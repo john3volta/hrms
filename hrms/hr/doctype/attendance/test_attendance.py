@@ -25,6 +25,10 @@ from hrms.hr.doctype.attendance.attendance import (
 	get_unmarked_days,
 	mark_attendance,
 )
+from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import (
+	assign_holiday_list,
+	create_holiday_list_assignment,
+)
 from hrms.tests.test_utils import get_first_sunday
 
 
@@ -171,6 +175,7 @@ class TestAttendance(IntegrationTestCase):
 		# holiday considered in unmarked days
 		self.assertIn(first_sunday, unmarked_days)
 
+	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_unmarked_days_excluding_holidays(self):
 		first_sunday = get_first_sunday(self.holiday_list, for_date=get_last_day(add_months(getdate(), -1)))
 		attendance_date = add_days(first_sunday, 1)
@@ -192,6 +197,28 @@ class TestAttendance(IntegrationTestCase):
 		self.assertIn(getdate(add_days(attendance_date, 1)), unmarked_days)
 		# holidays not considered in unmarked days
 		self.assertNotIn(first_sunday, unmarked_days)
+
+	def test_unmarked_days_excluding_holidays_across_two_holiday_list_assignments(self):
+		from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
+
+		employee = make_employee("test_unmarked_days_exclude_holidays@example.com", company="_Test Company")
+		start_date = get_first_day(getdate())
+		mid_date = add_days(start_date, 15)
+		end_date = get_last_day(getdate())
+		holiday_list_1 = make_holiday_list(
+			"First Holiday List", from_date=start_date, to_date=add_days(mid_date, -1)
+		)
+		holiday_list_2 = make_holiday_list("Second Holiday List", from_date=mid_date, to_date=end_date)
+		create_holiday_list_assignment("Employee", employee, holiday_list=holiday_list_1)
+		create_holiday_list_assignment("Employee", employee, holiday_list=holiday_list_2)
+
+		unmarked_days = get_unmarked_days(employee, start_date, end_date, exclude_holidays=True)
+		unmarked_days = [getdate(date) for date in unmarked_days]
+		sunday_in_holiday_list_1 = get_first_sunday(holiday_list=holiday_list_1, for_date=start_date)
+		sunday_in_holiday_list_2 = get_first_sunday(holiday_list=holiday_list_2, for_date=end_date)
+
+		self.assertNotIn(sunday_in_holiday_list_1, unmarked_days)
+		self.assertNotIn(sunday_in_holiday_list_2, unmarked_days)
 
 	def test_unmarked_days_as_per_joining_and_relieving_dates(self):
 		first_sunday = get_first_sunday(self.holiday_list, for_date=get_last_day(add_months(getdate(), -1)))

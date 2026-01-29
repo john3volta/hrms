@@ -384,7 +384,9 @@ def get_unmarked_days(employee, from_date, to_date, exclude_holidays=0):
 	marked_days = [getdate(record.attendance_date) for record in records]
 
 	if cint(exclude_holidays):
-		holiday_dates = get_holiday_dates_between_range(employee, from_date, to_date)
+		holiday_dates = get_holiday_dates_between_range(
+			employee, from_date, to_date, raise_exception_for_holiday_list=False
+		)
 		holidays = [getdate(record) for record in holiday_dates]
 		marked_days.extend(holidays)
 

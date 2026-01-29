@@ -113,7 +113,7 @@ class AdditionalSalary(Document):
 
 		if self.is_recurring and not (self.from_date and self.to_date):
 			frappe.throw(_("From and to dates are madatory for recurring type additional salaries."))
-		elif not self.payroll_date:
+		elif (not self.is_recurring) and (not self.payroll_date):
 			frappe.throw(_("Payroll date is mandatory for non-recurring type additional salaries."))
 
 		if date_of_joining:

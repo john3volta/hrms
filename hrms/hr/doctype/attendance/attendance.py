@@ -251,7 +251,7 @@ class Attendance(Document):
 @frappe.whitelist()
 def get_events(start, end, filters=None):
 	employee = frappe.db.get_value("Employee", {"user_id": frappe.session.user})
-	if not employee:
+	if not employee:	
 		return []
 	if isinstance(filters, str):
 		import json
@@ -270,7 +270,6 @@ def add_attendance(filters):
 		"Attendance",
 		fields=[
 			"name",
-			"'Attendance' as doctype",
 			"attendance_date",
 			"employee_name",
 			"status",
@@ -279,6 +278,7 @@ def add_attendance(filters):
 		filters=filters,
 	)
 	for record in attendance:
+		record["doctype"] = "Attendance"
 		record["title"] = f"{record.employee_name} : {record.status}"
 	return attendance
 

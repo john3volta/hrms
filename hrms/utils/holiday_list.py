@@ -36,11 +36,23 @@ def get_holiday_dates_between_range(
 	end_date: str,
 	skip_weekly_offs: bool = False,
 	select_weekly_offs: bool = False,
+	raise_exception_for_holiday_list: bool = True,
 ) -> list:
 	start_date = getdate(start_date)
 	end_date = getdate(end_date)
-	from_holiday_list = get_holiday_list_for_employee(assigned_to, as_on=start_date, as_dict=True) or {}
-	to_holiday_list = get_holiday_list_for_employee(assigned_to, as_on=end_date, as_dict=True) or {}
+
+	from_holiday_list = (
+		get_holiday_list_for_employee(
+			assigned_to, as_on=start_date, as_dict=True, raise_exception=raise_exception_for_holiday_list
+		)
+		or {}
+	)
+	to_holiday_list = (
+		get_holiday_list_for_employee(
+			assigned_to, as_on=end_date, as_dict=True, raise_exception=raise_exception_for_holiday_list
+		)
+		or {}
+	)
 
 	if (
 		from_holiday_list

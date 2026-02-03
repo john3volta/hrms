@@ -5,7 +5,10 @@ from datetime import timedelta
 
 import frappe
 from frappe import _
+from frappe.query_builder import Criterion
 from frappe.utils import cint, flt, format_datetime, format_duration
+
+from erpnext.accounts.utils import build_qb_match_conditions
 
 
 def execute(filters=None):
@@ -260,6 +263,8 @@ def get_query(filters):
 			query = query.where(attendance.out_time < checkin.shift_end)
 		else:
 			query = query.where(attendance[filter] == filters[filter])
+
+	query = query.where(Criterion.all(build_qb_match_conditions("Attendance")))
 
 	return query
 

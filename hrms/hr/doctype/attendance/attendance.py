@@ -5,6 +5,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
+from frappe.query_builder.terms import ValueWrapper
 from frappe.utils import (
 	add_days,
 	cint,
@@ -270,6 +271,7 @@ def add_attendance(filters):
 		"Attendance",
 		fields=[
 			"name",
+			ValueWrapper("Attendance").as_("doctype"),
 			"attendance_date",
 			"employee_name",
 			"status",
@@ -278,8 +280,7 @@ def add_attendance(filters):
 		filters=filters,
 	)
 	for record in attendance:
-		record["doctype"] = "Attendance"
-		record["title"] = f"{record.employee_name} : {record.status}"
+		record["title"] = f"{record['employee_name']} : {record['status']}"
 	return attendance
 
 

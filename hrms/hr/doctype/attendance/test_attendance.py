@@ -268,5 +268,44 @@ class TestAttendance(IntegrationTestCase):
 		)
 		self.assertEqual(len(attendances), 1)
 
+	def test_get_events_returns_attendance(self):
+		from frappe.utils import today
+
+		from hrms.hr.doctype.attendance.attendance import get_events
+
+		user = frappe.get_doc(
+			{"doctype": "User", "email": "calendar.user@example.com", "first_name": "Calendar", "enabled": 1}
+		).insert(ignore_permissions=True)
+
+		employee = frappe.get_doc(
+			{
+				"doctype": "Employee",
+				"first_name": "Calendar",
+				"gender": "Male",
+				"date_of_joining": today(),
+				"date_of_birth": "1990-01-01",
+				"status": "Active",
+				"company": "_Test Company",
+				"user_id": user.name,
+			}
+		).insert()
+
+		attendance = frappe.get_doc(
+			{
+				"doctype": "Attendance",
+				"employee": employee.name,
+				"attendance_date": today(),
+				"company": "_Test Company",
+				"status": "Present",
+			}
+		).insert()
+
+		self.assertEqual(attendance.status, "Present")
+
+		events = get_events(start=today(), end=today(), user=user.name)
+
+		self.assertTrue(events)
+		self.assertTrue(any(e.get("doctype") == "Attendance" for e in events))
+
 	def tearDown(self):
 		frappe.db.rollback()

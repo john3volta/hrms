@@ -250,8 +250,10 @@ class Attendance(Document):
 
 
 @frappe.whitelist()
-def get_events(start, end, filters=None):
-	employee = frappe.db.get_value("Employee", {"user_id": frappe.session.user})
+def get_events(start, end, filters=None, user=None):
+	if not user:
+		user = frappe.session.user
+	employee = frappe.db.get_value("Employee", {"user_id": user})
 	if not employee:
 		return []
 	if isinstance(filters, str):

@@ -2,6 +2,8 @@
 # License: GNU General Public License v3. See license.txt
 
 
+from datetime import date
+
 import frappe
 from frappe import _
 from frappe.model.document import Document
@@ -250,12 +252,11 @@ class Attendance(Document):
 
 
 @frappe.whitelist()
-def get_events(start, end, filters=None, user=None):
-	if not user:
-		user = frappe.session.user
-	employee = frappe.db.get_value("Employee", {"user_id": user})
+def get_events(start: date | str, end: date | str, filters: str | list | None = None) -> list[dict]:
+	employee = frappe.db.get_value("Employee", {"user_id": frappe.session.user})
 	if not employee:
 		return []
+
 	if isinstance(filters, str):
 		import json
 
@@ -341,7 +342,7 @@ def mark_attendance(
 
 
 @frappe.whitelist()
-def mark_bulk_attendance(data):
+def mark_bulk_attendance(data: str | dict):
 	import json
 
 	if isinstance(data, str):
@@ -351,11 +352,11 @@ def mark_bulk_attendance(data):
 		frappe.throw(_("Please select a date."))
 		return
 
-	for date in data.unmarked_days:
+	for attendance_date in data.unmarked_days:
 		doc_dict = {
 			"doctype": "Attendance",
 			"employee": data.employee,
-			"attendance_date": get_datetime(date),
+			"attendance_date": get_datetime(attendance_date),
 			"status": data.status,
 			"half_day_status": "Absent" if data.status == "Half Day" else None,
 			"shift": data.shift,

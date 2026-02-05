@@ -22,6 +22,7 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 from hrms.hr.doctype.attendance.attendance import (
 	DuplicateAttendanceError,
 	OverlappingShiftAttendanceError,
+	get_events,
 	get_unmarked_days,
 	mark_attendance,
 )
@@ -269,43 +270,28 @@ class TestAttendance(IntegrationTestCase):
 		self.assertEqual(len(attendances), 1)
 
 	def test_get_events_returns_attendance(self):
-		from frappe.utils import today
+		employee = make_employee("calendar.user@example.com", company="_Test Company")
 
-		from hrms.hr.doctype.attendance.attendance import get_events
+		attendance_name = mark_attendance(employee, getdate(), status="Present")
+		attendance = frappe.get_value("Attendance", attendance_name, "status")
 
-		user = frappe.get_doc(
-			{"doctype": "User", "email": "calendar.user@example.com", "first_name": "Calendar", "enabled": 1}
-		).insert(ignore_permissions=True)
+		self.assertEqual(attendance, "Present")
 
-		employee = frappe.get_doc(
-			{
-				"doctype": "Employee",
-				"first_name": "Calendar",
-				"gender": "Male",
-				"date_of_joining": today(),
-				"date_of_birth": "1990-01-01",
-				"status": "Active",
-				"company": "_Test Company",
-				"user_id": user.name,
-			}
-		).insert()
-
-		attendance = frappe.get_doc(
-			{
-				"doctype": "Attendance",
-				"employee": employee.name,
-				"attendance_date": today(),
-				"company": "_Test Company",
-				"status": "Present",
-			}
-		).insert()
-
-		self.assertEqual(attendance.status, "Present")
-
-		events = get_events(start=today(), end=today(), user=user.name)
+		frappe.set_user("calendar.user@example.com")
+		try:
+			events = get_events(start=getdate(), end=getdate())
+		finally:
+			frappe.set_user("Administrator")
 
 		self.assertTrue(events)
-		self.assertTrue(any(e.get("doctype") == "Attendance" for e in events))
+		attendance_events = [e for e in events if e.get("doctype") == "Attendance"]
+		self.assertTrue(attendance_events)
+		self.assertEqual(attendance_events[0].get("status"), "Present")
+		self.assertEqual(
+			attendance_events[0].get("employee_name"),
+			frappe.db.get_value("Employee", employee, "employee_name"),
+		)
+		self.assertEqual(attendance_events[0].get("attendance_date"), getdate())
 
 	def tearDown(self):
 		frappe.db.rollback()

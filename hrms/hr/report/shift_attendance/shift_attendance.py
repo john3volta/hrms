@@ -233,7 +233,6 @@ def get_attendance_with_checkins(filters):
 			shift_type.early_exit_grace_period,
 		)
 	)
-
 	for field in filters:
 		if field == "late_entry" and not filters.consider_grace_period:
 			query = query.where(attendance.in_time > checkin.shift_start)
@@ -285,7 +284,15 @@ def get_base_attendance_query(filters):
 
 
 def get_attendance_without_checkins(filters):
-	query = get_base_attendance_query(filters)
+	attendance = frappe.qb.DocType("Attendance")
+	checkin = frappe.qb.DocType("Employee Checkin")
+
+	query = (
+		get_base_attendance_query(filters)
+		.left_join(checkin)
+		.on(checkin.attendance == attendance.name)
+		.where(checkin.attendance.isnull())
+	)
 	result = query.run(as_dict=True)
 	return result
 

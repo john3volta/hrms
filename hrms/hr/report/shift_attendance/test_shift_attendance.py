@@ -246,7 +246,6 @@ class TestShiftAttendance(IntegrationTestCase):
 		self.assertEqual(len(table_data), 9)
 
 		chart_data = get_chart_data(report)
-		frappe.db.commit()
 		self.assertEqual(chart_data.present_records, 5)
 		self.assertEqual(chart_data.half_day_records, 2)
 		self.assertEqual(chart_data.absent_records, 2)

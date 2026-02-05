@@ -60,7 +60,7 @@ import ExpensesTable from "@/components/ExpensesTable.vue"
 import ExpenseTaxesTable from "@/components/ExpenseTaxesTable.vue"
 import ExpenseAdvancesTable from "@/components/ExpenseAdvancesTable.vue"
 
-import { getCompanyCurrency } from "@/data/currencies"
+import { updateCurrencyLabels } from "@/composables/updateCurrencyLabels"
 
 
 const dayjs = inject("$dayjs")
@@ -90,9 +90,10 @@ const tabs = [
 const expenseClaim = ref({
 	employee: currEmployee,
 	company: employeeCompany,
+	doctype: "Expense Claim"
 })
 
-const currency = computed(() => getCompanyCurrency(expenseClaim.value.company))
+const currency = computed(() => expenseClaim.value.currency)
 
 // get form fields
 const formFields = createResource({
@@ -109,6 +110,7 @@ const formFields = createResource({
 	onSuccess(_data) {
 		expenseApproverDetails.reload()
 		companyDetails.reload()
+		employeeCurrency.reload()
 	},
 })
 formFields.reload()
@@ -116,35 +118,22 @@ formFields.reload()
 // resources
 const advances = createResource({
 	url: "hrms.hr.doctype.expense_claim.expense_claim.get_advances",
-	params: { employee: currEmployee.value },
+	params: { expense_claim: expenseClaim.value },
 	auto: true,
 	onSuccess(data) {
 		// set advances
-		if (props.id) {
-			expenseClaim.value.advances?.map((advance) => (advance.selected = true))
-		} else {
+		if (!data) {
 			expenseClaim.value.advances = []
+			return
 		}
 
-		return data.forEach((advance) => {
-			if (
-				props.id &&
-				expenseClaim.value.advances?.some(
-					(entry) => entry.employee_advance === advance.name
-				)
-			)
-				return
-
-			expenseClaim.value.advances?.push({
-				employee_advance: advance.name,
-				purpose: advance.purpose,
-				posting_date: advance.posting_date,
-				advance_account: advance.advance_account,
-				advance_paid: advance.paid_amount,
-				unclaimed_amount: advance.paid_amount - advance.claimed_amount,
-				allocated_amount: 0,
+		if (!props.id) {
+			data.forEach((advance) => {
+				advance.allocated_amount = 0
+				advance.selected = true
 			})
-		})
+			expenseClaim.value.advances = data
+		}
 	},
 })
 
@@ -163,6 +152,21 @@ const companyDetails = createResource({
 		expenseClaim.value.cost_center = data?.cost_center
 		expenseClaim.value.payable_account =
 			data?.default_expense_claim_payable_account
+	},
+})
+
+const employeeCurrency = createResource({
+	url: "hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment.get_employee_currency",
+	params: { employee: currEmployee.value },
+	onSuccess(data) {
+		expenseClaim.value.currency = data
+	},
+})
+
+const exchangeRate = createResource({
+	url: "erpnext.setup.utils.get_exchange_rate",
+	onSuccess(data) {
+		expenseClaim.value.exchange_rate = data
 	},
 })
 
@@ -186,9 +190,13 @@ watch(
 	}
 )
 watch(
-	() => props.id && expenseClaim.value.expenses,
+	() => expenseClaim.value.currency,
+	() => setExchangeRate()
+)
+watch(
+	() => expenseClaim.value.expenses,
 	(_) => {
-		if (expenseClaim.value.docstatus === 0) {
+		if (!props.id && expenseClaim.value.docstatus === 0) {
 			advances.reload()
 		}
 	}
@@ -209,6 +217,33 @@ watch(
 			expense.cost_center = expenseClaim.value.cost_center
 		})
 	}
+)
+
+watch(
+	() => [formFields.data, expenseClaim.value.currency],
+	([fields, currency]) => {
+		if (!fields || !currency) return
+
+		updateCurrencyLabels({
+			formFields: fields,
+			doc: expenseClaim.value,
+			baseFields: [
+				"base_total_sanctioned_amount",
+				"base_total_taxes_and_charges",
+				"base_total_advance_amount",
+				"base_grand_total",
+				"base_total_claimed_amount"
+			],
+			transactionFields: [
+				"total_sanctioned_amount",
+				"total_taxes_and_charges",
+				"total_advance_amount",
+				"grand_total",
+				"total_claimed_amount"
+			],
+		})
+	},
+	{ immediate: true }
 )
 
 // helper functions
@@ -413,4 +448,21 @@ function validateForm() {
 	})
 }
 
+function setExchangeRate() {
+	if (!expenseClaim.value.currency) return
+	const exchange_rate_field = formFields.data?.find(
+		(field) => field.fieldname === "exchange_rate"
+	)
+
+	if (expenseClaim.value.currency === currency.value) {
+		expenseClaim.value.exchange_rate = 1
+		exchange_rate_field.hidden = 1
+	} else {
+		exchangeRate.fetch({
+			from_currency: expenseClaim.value.currency,
+			to_currency: currency.value,
+		})
+		exchange_rate_field.hidden = 0
+	}
+}
 </script>

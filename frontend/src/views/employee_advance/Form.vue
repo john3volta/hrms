@@ -23,6 +23,7 @@ import { ref, watch, inject, computed } from "vue"
 import FormView from "@/components/FormView.vue"
 
 import { getCompanyCurrency } from "@/data/currencies"
+import { updateCurrencyLabels } from "../../composables/updateCurrencyLabels"
 
 const employee = inject("$employee")
 
@@ -65,14 +66,6 @@ const employeeCurrency = createResource({
 	params: { employee: employee.data.name },
 	onSuccess(data) {
 		employeeAdvance.value.currency = data
-		setExchangeRate()
-	},
-})
-
-const exchangeRate = createResource({
-	url: "erpnext.setup.utils.get_exchange_rate",
-	onSuccess(data) {
-		employeeAdvance.value.exchange_rate = data
 	},
 })
 
@@ -84,11 +77,24 @@ const advanceAccount = createResource({
 	},
 })
 
-// form scripts
+// scripts
+
 watch(
-	() => employeeAdvance.value.currency,
-	() => setExchangeRate()
+	() => [formFields.data, employeeAdvance.value.currency],
+	([fields, currency]) => {
+		if (!fields || !currency) return
+
+		updateCurrencyLabels({
+			formFields: fields,
+			doc: employeeAdvance.value,
+			baseFields: ["base_paid_amount"],
+			transactionFields: ["paid_amount"],
+		})
+	},
+	{ immediate: true }
 )
+
+
 
 // helper functions
 function getFilteredFields(fields) {
@@ -127,24 +133,6 @@ function applyFilters(fields) {
 
 		return field
 	})
-}
-
-function setExchangeRate() {
-	if (!employeeAdvance.value.currency) return
-	const exchange_rate_field = formFields.data?.find(
-		(field) => field.fieldname === "exchange_rate"
-	)
-
-	if (employeeAdvance.value.currency === companyCurrency.value) {
-		employeeAdvance.value.exchange_rate = 1
-		exchange_rate_field.hidden = 1
-	} else {
-		exchangeRate.fetch({
-			from_currency: employeeAdvance.value.currency,
-			to_currency: companyCurrency.value,
-		})
-		exchange_rate_field.hidden = 0
-	}
 }
 
 function validateForm() {}

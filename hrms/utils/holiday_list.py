@@ -1,6 +1,8 @@
+from datetime import date
+
 import frappe
 from frappe import _
-from frappe.utils import add_days, get_link_to_form, getdate
+from frappe.utils import add_days, formatdate, get_link_to_form, getdate
 
 
 def get_holiday_dates_between(
@@ -92,19 +94,22 @@ def get_holiday_dates_between_range(
 
 
 def get_holiday_list_for_employee(
-	employee: str, raise_exception: bool = True, as_on=None, as_dict=False
+	employee: str, raise_exception: bool = True, as_on: date | str | None = None, as_dict: bool = False
 ) -> str:
+	as_on = frappe.utils.getdate(as_on)
 	holiday_list = get_assigned_holiday_list(employee, as_on, as_dict)
-
 	if not holiday_list:
 		company = frappe.db.get_value("Employee", employee, "company")
 		holiday_list = get_assigned_holiday_list(company, as_on, as_dict)
 
 	if not holiday_list and raise_exception:
 		frappe.throw(
-			_("Please assign Holiday List for Employee {0} or their company {1} through {2}").format(
-				employee,
-				company,
+			_(
+				"No Holiday List was found for Employee {0} or their company {1} for date {2}. Please assign through {3}"
+			).format(
+				frappe.bold(employee),
+				frappe.bold(company),
+				frappe.bold(formatdate(as_on)),
 				get_link_to_form("Holiday List Assignment", label="Holiday List Assignment"),
 			)
 		)

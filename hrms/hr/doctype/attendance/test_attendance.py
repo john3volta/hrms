@@ -22,6 +22,7 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 from hrms.hr.doctype.attendance.attendance import (
 	DuplicateAttendanceError,
 	OverlappingShiftAttendanceError,
+	get_events,
 	get_unmarked_days,
 	mark_attendance,
 )
@@ -267,6 +268,30 @@ class TestAttendance(IntegrationTestCase):
 			},
 		)
 		self.assertEqual(len(attendances), 1)
+
+	def test_get_events_returns_attendance(self):
+		employee = make_employee("calendar.user@example.com", company="_Test Company")
+
+		attendance_name = mark_attendance(employee, getdate(), status="Present")
+		attendance = frappe.get_value("Attendance", attendance_name, "status")
+
+		self.assertEqual(attendance, "Present")
+
+		frappe.set_user("calendar.user@example.com")
+		try:
+			events = get_events(start=getdate(), end=getdate())
+		finally:
+			frappe.set_user("Administrator")
+
+		self.assertTrue(events)
+		attendance_events = [e for e in events if e.get("doctype") == "Attendance"]
+		self.assertTrue(attendance_events)
+		self.assertEqual(attendance_events[0].get("status"), "Present")
+		self.assertEqual(
+			attendance_events[0].get("employee_name"),
+			frappe.db.get_value("Employee", employee, "employee_name"),
+		)
+		self.assertEqual(attendance_events[0].get("attendance_date"), getdate())
 
 	def tearDown(self):
 		frappe.db.rollback()

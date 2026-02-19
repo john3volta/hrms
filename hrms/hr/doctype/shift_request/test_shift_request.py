@@ -2,7 +2,6 @@
 # See license.txt
 
 import frappe
-from frappe.tests import change_settings
 from frappe.utils import add_days, nowdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -198,7 +197,7 @@ class TestShiftRequest(HRMSTestSuite):
 
 		self.assertRaises(OverlappingShiftRequestError, shift2.insert)
 
-	@change_settings("HR Settings", {"allow_multiple_shift_assignments": 1})
+	@HRMSTestSuite.change_settings("HR Settings", {"allow_multiple_shift_assignments": 1})
 	def test_allow_non_overlapping_shift_requests_for_same_day(self):
 		user = "test_shift_request@example.com"
 		employee = make_employee(user, company="_Test Company", shift_request_approver=user)

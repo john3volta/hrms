@@ -27,7 +27,7 @@ from hrms.hr.doctype.employee_checkin.employee_checkin import (
 from hrms.hr.doctype.leave_type.test_leave_type import create_leave_type
 from hrms.hr.doctype.shift_type.test_shift_type import make_shift_assignment, setup_shift_type
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list, make_leave_application
-from hrms.tests.utils import HRMSTestSuite, change_settings
+from hrms.tests.utils import HRMSTestSuite
 
 
 class TestEmployeeCheckin(HRMSTestSuite):
@@ -189,7 +189,7 @@ class TestEmployeeCheckin(HRMSTestSuite):
 		log = make_checkin(employee, timestamp)
 		self.assertIsNone(log.shift)
 
-	@change_settings("HR Settings", {"allow_multiple_shift_assignments": 1})
+	@HRMSTestSuite.change_settings("HR Settings", {"allow_multiple_shift_assignments": 1})
 	def test_fetch_shift_for_assignment_with_end_date(self):
 		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
 
@@ -452,7 +452,7 @@ class TestEmployeeCheckin(HRMSTestSuite):
 			self.assertEqual(log.shift_actual_start, start_timestamp)
 			self.assertEqual(log.shift_actual_end, end_timestamp)
 
-	@change_settings("HR Settings", {"allow_multiple_shift_assignments": 1})
+	@HRMSTestSuite.change_settings("HR Settings", {"allow_multiple_shift_assignments": 1})
 	def test_consecutive_shift_assignments_overlapping_within_grace_period(self):
 		# test adjustment for start and end times if they are overlapping
 		# within "begin_check_in_before_shift_start_time" and "allow_check_out_after_shift_end_time" periods
@@ -487,8 +487,8 @@ class TestEmployeeCheckin(HRMSTestSuite):
 		log = make_checkin(employee, timestamp)
 		self.assertEqual(log.shift, shift2.name)
 
-	@change_settings("HR Settings", {"allow_multiple_shift_assignments": 1})
-	@change_settings("HR Settings", {"allow_geolocation_tracking": 1})
+	@HRMSTestSuite.change_settings("HR Settings", {"allow_multiple_shift_assignments": 1})
+	@HRMSTestSuite.change_settings("HR Settings", {"allow_geolocation_tracking": 1})
 	def test_geofencing(self):
 		employee = make_employee("test_shift@example.com", company="_Test Company")
 

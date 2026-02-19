@@ -16,7 +16,7 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_holiday_list,
 )
 from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
-from hrms.tests.utils import HRMSTestSuite, change_settings
+from hrms.tests.utils import HRMSTestSuite
 
 test_dependencies = ["Salary Component", "Salary Slip", "Account"]
 
@@ -165,7 +165,7 @@ class TestGratuity(HRMSTestSuite):
 		self.assertEqual(gratuity.status, "Unpaid")
 		self.assertEqual(gratuity.paid_amount, 0)
 
-	@change_settings(
+	@HRMSTestSuite.change_settings(
 		"Payroll Settings",
 		{
 			"payroll_based_on": "Attendance",

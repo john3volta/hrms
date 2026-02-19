@@ -4,7 +4,6 @@
 from dateutil.relativedelta import relativedelta
 
 import frappe
-from frappe.tests.utils import FrappeTestCase, change_settings
 from frappe.utils import add_days, add_months, cstr, date_diff, flt
 
 import erpnext
@@ -147,7 +146,9 @@ class TestPayrollEntry(HRMSTestSuite):
 		self.assertEqual(salary_slip.base_net_pay, payment_entry[0].total_debit)
 		self.assertEqual(salary_slip.base_net_pay, payment_entry[0].total_credit)
 
-	@change_settings("Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 0})
+	@HRMSTestSuite.change_settings(
+		"Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 0}
+	)
 	def test_payroll_entry_with_employee_cost_center(self):
 		department = create_department("Cost Center Test")
 
@@ -192,7 +193,9 @@ class TestPayrollEntry(HRMSTestSuite):
 
 		self.assertEqual(je_entries, expected_je)
 
-	@change_settings("Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 0})
+	@HRMSTestSuite.change_settings(
+		"Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 0}
+	)
 	def test_employee_cost_center_breakup(self):
 		"""Test only the latest salary structure assignment is considered for cost center breakup"""
 		COMPANY = "_Test Company"
@@ -254,7 +257,9 @@ class TestPayrollEntry(HRMSTestSuite):
 		self.assertEqual(get_end_date("2017-02-15", "daily"), {"end_date": "2017-02-15"})
 
 	@if_lending_app_installed
-	@change_settings("Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 1})
+	@HRMSTestSuite.change_settings(
+		"Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 1}
+	)
 	def test_loan_with_settings_enabled(self):
 		from lending.loan_management.doctype.loan.test_loan import make_loan_disbursement_entry
 
@@ -300,7 +305,9 @@ class TestPayrollEntry(HRMSTestSuite):
 		self.assertEqual(party, applicant)
 
 	@if_lending_app_installed
-	@change_settings("Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 0})
+	@HRMSTestSuite.change_settings(
+		"Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 0}
+	)
 	def test_loan_with_settings_disabled(self):
 		from lending.loan_management.doctype.loan.test_loan import make_loan_disbursement_entry
 
@@ -504,7 +511,9 @@ class TestPayrollEntry(HRMSTestSuite):
 		payroll_entry.cancel()
 		self.assertEqual(payroll_entry.status, "Cancelled")
 
-	@change_settings("Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 1})
+	@HRMSTestSuite.change_settings(
+		"Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 1}
+	)
 	def test_payroll_accrual_journal_entry_with_employee_tagging(self):
 		company_doc = frappe.get_doc("Company", "_Test Company")
 		employee = make_employee(
@@ -535,7 +544,9 @@ class TestPayrollEntry(HRMSTestSuite):
 					self.assertEqual(account.party_type, "Employee")
 					self.assertEqual(account.party, employee)
 
-	@change_settings("Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 0})
+	@HRMSTestSuite.change_settings(
+		"Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 0}
+	)
 	def test_payroll_accrual_journal_entry_without_employee_tagging(self):
 		company_doc = frappe.get_doc("Company", "_Test Company")
 		employee = make_employee(
@@ -624,7 +635,9 @@ class TestPayrollEntry(HRMSTestSuite):
 
 		self.assertEqual(deduction_entry, expected_entry)
 
-	@change_settings("Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 1})
+	@HRMSTestSuite.change_settings(
+		"Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 1}
+	)
 	def test_employee_wise_bank_entry_with_cost_centers(self):
 		department = create_department("Cost Center Test")
 		employee1 = make_employee(
@@ -729,7 +742,7 @@ class TestPayrollEntry(HRMSTestSuite):
 		employees = payroll_entry.get_employees_with_unmarked_attendance()
 		self.assertFalse(employees)
 
-	@change_settings(
+	@HRMSTestSuite.change_settings(
 		"Payroll Settings",
 		{
 			"payroll_based_on": "Attendance",
@@ -766,12 +779,16 @@ class TestPayrollEntry(HRMSTestSuite):
 		self.assertTrue(journal_entry)
 
 	@if_lending_app_installed
-	@change_settings("Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 0})
+	@HRMSTestSuite.change_settings(
+		"Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 0}
+	)
 	def test_loan_repayment_from_salary(self):
 		self.run_test_for_loan_repayment_from_salary()
 
 	@if_lending_app_installed
-	@change_settings("Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 1})
+	@HRMSTestSuite.change_settings(
+		"Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 1}
+	)
 	def test_loan_repayment_from_salary_with_employee_tagging(self):
 		self.run_test_for_loan_repayment_from_salary()
 
@@ -833,7 +850,9 @@ class TestPayrollEntry(HRMSTestSuite):
 		self.assertEqual(total_debit, expected_bank_entry_amount)
 		self.assertEqual(total_credit, expected_bank_entry_amount)
 
-	@change_settings("Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 0})
+	@HRMSTestSuite.change_settings(
+		"Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 0}
+	)
 	def test_component_exclusion_from_accounting_entries(self):
 		company = frappe.get_doc("Company", "_Test Company")
 		employee = make_employee("exclude_component_test@payroll.com", company=company.name)

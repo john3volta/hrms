@@ -1,5 +1,4 @@
 import frappe
-from frappe.tests import change_settings
 from frappe.utils import add_days, add_months, getdate, nowdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -287,7 +286,7 @@ class TestLeaveAllocation(HRMSTestSuite):
 
 		self.assertEqual(leave_allocation_2.unused_leaves, 5)
 
-	@change_settings("System Settings", {"float_precision": 2})
+	@HRMSTestSuite.change_settings("System Settings", {"float_precision": 2})
 	def test_precision(self):
 		create_leave_type(
 			leave_type_name="_Test_CF_leave",

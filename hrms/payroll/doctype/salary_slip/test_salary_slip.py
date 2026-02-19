@@ -46,7 +46,7 @@ from hrms.payroll.doctype.salary_slip.salary_slip import (
 )
 from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
 from hrms.tests.test_utils import get_email_by_subject, get_first_sunday
-from hrms.tests.utils import HRMSTestSuite, change_settings
+from hrms.tests.utils import HRMSTestSuite
 
 
 class TestSalarySlip(HRMSTestSuite):
@@ -61,7 +61,7 @@ class TestSalarySlip(HRMSTestSuite):
 		frappe.set_user("Administrator")
 		clear_cache()
 
-	@change_settings("Payroll Settings", {"show_leave_balances_in_salary_slip": True})
+	@HRMSTestSuite.change_settings("Payroll Settings", {"show_leave_balances_in_salary_slip": True})
 	def test_leave_details(self):
 		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
@@ -115,7 +115,7 @@ class TestSalarySlip(HRMSTestSuite):
 
 		self.assertRaises(InactiveEmployeeStatusError, salary_slip.save)
 
-	@change_settings(
+	@HRMSTestSuite.change_settings(
 		"Payroll Settings", {"payroll_based_on": "Attendance", "daily_wages_fraction_for_half_day": 0.75}
 	)
 	def test_payment_days_based_on_attendance(self):
@@ -179,7 +179,7 @@ class TestSalarySlip(HRMSTestSuite):
 
 		self.assertEqual(rounded(ss.gross_pay), rounded(gross_pay))
 
-	@change_settings(
+	@HRMSTestSuite.change_settings(
 		"Payroll Settings",
 		{
 			"payroll_based_on": "Attendance",
@@ -243,7 +243,7 @@ class TestSalarySlip(HRMSTestSuite):
 		# half day (when absent) from checkins is considered as 0.5 lwp but half day (absent) from leave application is considered as absent
 		self.assertEqual(rounded(ss.gross_pay), rounded(gross_pay))
 
-	@change_settings(
+	@HRMSTestSuite.change_settings(
 		"Payroll Settings",
 		{
 			"payroll_based_on": "Attendance",
@@ -308,7 +308,7 @@ class TestSalarySlip(HRMSTestSuite):
 		# half day (when absent) from checkins is considered as 0.5 lwp but half day (absent) from leave application is considered as absent
 		self.assertEqual(rounded(ss.gross_pay), rounded(gross_pay))
 
-	@change_settings(
+	@HRMSTestSuite.change_settings(
 		"Payroll Settings",
 		{
 			"payroll_based_on": "Attendance",
@@ -373,7 +373,7 @@ class TestSalarySlip(HRMSTestSuite):
 		self.assertEqual(new_ss.total_working_days, no_of_days[0])
 		self.assertEqual(new_ss.payment_days, no_of_days[0] - 8)
 
-	@change_settings(
+	@HRMSTestSuite.change_settings(
 		"Payroll Settings",
 		{
 			"payroll_based_on": "Attendance",
@@ -411,7 +411,7 @@ class TestSalarySlip(HRMSTestSuite):
 		self.assertEqual(new_ss.total_working_days, no_of_days[0])
 		self.assertEqual(new_ss.payment_days, no_of_days[0] - 8)
 
-	@change_settings(
+	@HRMSTestSuite.change_settings(
 		"Payroll Settings",
 		{
 			"payroll_based_on": "Attendance",
@@ -451,7 +451,7 @@ class TestSalarySlip(HRMSTestSuite):
 		self.assertEqual(new_ss.total_working_days, no_of_days[0] - no_of_days[1])
 		self.assertEqual(new_ss.payment_days, no_of_days[0] - holidays - 8)
 
-	@change_settings("Payroll Settings", {"payroll_based_on": "Leave"})
+	@HRMSTestSuite.change_settings("Payroll Settings", {"payroll_based_on": "Leave"})
 	def test_payment_days_based_on_leave_application(self):
 		no_of_days = get_no_of_days()
 
@@ -500,7 +500,7 @@ class TestSalarySlip(HRMSTestSuite):
 
 		self.assertEqual(ss.payment_days, days_in_month - no_of_holidays - 3.75)
 
-	@change_settings("Payroll Settings", {"payroll_based_on": "Leave"})
+	@HRMSTestSuite.change_settings("Payroll Settings", {"payroll_based_on": "Leave"})
 	def test_payment_days_calculation_for_lwp_on_month_boundaries(self):
 		from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import (
 			create_holiday_list_assignment,
@@ -527,7 +527,7 @@ class TestSalarySlip(HRMSTestSuite):
 		self.assertEqual(ss.leave_without_pay, 10)
 		self.assertEqual(ss.payment_days, 17)
 
-	@change_settings("Payroll Settings", {"payroll_based_on": "Attendance"})
+	@HRMSTestSuite.change_settings("Payroll Settings", {"payroll_based_on": "Attendance"})
 	def test_payment_days_in_salary_slip_based_on_timesheet(self):
 		from erpnext.projects.doctype.timesheet.test_timesheet import make_timesheet
 
@@ -571,7 +571,7 @@ class TestSalarySlip(HRMSTestSuite):
 
 		self.assertEqual(amount, expected_amount)
 
-	@change_settings("Payroll Settings", {"payroll_based_on": "Attendance"})
+	@HRMSTestSuite.change_settings("Payroll Settings", {"payroll_based_on": "Attendance"})
 	def test_component_amount_dependent_on_another_payment_days_based_component(self):
 		from hrms.payroll.doctype.salary_structure.test_salary_structure import (
 			create_salary_structure_assignment,
@@ -618,7 +618,7 @@ class TestSalarySlip(HRMSTestSuite):
 
 		self.assertEqual(actual_amount, expected_amount)
 
-	@change_settings("Payroll Settings", {"include_holidays_in_total_working_days": 1})
+	@HRMSTestSuite.change_settings("Payroll Settings", {"include_holidays_in_total_working_days": 1})
 	def test_salary_slip_with_holidays_included(self):
 		no_of_days = get_no_of_days()
 		emp_id = make_employee(
@@ -639,7 +639,7 @@ class TestSalarySlip(HRMSTestSuite):
 		self.assertEqual(ss.earnings[1].amount, 3000)
 		self.assertEqual(ss.gross_pay, 78000)
 
-	@change_settings("Payroll Settings", {"include_holidays_in_total_working_days": 0})
+	@HRMSTestSuite.change_settings("Payroll Settings", {"include_holidays_in_total_working_days": 0})
 	def test_salary_slip_with_holidays_excluded(self):
 		no_of_days = get_no_of_days()
 		emp_id = make_employee(
@@ -661,7 +661,7 @@ class TestSalarySlip(HRMSTestSuite):
 		self.assertEqual(ss.earnings[1].amount, 3000)
 		self.assertEqual(ss.gross_pay, 78000)
 
-	@change_settings(
+	@HRMSTestSuite.change_settings(
 		"Payroll Settings",
 		{
 			"payroll_based_on": "Attendance",
@@ -697,7 +697,7 @@ class TestSalarySlip(HRMSTestSuite):
 		ss.save()
 		self.assertEqual(ss.total_working_days, no_of_days[0])
 
-	@change_settings(
+	@HRMSTestSuite.change_settings(
 		"Payroll Settings",
 		{
 			"payroll_based_on": "Attendance",
@@ -749,7 +749,7 @@ class TestSalarySlip(HRMSTestSuite):
 		# no_of_days - period before DOJ
 		self.assertEqual(ss.payment_days, no_of_days[0] - 3 - 1)
 
-	@change_settings(
+	@HRMSTestSuite.change_settings(
 		"Payroll Settings",
 		{
 			"payroll_based_on": "Attendance",
@@ -804,7 +804,7 @@ class TestSalarySlip(HRMSTestSuite):
 		# no_of_days - period before DOJ - 0.5 LWP on holiday (half day present)
 		self.assertEqual(ss.payment_days, no_of_days[0] - 3 - 0.5)
 
-	@change_settings("Payroll Settings", {"include_holidays_in_total_working_days": 1})
+	@HRMSTestSuite.change_settings("Payroll Settings", {"include_holidays_in_total_working_days": 1})
 	def test_payment_days(self):
 		from hrms.payroll.doctype.salary_structure.test_salary_structure import (
 			create_salary_structure_assignment,
@@ -880,7 +880,7 @@ class TestSalarySlip(HRMSTestSuite):
 		frappe.set_user("test_employee_salary_slip_read_permission@salary.com")
 		self.assertTrue(salary_slip_test_employee.has_permission("read"))
 
-	@change_settings("Payroll Settings", {"email_salary_slip_to_employee": 1})
+	@HRMSTestSuite.change_settings("Payroll Settings", {"email_salary_slip_to_employee": 1})
 	def test_email_salary_slip(self):
 		frappe.db.delete("Email Queue")
 
@@ -892,7 +892,7 @@ class TestSalarySlip(HRMSTestSuite):
 
 		self.assertIsNotNone(get_email_by_subject("Salary Slip - from"))
 
-	@change_settings(
+	@HRMSTestSuite.change_settings(
 		"Payroll Settings", {"email_salary_slip_to_employee": 1, "email_template": "Salary Slip"}
 	)
 	def test_email_salary_slip_with_email_template(self):
@@ -1145,7 +1145,7 @@ class TestSalarySlip(HRMSTestSuite):
 		# undelete fixture data
 		frappe.db.rollback()
 
-	@change_settings(
+	@HRMSTestSuite.change_settings(
 		"Payroll Settings",
 		{
 			"payroll_based_on": "Attendance",
@@ -1274,7 +1274,7 @@ class TestSalarySlip(HRMSTestSuite):
 		components = [row.salary_component for row in new_ss.get("earnings")]
 		self.assertNotIn("Statistical Component", components)
 
-	@change_settings(
+	@HRMSTestSuite.change_settings(
 		"Payroll Settings",
 		{"payroll_based_on": "Attendance", "consider_unmarked_attendance_as": "Present"},
 	)
@@ -1567,7 +1567,7 @@ class TestSalarySlip(HRMSTestSuite):
 		# to handle cases like 16th Jul 2024 - 15th Jul 2025
 		self.assertEqual(period_factor, 12)
 
-	@change_settings("Payroll Settings", {"payroll_based_on": "Leave"})
+	@HRMSTestSuite.change_settings("Payroll Settings", {"payroll_based_on": "Leave"})
 	def test_lwp_calculation_based_on_relieving_date(self):
 		emp_id = make_employee("test_lwp_based_on_relieving_date@salary.com")
 		frappe.db.set_value("Employee", emp_id, {"relieving_date": None, "status": "Active"})

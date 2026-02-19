@@ -6,7 +6,7 @@ from frappe.utils import add_days, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
-from hrms.tests.utils import HRMSTestSuite, change_settings
+from hrms.tests.utils import HRMSTestSuite
 
 
 class TestEmployeeTransfer(HRMSTestSuite):
@@ -99,7 +99,7 @@ class TestEmployeeTransfer(HRMSTestSuite):
 			self.assertEqual(data.from_date, dt[0])
 			self.assertEqual(data.to_date, None)
 
-	@change_settings("System Settings", {"number_format": "#.###,##"})
+	@HRMSTestSuite.change_settings("System Settings", {"number_format": "#.###,##"})
 	def test_data_formatting_in_history(self):
 		from hrms.hr.utils import get_formatted_value
 

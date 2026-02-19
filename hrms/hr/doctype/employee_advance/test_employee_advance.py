@@ -21,7 +21,7 @@ from hrms.hr.doctype.expense_claim.test_expense_claim import (
 )
 from hrms.payroll.doctype.salary_component.test_salary_component import create_salary_component
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
-from hrms.tests.utils import HRMSTestSuite, change_settings
+from hrms.tests.utils import HRMSTestSuite
 
 
 class TestEmployeeAdvance(HRMSTestSuite):
@@ -284,7 +284,9 @@ class TestEmployeeAdvance(HRMSTestSuite):
 		# (1000 - 500) + (1000 - 700)
 		self.assertEqual(advance3.pending_amount, 800)
 
-	@change_settings("HR Settings", {"unlink_payment_on_cancellation_of_employee_advance": True})
+	@HRMSTestSuite.change_settings(
+		"HR Settings", {"unlink_payment_on_cancellation_of_employee_advance": True}
+	)
 	def test_unlink_payment_entries(self):
 		employee_name = make_employee("_T@employee.advance", "_Test Company")
 		self.assertTrue(frappe.db.exists("Employee", employee_name))

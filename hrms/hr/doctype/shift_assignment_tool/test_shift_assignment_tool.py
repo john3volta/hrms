@@ -11,7 +11,7 @@ from hrms.hr.doctype.shift_request.test_shift_request import make_shift_request
 from hrms.hr.doctype.shift_schedule.shift_schedule import get_or_insert_shift_schedule
 from hrms.hr.doctype.shift_type.test_shift_type import make_shift_assignment, setup_shift_type
 from hrms.tests.test_utils import create_company
-from hrms.tests.utils import HRMSTestSuite, change_settings
+from hrms.tests.utils import HRMSTestSuite
 
 
 class TestShiftAssignmentTool(HRMSTestSuite):
@@ -34,7 +34,7 @@ class TestShiftAssignmentTool(HRMSTestSuite):
 	def tearDown(self):
 		frappe.db.rollback()
 
-	@change_settings("HR Settings", {"allow_multiple_shift_assignments": 0})
+	@HRMSTestSuite.change_settings("HR Settings", {"allow_multiple_shift_assignments": 0})
 	def test_get_employees_for_assigning_shifts(self):
 		today = getdate()
 

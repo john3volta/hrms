@@ -2,7 +2,6 @@
 # See license.txt
 
 import frappe
-from frappe.tests import change_settings
 from frappe.utils import add_days, add_to_date, get_first_day, get_last_day, getdate
 
 from hrms.hr.doctype.leave_allocation.test_leave_allocation import (
@@ -115,7 +114,7 @@ class TestLeaveAdjustment(HRMSTestSuite):
 		)
 		self.assertEqual(leave_balance, 13)
 
-	@change_settings("System Settings", {"float_precision": 2})
+	@HRMSTestSuite.change_settings("System Settings", {"float_precision": 2})
 	def test_precision(self):
 		leave_adjustment = create_leave_adjustment(
 			self.leave_allocation, adjustment_type="Allocate", leaves_to_adjust=5.126

@@ -2,7 +2,6 @@
 # See license.txt
 
 import frappe
-from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, get_year_ending, get_year_start, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -22,11 +21,12 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 )
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 from hrms.tests.test_utils import get_first_sunday
+from hrms.tests.utils import HRMSTestSuite
 
 test_records = frappe.get_test_records("Leave Type")
 
 
-class TestLeaveEncashment(IntegrationTestCase):
+class TestLeaveEncashment(HRMSTestSuite):
 	def setUp(self):
 		for dt in [
 			"Leave Period",

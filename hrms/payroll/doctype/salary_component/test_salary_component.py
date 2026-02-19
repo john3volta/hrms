@@ -2,12 +2,12 @@
 # See license.txt
 
 import frappe
-from frappe.tests import IntegrationTestCase
 
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+from hrms.tests.utils import HRMSTestSuite
 
 
-class TestSalaryComponent(IntegrationTestCase):
+class TestSalaryComponent(HRMSTestSuite):
 	def test_update_salary_structures(self):
 		salary_component = create_salary_component("Special Allowance")
 		salary_component.condition = "H < 10000"

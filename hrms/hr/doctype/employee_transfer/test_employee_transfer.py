@@ -2,13 +2,14 @@
 # See license.txt
 
 import frappe
-from frappe.tests import IntegrationTestCase, change_settings
 from frappe.utils import add_days, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
+from hrms.tests.utils import HRMSTestSuite, change_settings
 
-class TestEmployeeTransfer(IntegrationTestCase):
+
+class TestEmployeeTransfer(HRMSTestSuite):
 	def setUp(self):
 		create_company()
 

@@ -1,5 +1,4 @@
 import frappe
-from frappe.tests import IntegrationTestCase
 from frappe.utils.make_random import get_random
 
 from erpnext.projects.doctype.project.test_project import make_project
@@ -8,9 +7,10 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 from hrms.hr.report.employee_hours_utilization_based_on_timesheet.employee_hours_utilization_based_on_timesheet import (
 	execute,
 )
+from hrms.tests.utils import HRMSTestSuite
 
 
-class TestEmployeeUtilization(IntegrationTestCase):
+class TestEmployeeUtilization(HRMSTestSuite):
 	@classmethod
 	def setUpClass(cls):
 		super().setUpClass()

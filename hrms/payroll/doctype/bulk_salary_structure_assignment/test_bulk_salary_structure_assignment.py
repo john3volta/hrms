@@ -2,7 +2,6 @@
 # See license.txt
 
 import frappe
-from frappe.tests import IntegrationTestCase
 from frappe.utils import getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -12,9 +11,10 @@ from hrms.payroll.doctype.bulk_salary_structure_assignment.bulk_salary_structure
 )
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 from hrms.tests.test_utils import create_company, create_department, create_employee_grade
+from hrms.tests.utils import HRMSTestSuite
 
 
-class TestBulkSalaryStructureAssignment(IntegrationTestCase):
+class TestBulkSalaryStructureAssignment(HRMSTestSuite):
 	def setUp(self):
 		create_company()
 		self.department = create_department("Accounts")

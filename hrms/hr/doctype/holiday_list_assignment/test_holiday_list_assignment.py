@@ -13,10 +13,6 @@ from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignmen
 from hrms.tests.utils import HRMSTestSuite
 from hrms.utils.holiday_list import get_holiday_list_for_employee
 
-# On IntegrationTestCase, the doctype test records and all
-# link-field test record dependencies are recursively loaded
-# Use these module variables to add/remove to/from that list
-
 
 class IntegrationTestHolidayListAssignment(HRMSTestSuite):
 	"""

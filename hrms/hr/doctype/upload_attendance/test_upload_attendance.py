@@ -2,18 +2,18 @@
 # See license.txt
 
 import frappe
-from frappe.tests import IntegrationTestCase
 from frappe.utils import getdate
 
 import erpnext
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.upload_attendance.upload_attendance import get_data
+from hrms.tests.utils import HRMSTestSuite
 
 test_dependencies = ["Holiday List"]
 
 
-class TestUploadAttendance(IntegrationTestCase):
+class TestUploadAttendance(HRMSTestSuite):
 	@classmethod
 	def setUpClass(cls):
 		super().setUpClass()

@@ -1,5 +1,4 @@
 import frappe
-from frappe.tests import IntegrationTestCase
 from frappe.utils import getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -14,9 +13,10 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 )
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 from hrms.payroll.report.income_tax_computation.income_tax_computation import execute
+from hrms.tests.utils import HRMSTestSuite
 
 
-class TestIncomeTaxComputation(IntegrationTestCase):
+class TestIncomeTaxComputation(HRMSTestSuite):
 	def setUp(self):
 		self.cleanup_records()
 		self.create_records()

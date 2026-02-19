@@ -2,7 +2,6 @@
 # See license.txt
 
 import frappe
-from frappe.tests import IntegrationTestCase
 from frappe.utils import today
 
 from erpnext.setup.doctype.designation.test_designation import create_designation
@@ -12,9 +11,10 @@ from hrms.hr.doctype.employee_referral.employee_referral import (
 	create_additional_salary,
 	create_job_applicant,
 )
+from hrms.tests.utils import HRMSTestSuite
 
 
-class TestEmployeeReferral(IntegrationTestCase):
+class TestEmployeeReferral(HRMSTestSuite):
 	def setUp(self):
 		for d in ["Job Applicant", "Employee Referral"]:
 			frappe.db.delete(d)

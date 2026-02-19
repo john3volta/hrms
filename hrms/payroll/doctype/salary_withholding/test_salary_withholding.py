@@ -2,7 +2,6 @@
 # See license.txt
 
 import frappe
-from frappe.tests import IntegrationTestCase
 from frappe.utils import getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -10,6 +9,7 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 from hrms.payroll.doctype.payroll_entry.payroll_entry import get_start_end_dates
 from hrms.payroll.doctype.payroll_entry.test_payroll_entry import make_payroll_entry
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+from hrms.tests.utils import HRMSTestSuite
 
 COMPANY_NAME = "_Test Company"
 MONTH_1_START = getdate("2024-01-01")
@@ -18,7 +18,7 @@ MONTH_2_START = getdate("2024-02-01")
 MONTH_2_END = getdate("2024-02-29")
 
 
-class TestSalaryWithholding(IntegrationTestCase):
+class TestSalaryWithholding(HRMSTestSuite):
 	def setUp(self):
 		for dt in [
 			"Salary Withholding",

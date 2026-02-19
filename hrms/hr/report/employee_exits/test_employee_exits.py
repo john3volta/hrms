@@ -1,5 +1,4 @@
 import frappe
-from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -10,9 +9,10 @@ from hrms.hr.doctype.full_and_final_statement.test_full_and_final_statement impo
 )
 from hrms.hr.report.employee_exits.employee_exits import execute
 from hrms.tests.test_utils import create_company
+from hrms.tests.utils import HRMSTestSuite
 
 
-class TestEmployeeExits(IntegrationTestCase):
+class TestEmployeeExits(HRMSTestSuite):
 	@classmethod
 	def setUpClass(cls):
 		super().setUpClass()

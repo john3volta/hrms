@@ -2,13 +2,13 @@
 # See license.txt
 
 import frappe
-from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, getdate
 
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_employee
+from hrms.tests.utils import HRMSTestSuite
 
 
-class TestEmployeePromotion(IntegrationTestCase):
+class TestEmployeePromotion(HRMSTestSuite):
 	def setUp(self):
 		frappe.db.delete("Employee Promotion")
 

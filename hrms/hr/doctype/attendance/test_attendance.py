@@ -4,7 +4,6 @@
 from datetime import datetime
 
 import frappe
-from frappe.tests import IntegrationTestCase
 from frappe.utils import (
 	add_days,
 	add_months,
@@ -31,9 +30,10 @@ from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import
 	create_holiday_list_assignment,
 )
 from hrms.tests.test_utils import get_first_sunday
+from hrms.tests.utils import HRMSTestSuite
 
 
-class TestAttendance(IntegrationTestCase):
+class TestAttendance(HRMSTestSuite):
 	def setUp(self):
 		from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
 

@@ -37,12 +37,13 @@ from hrms.payroll.doctype.salary_structure.test_salary_structure import (
 	make_salary_structure,
 )
 from hrms.tests.test_utils import create_department
+from hrms.tests.utils import HRMSTestSuite
 from hrms.utils import get_date_range
 
 test_dependencies = ["Holiday List"]
 
 
-class TestPayrollEntry(FrappeTestCase):
+class TestPayrollEntry(HRMSTestSuite):
 	def setUp(self):
 		for dt in [
 			"Salary Slip",

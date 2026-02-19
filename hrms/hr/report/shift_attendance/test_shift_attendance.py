@@ -1,7 +1,6 @@
 from datetime import date, datetime, time
 
 import frappe
-from frappe.tests import IntegrationTestCase
 from frappe.utils import format_datetime
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -10,9 +9,10 @@ from hrms.hr.doctype.attendance.attendance import mark_attendance
 from hrms.hr.doctype.shift_type.test_shift_type import setup_shift_type
 from hrms.hr.report.shift_attendance.shift_attendance import execute
 from hrms.tests.test_utils import create_company
+from hrms.tests.utils import HRMSTestSuite
 
 
-class TestShiftAttendance(IntegrationTestCase):
+class TestShiftAttendance(HRMSTestSuite):
 	@classmethod
 	def setUpClass(cls):
 		create_company()

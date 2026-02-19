@@ -2,7 +2,6 @@
 # See license.txt
 
 import frappe
-from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, flt, get_first_day, getdate, nowdate, today
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -11,11 +10,12 @@ from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
 from hrms.hr.doctype.overtime_type.test_overtime_type import create_overtime_type
 from hrms.hr.doctype.shift_type.test_shift_type import make_shift_assignment, setup_shift_type
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+from hrms.tests.utils import HRMSTestSuite
 
 TEST_COMPANY = "_Test Company"
 
 
-class TestOvertimeSlip(IntegrationTestCase):
+class TestOvertimeSlip(HRMSTestSuite):
 	def setUp(self):
 		frappe.db.delete("Overtime Type")
 		frappe.db.delete("Overtime Slip")

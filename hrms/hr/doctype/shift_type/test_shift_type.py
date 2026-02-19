@@ -3,7 +3,6 @@
 from datetime import datetime, timedelta
 
 import frappe
-from frappe.tests import IntegrationTestCase
 from frappe.utils import (
 	add_days,
 	get_datetime,
@@ -21,9 +20,10 @@ from hrms.hr.doctype.leave_application.test_leave_application import get_first_s
 from hrms.hr.doctype.shift_type.shift_type import update_last_sync_of_checkin
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
 from hrms.tests.test_utils import add_date_to_holiday_list
+from hrms.tests.utils import HRMSTestSuite
 
 
-class TestShiftType(IntegrationTestCase):
+class TestShiftType(HRMSTestSuite):
 	def setUp(self):
 		frappe.db.delete("Shift Type")
 		frappe.db.delete("Shift Assignment")

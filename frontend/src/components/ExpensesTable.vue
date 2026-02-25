@@ -140,7 +140,7 @@ import CustomIonModal from "@/components/CustomIonModal.vue"
 import { claimTypesByID } from "@/data/claims"
 import { formatCurrency } from "@/utils/formatters"
 
-import { updateCurrencyLabels } from "@/composables/updateCurrencyLabels"
+import { updateCurrencyLabels, updateBaseFieldsAmount } from "@/composables/useCurrencyConversion"
 
 const props = defineProps({
 	expenseClaim: {
@@ -260,5 +260,33 @@ watch(
 	},
 	{ immediate: true }
 )
+
+watch(
+	() => [expenseItem.value.amount, expenseItem.value.sanctioned_amount],
+	() => {
+		if (expenseItem.value) {
+			updateBaseFieldsAmount({
+				doc: expenseItem.value, 
+				fields: ['amount', 'sanctioned_amount'], 
+				exchangeRate: props.expenseClaim.exchange_rate,
+			});
+		}
+	}
+);
+
+watch(
+	() => props.expenseClaim.exchange_rate,
+	(exchangeRate) => {
+		if (props.expenseClaim.expenses) {
+			props.expenseClaim.expenses.forEach(row => {
+				updateBaseFieldsAmount({
+					doc:row,
+					fields:['amount', 'sanctioned_amount'],
+					exchangeRate: exchangeRate
+				});
+			});
+		}
+	}
+);
 
 </script>

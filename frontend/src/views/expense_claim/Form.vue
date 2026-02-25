@@ -60,7 +60,7 @@ import ExpensesTable from "@/components/ExpensesTable.vue"
 import ExpenseTaxesTable from "@/components/ExpenseTaxesTable.vue"
 import ExpenseAdvancesTable from "@/components/ExpenseAdvancesTable.vue"
 import { getCompanyCurrency } from "@/data/currencies"
-import { updateCurrencyLabels } from "@/composables/updateCurrencyLabels"
+import { updateCurrencyLabels, updateBaseFieldsAmount } from "@/composables/useCurrencyConversion"
 
 
 const dayjs = inject("$dayjs")
@@ -257,6 +257,32 @@ watch(
 	},
 	{ immediate: true }
 )
+
+watch(
+    () => [
+        expenseClaim.value.total_sanctioned_amount,
+        expenseClaim.value.total_advance_amount,
+        expenseClaim.value.grand_total,
+        expenseClaim.value.total_claimed_amount,
+        expenseClaim.value.total_taxes_and_charges,
+        expenseClaim.value.exchange_rate
+    ],
+    () => {
+        const fieldsToConvert = [
+            "total_sanctioned_amount",
+            "total_advance_amount",
+            "grand_total",
+            "total_claimed_amount",
+            "total_taxes_and_charges"
+        ];
+        updateBaseFieldsAmount({
+			doc: expenseClaim.value,
+			fields: fieldsToConvert,
+			exchangeRate: expenseClaim.value.exchange_rate,
+		});
+    },
+    { deep: true }
+);
 
 // helper functions
 function getFilteredFields(fields) {

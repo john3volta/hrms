@@ -23,7 +23,7 @@ import { ref, watch, inject, computed } from "vue"
 import FormView from "@/components/FormView.vue"
 
 import { getCompanyCurrency } from "@/data/currencies"
-import { updateCurrencyLabels } from "../../composables/updateCurrencyLabels"
+import { updateCurrencyLabels } from "@/composables/useCurrencyConversion"
 
 const employee = inject("$employee")
 

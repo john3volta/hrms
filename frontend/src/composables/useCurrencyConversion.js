@@ -1,5 +1,11 @@
 import { ref, watch } from "vue"
-import { getCompanyCurrency } from "@/data/currencies"
+import { getCompanyCurrency, currencyPrecision } from "@/data/currencies"
+
+const flt = (value, precision) => {
+	const num = parseFloat(value) || 0;
+	const targetPrecision = precision !== undefined ? precision : (currencyPrecision.data || 2);
+	return parseFloat(num.toFixed(targetPrecision));
+};
 
 export function updateCurrencyLabels({ formFields, doc, baseFields = [], transactionFields = []}) {
 	if (!formFields || !doc) return
@@ -42,4 +48,14 @@ export function updateCurrencyLabels({ formFields, doc, baseFields = [], transac
 	)
 
 	return { updateLabels, companyCurrency }
+}
+
+// function to update base currency fields data
+export function updateBaseFieldsAmount({doc, fields, exchangeRate}) {
+	if (!doc) return;
+	const excahnge_rate = flt(exchangeRate || doc.exchange_rate || 1, 9);
+	fields.forEach(f => {
+		const val = flt(flt(doc[f]) * excahnge_rate);
+		doc["base_" + f] = val;
+	});
 }

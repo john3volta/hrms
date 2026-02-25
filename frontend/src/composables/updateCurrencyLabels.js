@@ -1,11 +1,9 @@
 import { ref, watch } from "vue"
 import { getCompanyCurrency } from "@/data/currencies"
 
-export function updateCurrencyLabels({ formFields, doc, baseFields = [], transactionFields = []}) {	
+export function updateCurrencyLabels({ formFields, doc, baseFields = [], transactionFields = []}) {
 	if (!formFields || !doc) return
-
 	const companyCurrency = ref("")
-
 	// fetch company currency initially or when company changes
 	const fetchCompanyCurrency = async () => {
 		if (!doc.company) return
@@ -13,7 +11,6 @@ export function updateCurrencyLabels({ formFields, doc, baseFields = [], transac
 	}
 
 	const currencyFields = new Set([...baseFields, ...transactionFields])
-
 	const updateLabels = () => {
 		if (!companyCurrency.value) return
 
@@ -24,19 +21,17 @@ export function updateCurrencyLabels({ formFields, doc, baseFields = [], transac
 			if (!field._original_label && field.label) {
 				field._original_label = field.label.replace(/\([^\)]*\)/g, "").trim()
 			}
-
 			if (baseFields.includes(field.fieldname)) {
 				field.label = `${field._original_label} (${companyCurrency.value})`
 				field.hidden = doc.currency === companyCurrency.value
 			}
-
 			if (transactionFields.includes(field.fieldname)) {
 				field.label = `${field._original_label} (${doc.currency})`
 			}
 		})
 	}
 
-	// update labels script
+	// update labels
 	watch(
 		() => [doc.company, doc.currency],
 		async () => {

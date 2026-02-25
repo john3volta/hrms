@@ -59,7 +59,7 @@ import FormView from "@/components/FormView.vue"
 import ExpensesTable from "@/components/ExpensesTable.vue"
 import ExpenseTaxesTable from "@/components/ExpenseTaxesTable.vue"
 import ExpenseAdvancesTable from "@/components/ExpenseAdvancesTable.vue"
-
+import { getCompanyCurrency } from "@/data/currencies"
 import { updateCurrencyLabels } from "@/composables/updateCurrencyLabels"
 
 
@@ -90,10 +90,11 @@ const tabs = [
 const expenseClaim = ref({
 	employee: currEmployee,
 	company: employeeCompany,
-	doctype: "Expense Claim"
+	doctype: "Expense Claim",
 })
 
 const currency = computed(() => expenseClaim.value.currency)
+const companyCurrency = computed(() => getCompanyCurrency(expenseClaim.value.company))
 
 // get form fields
 const formFields = createResource({
@@ -110,7 +111,6 @@ const formFields = createResource({
 	onSuccess(_data) {
 		expenseApproverDetails.reload()
 		companyDetails.reload()
-		employeeCurrency.reload()
 	},
 })
 formFields.reload()
@@ -120,19 +120,19 @@ const advances = createResource({
 	url: "hrms.hr.doctype.expense_claim.expense_claim.get_advances",
 	params: { expense_claim: expenseClaim.value },
 	auto: true,
+	transform(data) {
+		if (!data) return []
+		return data.map((item) => ({
+			...item,
+			selected: parseFloat(item.allocated_amount || 0) > 0,
+			allocated_amount: item.allocated_amount || 0
+		}))
+	},
 	onSuccess(data) {
-		// set advances
-		if (!data) {
-			expenseClaim.value.advances = []
-			return
-		}
-
-		if (!props.id) {
-			data.forEach((advance) => {
-				advance.allocated_amount = 0
-				advance.selected = true
-			})
+		// Only replace if the resource found data
+		if (data && data.length > 0) {
 			expenseClaim.value.advances = data
+			calculateTotalAdvance()
 		}
 	},
 })
@@ -152,14 +152,6 @@ const companyDetails = createResource({
 		expenseClaim.value.cost_center = data?.cost_center
 		expenseClaim.value.payable_account =
 			data?.default_expense_claim_payable_account
-	},
-})
-
-const employeeCurrency = createResource({
-	url: "hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment.get_employee_currency",
-	params: { employee: currEmployee.value },
-	onSuccess(data) {
-		expenseClaim.value.currency = data
 	},
 })
 
@@ -191,7 +183,7 @@ watch(
 )
 watch(
 	() => expenseClaim.value.currency,
-	() => setExchangeRate()
+	() => setExchangeRate(),
 )
 watch(
 	() => expenseClaim.value.expenses,
@@ -208,6 +200,26 @@ watch(
 		calculateTotalAdvance()
 	},
 	{ deep: true }
+)
+
+watch(
+	() => expenseClaim.value,
+	(newDoc) => {
+		if (newDoc?.advances?.length > 0) {
+			let needsRecalc = false
+			newDoc.advances.forEach(advance => {
+				// Reapply the "selected" flag if money is allocated
+				if (parseFloat(advance.allocated_amount || 0) > 0 && !advance.selected) {
+					advance.selected = true
+					needsRecalc = true
+				}
+			})
+			if (needsRecalc) {
+				calculateTotalAdvance()
+			}
+		}
+	},
+	{ immediate: true }
 )
 
 watch(
@@ -399,6 +411,8 @@ function allocateAdvanceAmount() {
 	let amount_to_be_allocated =
 		parseFloat(expenseClaim.value.total_sanctioned_amount) +
 		parseFloat(expenseClaim.value.total_taxes_and_charges)
+
+	if (!amount_to_be_allocated) return
 	let total_advance_amount = 0
 
 	expenseClaim?.value?.advances?.forEach((advance) => {
@@ -422,8 +436,8 @@ function calculateTotalAdvance() {
 	let total_advance_amount = 0
 
 	expenseClaim?.value?.advances?.forEach((advance) => {
-		if (advance.selected) {
-			total_advance_amount += parseFloat(advance.allocated_amount)
+		if (advance.selected || parseFloat(advance.allocated_amount) > 0) {
+			total_advance_amount += parseFloat(advance.allocated_amount || 0)
 		}
 	})
 	expenseClaim.value.total_advance_amount = total_advance_amount
@@ -449,20 +463,20 @@ function validateForm() {
 }
 
 function setExchangeRate() {
-	if (!expenseClaim.value.currency) return
+	if (!expenseClaim.value.currency || !formFields.data) return
 	const exchange_rate_field = formFields.data?.find(
 		(field) => field.fieldname === "exchange_rate"
 	)
 
-	if (expenseClaim.value.currency === currency.value) {
+	if (currency.value === companyCurrency.value) {
 		expenseClaim.value.exchange_rate = 1
-		exchange_rate_field.hidden = 1
+		if (exchange_rate_field) exchange_rate_field.hidden = 1
 	} else {
 		exchangeRate.fetch({
-			from_currency: expenseClaim.value.currency,
-			to_currency: currency.value,
+			from_currency: currency.value,
+			to_currency: companyCurrency.value,
 		})
-		exchange_rate_field.hidden = 0
+		if (exchange_rate_field) exchange_rate_field.hidden = 0
 	}
 }
 </script>

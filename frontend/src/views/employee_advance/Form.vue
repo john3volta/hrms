@@ -55,19 +55,10 @@ const formFields = createResource({
 		return applyFilters(fields)
 	},
 	onSuccess(_) {
-		employeeCurrency.reload()
 		advanceAccount.reload()
 	},
 })
 formFields.reload()
-
-const employeeCurrency = createResource({
-	url: "hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment.get_employee_currency",
-	params: { employee: employee.data.name },
-	onSuccess(data) {
-		employeeAdvance.value.currency = data
-	},
-})
 
 const advanceAccount = createResource({
 	url: "hrms.api.get_advance_account",
@@ -78,7 +69,6 @@ const advanceAccount = createResource({
 })
 
 // scripts
-
 watch(
 	() => [formFields.data, employeeAdvance.value.currency],
 	([fields, currency]) => {
@@ -93,8 +83,6 @@ watch(
 	},
 	{ immediate: true }
 )
-
-
 
 // helper functions
 function getFilteredFields(fields) {

@@ -21,6 +21,7 @@ const EXPENSE_CLAIM_FIELDS = [
 	"`tabExpense Claim`.name",
 	"`tabExpense Claim`.employee",
 	"`tabExpense Claim`.employee_name",
+	"`tabExpense Claim`.currency",
 	"`tabExpense Claim`.approval_status",
 	"`tabExpense Claim`.status",
 	"`tabExpense Claim`.expense_approver",

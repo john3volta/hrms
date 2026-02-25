@@ -185,6 +185,7 @@ def get_custom_fields():
 				"label": _("Employment Type"),
 				"options": "Employment Type",
 				"insert_after": "department",
+				"in_list_view": 1,
 			},
 			{
 				"fieldname": "job_applicant",

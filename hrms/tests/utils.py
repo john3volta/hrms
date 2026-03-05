@@ -12,24 +12,13 @@ class HRMSTestSuite(ERPNextTestSuite):
 	def setUpClass(cls):
 		if not hasattr(cls, "globalTestRecords"):
 			cls.globalTestRecords = {}
-
-		if not hasattr(cls, "bootstrap_testsite"):
-			cls.bootstrap_testsite = False
-
-		if not cls.bootstrap_testsite:
-			super().make_presets()
-			cls.make_persistent_master_data()
-			cls.bootstrap_testsite = True
+		cls.make_persistent_master_data()
 
 	@classmethod
 	def make_persistent_master_data(cls):
-		super().make_fiscal_year()
-		super().make_role()
-		super().make_user()
 		cls.make_company()
+		cls.make_holiday_list()
 		cls.make_holiday_list_assignment()
-		super().make_department()
-		cls.make_employees()
 		cls.update_system_settings()
 		cls.update_email_account_settings()
 		frappe.db.commit()
@@ -49,28 +38,16 @@ class HRMSTestSuite(ERPNextTestSuite):
 		cls.make_records(["company_name"], records, "companies")
 
 	@classmethod
-	def make_department(cls):
-		"""Create test departments"""
-		# Create test departments here
-		super().make_department()
-
-	@classmethod
-	def make_employees(cls):
-		"""Create test employees"""
-		# Create test employees here
-		super().make_employees()
-
-	@classmethod
 	def make_holiday_list_assignment(cls):
-		cls.make_holiday_list()
+		fiscal_year = get_fiscal_year(getdate())
 		records = [
 			{
 				"doctype": "Holiday List Assignment",
 				"applicable_for": "Company",
-				"assigned_to": cls.companies[0].name,
-				"holiday_list": cls.holiday_list[0].name,
-				"from_date": cls.holiday_list[0].from_date,
-				"to_date": cls.holiday_list[0].to_date,
+				"assigned_to": "_Test Company",
+				"holiday_list": "Salary Slip Test Holiday List",
+				"from_date": fiscal_year[1],
+				"to_date": fiscal_year[2],
 			}
 		]
 		cls.make_records(["assigned_to", "from_date"], records, "holiday_list_assignment")
@@ -78,18 +55,16 @@ class HRMSTestSuite(ERPNextTestSuite):
 	@classmethod
 	def make_holiday_list(cls):
 		fiscal_year = get_fiscal_year(getdate())
-		holiday_list = frappe.get_doc(
+		records = [
 			{
 				"doctype": "Holiday List",
 				"from_date": fiscal_year[1],
 				"to_date": fiscal_year[2],
 				"holiday_list_name": "Salary Slip Test Holiday List",
+				"weekly_off": "Sunday",
 			}
-		).insert()
-		holiday_list.weekly_off = "Sunday"
-		holiday_list.save()
-		cls.holiday_list = []
-		cls.holiday_list.append(holiday_list)
+		]
+		cls.make_records(["from_date", "to_date", "holiday_list_name"], records, "holiday_list")
 
 	@classmethod
 	def make_leave_types(cls):
@@ -163,8 +138,19 @@ class HRMSTestSuite(ERPNextTestSuite):
 		email_account.save()
 
 	@classmethod
-	def make_records(cls, key, records, attr):
-		super().make_records(key, records, attr)
+	def make_records(self, key, records, attr):
+		doctype = records[0].get("doctype")
+
+		def get_filters(record):
+			filters = {}
+			for x in key:
+				filters[x] = record.get(x)
+			return filters
+
+		for x in records:
+			filters = get_filters(x)
+			if not frappe.db.exists(doctype, filters):
+				frappe.get_doc(x).insert()
 
 	def tearDown(self):
 		frappe.db.rollback()

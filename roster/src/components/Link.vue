@@ -104,4 +104,9 @@ watch(
 	},
 	{ immediate: true },
 );
+
+watch(
+	() => props.filters,
+	() => reloadOptions(""),
+);
 </script>

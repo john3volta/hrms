@@ -29,7 +29,6 @@ class TestAppraisal(HRMSTestSuite):
 		engineer = create_designation(designation_name="Engineer")
 		engineer.appraisal_template = self.template.name
 		engineer.save()
-
 		self.employee1 = make_employee(
 			"test_appraisal1@example.com", company=self.company, designation="Engineer"
 		)
@@ -106,7 +105,7 @@ class TestAppraisal(HRMSTestSuite):
 		appraisal.save()
 
 		# FEEDBACK SCORE
-		reviewer = make_employee("reviewer1@example.com", designation="Engineer")
+		reviewer = make_employee("reviewer1@example.com", designation="Engineer", company=self.company)
 		feedback = create_performance_feedback(
 			self.employee1,
 			reviewer,

@@ -50,7 +50,7 @@ class TestEmployeeReminders(HRMSTestSuite):
 
 		# Employee without holidays in this month/week
 		test_employee_2 = make_employee("test@empwithoutholiday.io", company="_Test Company")
-		test_employee_2 = frappe.get_doc("Employee", test_employee_2)
+		test_employee_2 = frappe.get_doc("Employee", test_employee_2, company="_Test Company")
 
 		test_holiday_list2 = make_holiday_list(
 			"TestHolidayRemindersList2",

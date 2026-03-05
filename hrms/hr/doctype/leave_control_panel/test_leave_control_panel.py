@@ -16,19 +16,9 @@ from hrms.tests.utils import HRMSTestSuite
 
 
 class TestLeaveControlPanel(HRMSTestSuite):
-	@classmethod
-	def setUpClass(self):
-		create_company()
-		super().setUpClass()
-		frappe.db.delete("Employee", {"company": "_Test Company"})
-
+	def setUp(self):
 		self.create_records()
 
-	@classmethod
-	def tearDownClass(self):
-		frappe.db.rollback()
-
-	@classmethod
 	def create_records(self):
 		self.leave_period = create_leave_period(date(2030, 1, 1), date(2030, 12, 31), "_Test Company")
 		self.leave_policy = create_leave_policy(leave_type="Casual Leave", annual_allocation=10)

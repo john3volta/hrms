@@ -44,9 +44,6 @@ class TestEmployeeLeaveBalance(HRMSTestSuite):
 			"_Test Emp Balance Holiday List", self.year_start, self.year_end
 		)
 
-	def tearDown(self):
-		frappe.db.rollback()
-
 	@assign_holiday_list("_Test Emp Balance Holiday List", "_Test Company")
 	def test_employee_leave_balance_summary(self):
 		frappe.get_doc(test_records[0]).insert()

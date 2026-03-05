@@ -190,6 +190,3 @@ class TestLeaveLedger(HRMSTestSuite):
 		self.assertEqual(f"Total Leaves ({self.casual_leave})", total_row.employee)
 		# 15 leave allocated, 2 leave taken
 		self.assertEqual(total_row.leaves, 13)
-
-	def tearDown(self):
-		frappe.flags.current_date = None

@@ -14,11 +14,6 @@ test_dependencies = ["Shift Type"]
 
 
 class TestShiftRequest(HRMSTestSuite):
-	@classmethod
-	def setUpClass(cls):
-		super().setUpClass()
-		cls.make_employees()
-
 	def setUp(self):
 		for doctype in ["Shift Request", "Shift Assignment", "Shift Type"]:
 			frappe.db.delete(doctype)

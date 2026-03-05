@@ -139,9 +139,6 @@ class TestOvertimeSlip(HRMSTestSuite):
 
 		self.assertTrue(overtime_slip)
 
-	def tearDown(self):
-		frappe.db.rollback()
-
 
 def create_overtime_slip(employee):
 	date = getdate()

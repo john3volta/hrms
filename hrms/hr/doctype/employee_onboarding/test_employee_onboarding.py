@@ -88,9 +88,6 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		for task_status in frappe.get_all("Task", dict(project=project.name), pluck="status"):
 			self.assertEqual(task_status, "Completed")
 
-	def tearDown(self):
-		frappe.db.rollback()
-
 
 def get_job_applicant():
 	if frappe.db.exists("Job Applicant", "test@researcher.com"):

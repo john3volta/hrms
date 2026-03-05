@@ -31,9 +31,6 @@ class TestBulkSalaryStructureAssignment(HRMSTestSuite):
 		# different domain in employee_name
 		self.emp5 = make_employee("employee5@test.com", company="_Test Company", department=self.department)
 
-	def tearDown(self):
-		frappe.db.rollback()
-
 	def test_get_employees(self):
 		today = getdate()
 

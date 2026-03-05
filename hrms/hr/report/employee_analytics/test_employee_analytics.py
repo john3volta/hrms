@@ -9,13 +9,9 @@ from hrms.tests.utils import HRMSTestSuite
 
 
 class TestEmployeeAnalytics(HRMSTestSuite):
-	@classmethod
-	def setUpClass(cls):
-		super().setUpClass()
+	def setUp(self):
 		create_branches()
 		create_employee_grade()
-
-	def setUp(self):
 		self.company = "_Test Company"
 		self.company_2 = create_company("_Test Company 2")
 

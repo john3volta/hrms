@@ -29,12 +29,6 @@ from hrms.tests.utils import HRMSTestSuite
 
 
 class TestLeaveAllocation(HRMSTestSuite):
-	@classmethod
-	def setUpClass(cls):
-		super().setUpClass()
-		cls.make_employees()
-		cls.make_leave_types()
-
 	def setUp(self):
 		for doctype in [
 			"Leave Period",
@@ -1141,12 +1135,6 @@ class TestLeaveAllocation(HRMSTestSuite):
 		self.assertEqual(total_leaves_allocated_with_schedule, 4)
 
 		frappe.delete_doc_if_exists("Employee", employee2.name, force=1)
-
-	def tearDown(self):
-		frappe.db.set_value("Employee", self.employee.name, "date_of_joining", self.original_doj)
-		frappe.db.set_value("Employee", "_T-Employee-00002", "date_of_joining", self.original_doj)
-		frappe.db.set_value("Leave Type", self.leave_type, "max_leaves_allowed", 0)
-		frappe.flags.current_date = None
 
 
 def create_earned_leave_type(

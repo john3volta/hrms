@@ -56,9 +56,6 @@ class TestTrainingFeedback(HRMSTestSuite):
 
 		self.assertEqual(status, "Feedback Submitted")
 
-	def tearDown(self):
-		frappe.db.rollback()
-
 
 def create_training_feedback(event, employee):
 	return frappe.get_doc(

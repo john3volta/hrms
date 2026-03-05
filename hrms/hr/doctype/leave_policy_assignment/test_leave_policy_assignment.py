@@ -16,11 +16,6 @@ from hrms.tests.utils import HRMSTestSuite
 
 
 class TestLeavePolicyAssignment(HRMSTestSuite):
-	@classmethod
-	def setUpClass(cls):
-		super().setUpClass()
-		cls.make_employees()
-
 	def setUp(self):
 		for doctype in [
 			"Leave Period",
@@ -35,9 +30,6 @@ class TestLeavePolicyAssignment(HRMSTestSuite):
 		employee = get_employee()
 		self.original_doj = employee.date_of_joining
 		self.employee = employee
-
-	def tearDown(self):
-		frappe.db.set_value("Employee", self.employee.name, "date_of_joining", self.original_doj)
 
 	def test_grant_leaves(self):
 		leave_period = get_leave_period()

@@ -10,12 +10,6 @@ from hrms.tests.utils import HRMSTestSuite
 
 
 class TestLeaveAllocation(HRMSTestSuite):
-	@classmethod
-	def setUpClass(cls):
-		super().setUpClass()
-		cls.make_employees()
-		cls.make_leave_types()
-
 	def setUp(self):
 		for doctype in [
 			"Leave Period",
@@ -39,11 +33,6 @@ class TestLeaveAllocation(HRMSTestSuite):
 		to_date = get_year_ending(getdate())
 		self.holiday_list = make_holiday_list(from_date=from_date, to_date=to_date)
 		frappe.db.set_value("Email Account", "_Test Email Account 1", "default_outgoing", 1)
-
-	def tearDown(self):
-		frappe.db.set_value("Employee", self.employee.name, "date_of_joining", self.original_doj)
-		frappe.db.set_value("Leave Type", self.leave_type, "max_leaves_allowed", 0)
-		frappe.flags.current_date = None
 
 	def test_schedule_for_monthly_earned_leave_allocated_on_first_day(self):
 		frappe.flags.current_date = get_year_start(getdate())

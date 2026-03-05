@@ -7,15 +7,6 @@ import erpnext
 
 from hrms.tests.utils import HRMSTestSuite
 
-test_dependencies = ["Leave Policy"]
-
-
-class TestLeavePeriod(HRMSTestSuite):
-	@classmethod
-	def setUpClass(cls):
-		super().setUpClass()
-		cls.make_employees()
-
 
 def create_leave_period(from_date, to_date, company=None):
 	leave_period = frappe.db.get_value(

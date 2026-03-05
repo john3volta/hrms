@@ -56,11 +56,6 @@ class TestSalarySlip(HRMSTestSuite):
 		create_ss_email_template()
 		clear_cache()
 
-	def tearDown(self):
-		frappe.db.set_single_value("Payroll Settings", "include_holidays_in_total_working_days", 0)
-		frappe.set_user("Administrator")
-		clear_cache()
-
 	@HRMSTestSuite.change_settings("Payroll Settings", {"show_leave_balances_in_salary_slip": True})
 	def test_leave_details(self):
 		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure

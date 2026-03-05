@@ -33,9 +33,6 @@ class TestTrainingEvent(HRMSTestSuite):
 		for entry in training_event.employees:
 			self.assertEqual(entry.status, "Open")
 
-	def tearDown(self):
-		frappe.db.rollback()
-
 
 def create_training_program(training_program):
 	if not frappe.db.get_value("Training Program", training_program):

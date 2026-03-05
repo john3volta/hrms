@@ -205,9 +205,6 @@ class TestInterview(HRMSTestSuite):
 
 		self.assertEqual(interview.status, "Cancelled")
 
-	def tearDown(self):
-		frappe.db.rollback()
-
 
 def create_interview_and_dependencies(
 	job_applicant,

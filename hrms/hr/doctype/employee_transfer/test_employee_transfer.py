@@ -13,9 +13,6 @@ class TestEmployeeTransfer(HRMSTestSuite):
 	def setUp(self):
 		create_company()
 
-	def tearDown(self):
-		frappe.db.rollback()
-
 	def test_submit_before_transfer_date(self):
 		make_employee("employee2@transfers.com")
 

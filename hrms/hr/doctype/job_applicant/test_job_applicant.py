@@ -50,6 +50,3 @@ class TestJobApplicant(HRMSTestSuite):
 		self.assertEqual(applicant.status, "Accepted")
 		job_offer.reload()
 		self.assertEqual(job_offer.status, "Accepted")
-
-	def tearDown(self):
-		frappe.db.rollback()

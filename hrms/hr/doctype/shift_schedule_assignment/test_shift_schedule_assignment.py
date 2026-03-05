@@ -24,9 +24,6 @@ class TestShiftScheduleAssignment(HRMSTestSuite):
 			self.shift_type.name, "Every Week", ["Monday", "Tuesday", "Wednesday"]
 		)
 
-	def tearDown(self):
-		frappe.db.rollback()
-
 	def test_existing_shift_assignment_validation(self):
 		shift_schedule_assignment = frappe.get_doc(
 			{

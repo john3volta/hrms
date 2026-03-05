@@ -21,9 +21,6 @@ class TestIncomeTaxComputation(HRMSTestSuite):
 		self.cleanup_records()
 		self.create_records()
 
-	def tearDown(self):
-		frappe.db.rollback()
-
 	def cleanup_records(self):
 		frappe.db.sql("delete from `tabEmployee Tax Exemption Declaration`")
 		frappe.db.sql("delete from `tabPayroll Period`")

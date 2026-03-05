@@ -31,11 +31,6 @@ class TestEmployeeAdvance(HRMSTestSuite):
 		frappe.db.set_value("Account", "Employee Advances - _TC", "account_type", "Receivable")
 		frappe.db.set_value("Account", "_Test Employee Advance - _TC", "account_type", "Receivable")
 
-	def tearDown(self):
-		frappe.set_value(
-			"Company", "_Test Company", "default_employee_advance_account", "Employee Advances - _TC"
-		)
-
 	def test_paid_amount_and_status(self):
 		employee_name = make_employee("_T@employee.advance", "_Test Company")
 		advance = make_employee_advance(employee_name)

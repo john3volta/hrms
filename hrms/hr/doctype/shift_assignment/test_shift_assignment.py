@@ -24,15 +24,6 @@ test_dependencies = ["Shift Type"]
 
 
 class TestShiftAssignment(HRMSTestSuite):
-	@classmethod
-	def setUpClass(cls):
-		super().setUpClass()
-		cls.make_employees()
-
-	def setUp(self):
-		frappe.db.delete("Shift Assignment")
-		frappe.db.delete("Shift Type")
-
 	def test_overlapping_for_ongoing_shift(self):
 		shift = "Day Shift"
 		employee = "_T-Employee-00001"

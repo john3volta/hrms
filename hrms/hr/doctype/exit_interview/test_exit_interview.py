@@ -88,9 +88,6 @@ class TestExitInterview(HRMSTestSuite):
 		interview.reload()
 		self.assertEqual(interview.status, "Cancelled")
 
-	def tearDown(self):
-		frappe.db.rollback()
-
 
 def create_exit_interview(employee, save=True):
 	interviewer = create_user("test_exit_interviewer@example.com")

@@ -20,10 +20,6 @@ class TestVehicleLog(HRMSTestSuite):
 
 		self.license_plate = get_vehicle(self.employee_id)
 
-	def tearDown(self):
-		frappe.delete_doc("Vehicle", self.license_plate, force=1)
-		frappe.delete_doc("Employee", self.employee_id, force=1)
-
 	def test_make_vehicle_log_and_syncing_of_odometer_value(self):
 		vehicle_log = make_vehicle_log(self.license_plate, self.employee_id)
 

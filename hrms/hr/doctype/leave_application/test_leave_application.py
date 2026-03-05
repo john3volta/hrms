@@ -49,16 +49,38 @@ test_dependencies = ["Leave Block List"]
 
 
 class TestLeaveApplication(HRMSTestSuite):
-	@classmethod
-	def setUpClass(cls):
-		super().setUpClass()
-		cls.make_employees()
-		cls.make_leave_types()
-		cls.make_leave_allocations()
-		cls.make_leave_applications()
+	def setUp(self):
+		for dt in [
+			"Leave Application",
+			"Leave Allocation",
+			"Salary Slip",
+			"Leave Ledger Entry",
+			"Leave Period",
+			"Leave Policy Assignment",
+		]:
+			frappe.db.delete(dt)
 
-	@classmethod
-	def make_leave_applications(cls):
+		frappe.set_user("Administrator")
+
+		self.make_leave_applications()
+		employee = get_employee()
+		frappe.db.delete("Attendance", {"employee": employee.name})
+		frappe.db.set_value("Employee", employee.name, "holiday_list", "")
+
+		from_date = get_year_start(getdate())
+		to_date = get_year_ending(getdate())
+		self.holiday_list = make_holiday_list(from_date=from_date, to_date=to_date)
+		# list_without_weekly_offs
+		make_holiday_list(
+			"Holiday List w/o Weekly Offs", from_date=from_date, to_date=to_date, add_weekly_offs=False
+		)
+
+		if not frappe.db.exists("Leave Type", "_Test Leave Type"):
+			frappe.get_doc(
+				dict(leave_type_name="_Test Leave Type", doctype="Leave Type", include_holiday=True)
+			).insert()
+
+	def make_leave_applications(self):
 		records = [
 			{
 				"company": "_Test Company",
@@ -91,51 +113,18 @@ class TestLeaveApplication(HRMSTestSuite):
 				"to_date": "2013-01-15",
 			},
 		]
-		cls.leave_applications = []
+		self.leave_applications = []
 		for x in records:
 			if not frappe.db.exists(
 				"Leave Application", {"employee": x.get("employee"), "from_date": x.get("from_date")}
 			):
-				cls.leave_applications.append(frappe.get_doc(x).insert())
+				self.leave_applications.append(frappe.get_doc(x).insert())
 			else:
-				cls.leave_applications.append(
+				self.leave_applications.append(
 					frappe.get_doc(
 						"Leave Application", {"employee": x.get("employee"), "from_date": x.get("from_date")}
 					)
 				)
-
-	def setUp(self):
-		for dt in [
-			"Leave Application",
-			"Leave Allocation",
-			"Salary Slip",
-			"Leave Ledger Entry",
-			"Leave Period",
-			"Leave Policy Assignment",
-		]:
-			frappe.db.delete(dt)
-
-		frappe.set_user("Administrator")
-
-		employee = get_employee()
-		frappe.db.delete("Attendance", {"employee": employee.name})
-		frappe.db.set_value("Employee", employee.name, "holiday_list", "")
-
-		from_date = get_year_start(getdate())
-		to_date = get_year_ending(getdate())
-		self.holiday_list = make_holiday_list(from_date=from_date, to_date=to_date)
-		# list_without_weekly_offs
-		make_holiday_list(
-			"Holiday List w/o Weekly Offs", from_date=from_date, to_date=to_date, add_weekly_offs=False
-		)
-
-		if not frappe.db.exists("Leave Type", "_Test Leave Type"):
-			frappe.get_doc(
-				dict(leave_type_name="_Test Leave Type", doctype="Leave Type", include_holiday=True)
-			).insert()
-
-	def tearDown(self):
-		frappe.set_user("Administrator")
 
 	def _clear_roles(self):
 		frappe.db.sql(

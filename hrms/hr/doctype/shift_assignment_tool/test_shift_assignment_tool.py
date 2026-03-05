@@ -31,9 +31,6 @@ class TestShiftAssignmentTool(HRMSTestSuite):
 		self.emp4 = make_employee("employee4@test.com", company="_Test Company2")
 		self.emp5 = make_employee("employee5@test.io", company="_Test Company")
 
-	def tearDown(self):
-		frappe.db.rollback()
-
 	@HRMSTestSuite.change_settings("HR Settings", {"allow_multiple_shift_assignments": 0})
 	def test_get_employees_for_assigning_shifts(self):
 		today = getdate()

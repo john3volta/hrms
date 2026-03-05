@@ -69,9 +69,6 @@ class TestInterviewFeedback(HRMSTestSuite):
 
 		frappe.set_user("Administrator")
 
-	def tearDown(self):
-		frappe.db.rollback()
-
 
 def create_interview_feedback(interview, interviewer, skills_ratings):
 	interview_feedback = frappe.new_doc("Interview Feedback")

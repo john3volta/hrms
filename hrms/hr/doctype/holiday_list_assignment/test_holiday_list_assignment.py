@@ -20,11 +20,6 @@ class IntegrationTestHolidayListAssignment(HRMSTestSuite):
 	Use this class for testing interactions between multiple components.
 	"""
 
-	@classmethod
-	def setUpClass(cls):
-		super().setUpClass()
-		cls.make_employees()
-
 	def setUp(self):
 		for d in ["Holiday List Assignment"]:
 			frappe.db.delete(d)

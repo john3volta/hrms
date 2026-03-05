@@ -16,21 +16,8 @@ from hrms.tests.utils import HRMSTestSuite
 
 
 class TestAttendanceRequest(HRMSTestSuite):
-	@classmethod
-	def setUpClass(cls):
-		super().setUpClass()
-		cls.make_employees()
-
 	def setUp(self):
-		for doctype in ["Attendance Request", "Attendance"]:
-			frappe.db.delete(doctype)
-
-		self.from_date = get_year_start(add_months(getdate(), -1))
-		self.to_date = get_year_ending(getdate())
-		self.holiday_list = make_holiday_list(
-			from_date=self.from_date, to_date=self.to_date, add_weekly_offs=False
-		)
-
+		self.holiday_list = "Salary Slip Test Holiday List"
 		self.employee = get_employee()
 		frappe.db.set_value("Employee", self.employee.name, "holiday_list", self.holiday_list)
 
@@ -123,6 +110,9 @@ class TestAttendanceRequest(HRMSTestSuite):
 		self.assertEqual(records[0].status, "Present")
 
 	def test_skip_attendance_on_leave(self):
+		self.from_date = get_year_start(add_months(getdate(), -1))
+		self.to_date = get_year_ending(getdate())
+
 		frappe.delete_doc_if_exists("Leave Type", "Test Skip Attendance", force=1)
 		leave_type = frappe.get_doc(
 			dict(leave_type_name="Test Skip Attendance", doctype="Leave Type")

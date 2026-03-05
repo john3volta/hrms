@@ -21,6 +21,9 @@ class HRMSTestSuite(ERPNextTestSuite):
 		cls.make_holiday_list_assignment()
 		cls.update_system_settings()
 		cls.update_email_account_settings()
+		# TODO: clean up
+		if frappe.db.get_value("Holiday List Assignment", {"assigned_to": "_Test Company"}, "docstatus") == 0:
+			frappe.get_doc("Holiday List Assignment", {"assigned_to": "_Test Company"}).submit()
 		frappe.db.commit()
 
 	@classmethod

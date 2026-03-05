@@ -19,6 +19,8 @@ class HRMSTestSuite(ERPNextTestSuite):
 		cls.make_company()
 		cls.make_holiday_list()
 		cls.make_holiday_list_assignment()
+		cls.make_leave_types()
+		cls.make_leave_allocations()
 		cls.update_system_settings()
 		cls.update_email_account_settings()
 		# TODO: clean up

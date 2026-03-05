@@ -170,6 +170,7 @@ class TestEmployeeAttendanceTool(HRMSTestSuite):
 				"date_of_joining": "2023-01-01",
 				"default_shift": "",
 				"gender": "Male",
+				"company": "_Test Company",
 			}
 		).insert()
 
@@ -182,6 +183,7 @@ class TestEmployeeAttendanceTool(HRMSTestSuite):
 				"date_of_joining": "2023-01-01",
 				"default_shift": self.shift.name,
 				"gender": "Male",
+				"company": "_Test Company",
 			}
 		).insert()
 
@@ -194,6 +196,7 @@ class TestEmployeeAttendanceTool(HRMSTestSuite):
 				"date_of_joining": "2023-01-01",
 				"default_shift": "",
 				"gender": "Male",
+				"company": "_Test Company",
 			}
 		).insert()
 

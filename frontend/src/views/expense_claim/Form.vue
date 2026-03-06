@@ -183,7 +183,12 @@ watch(
 )
 watch(
 	() => expenseClaim.value.currency,
-	() => setExchangeRate(),
+	(currency) => {
+		setExchangeRate()
+
+		if (!currency) return
+		formFields.reload()
+	}
 )
 watch(
 	() => expenseClaim.value.expenses,
@@ -318,6 +323,7 @@ function applyFilters(field) {
 			account_type: "Payable",
 			company: expenseClaim.value.company,
 			is_group: 0,
+			account_currency: currency.value,
 		}
 	} else if (field.fieldname === "cost_center") {
 		field.linkFilters = {

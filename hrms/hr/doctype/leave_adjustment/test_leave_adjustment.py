@@ -18,11 +18,11 @@ class TestLeaveAdjustment(HRMSTestSuite):
 	def setUp(self):
 		for dt in ["Leave Adjustment", "Leave Allocation", "Leave Application", "Leave Ledger Entry"]:
 			frappe.db.delete(dt)
-
+		self.employee = frappe.get_doc("Employee", {"first_name": "_Test Employee"})
 		self.leave_allocation = create_leave_allocation(
-			employee=self.employees[0].name,
-			employee_name=self.employees[0].employee_name,
-			leave_type=self.leave_types[0].name,
+			employee=self.employee.name,
+			employee_name=self.employee.employee_name,
+			leave_type="_Test Leave Type",
 			new_leaves_allocated=10,
 			from_date=get_first_day(getdate()),
 			to_date=get_last_day(getdate()),
@@ -39,8 +39,8 @@ class TestLeaveAdjustment(HRMSTestSuite):
 	def test_adjustment_for_over_allocation(self):
 		leave_type = create_leave_type(leave_type_name="Test Over Allocation", max_leaves_allowed=30)
 		leave_allocation = create_leave_allocation(
-			employee=self.employees[0].name,
-			employee_name=self.employees[0].employee_name,
+			employee=self.employee.name,
+			employee_name=self.employee.employee_name,
 			leave_type=leave_type.name,
 			new_leaves_allocated=25,
 		)
@@ -53,10 +53,10 @@ class TestLeaveAdjustment(HRMSTestSuite):
 
 	def test_adjustment_for_negative_leave_balance(self):
 		make_leave_application(
-			employee=self.employees[0].name,
+			employee=self.employee.name,
 			from_date=get_first_day(getdate()),
 			to_date=add_days(get_first_day(getdate()), 6),
-			leave_type=self.leave_types[0].name,
+			leave_type="_Test Leave Type",
 		)
 
 		leave_adjustment = create_leave_adjustment(
@@ -74,7 +74,7 @@ class TestLeaveAdjustment(HRMSTestSuite):
 		).submit()
 
 		leave_balance = get_leave_balance_on(
-			employee=self.employees[0].name, leave_type=self.leave_types[0].name, date=getdate()
+			employee=self.employee.name, leave_type="_Test Leave Type", date=getdate()
 		)
 
 		self.assertEqual(leave_balance, 16)
@@ -82,7 +82,7 @@ class TestLeaveAdjustment(HRMSTestSuite):
 	def test_decrease_balance_with_adjustment(self):
 		create_leave_adjustment(self.leave_allocation, adjustment_type="Reduce", leaves_to_adjust=3).submit()
 		leave_balance = get_leave_balance_on(
-			employee=self.employees[0].name, leave_type=self.leave_types[0].name, date=getdate()
+			employee=self.employee.name, leave_type="_Test Leave Type", date=getdate()
 		)
 		self.assertEqual(leave_balance, 7)
 
@@ -90,10 +90,10 @@ class TestLeaveAdjustment(HRMSTestSuite):
 		# allocation of 10 leaves, leave application for 3 days
 		mid_month = add_days(get_first_day(getdate()), 15)
 		make_leave_application(
-			employee=self.employees[0].name,
+			employee=self.employee.name,
 			from_date=mid_month,
 			to_date=add_days(mid_month, 2),
-			leave_type=self.leave_types[0].name,
+			leave_type="_Test Leave Type",
 		)
 		# adjustment of 6 days made after applications
 		create_leave_adjustment(
@@ -104,7 +104,7 @@ class TestLeaveAdjustment(HRMSTestSuite):
 		).submit()
 		# so total balance should be 10 - 3 + 6 = 13
 		leave_balance = get_leave_balance_on(
-			employee=self.employees[0].name, leave_type=self.leave_types[0].name, date=get_last_day(getdate())
+			employee=self.employee.name, leave_type="_Test Leave Type", date=get_last_day(getdate())
 		)
 		self.assertEqual(leave_balance, 13)
 
@@ -123,9 +123,9 @@ class TestLeaveAdjustment(HRMSTestSuite):
 
 		# backdated leave allocation
 		leave_allocation = create_leave_allocation(
-			employee=self.employees[0].name,
-			employee_name=self.employees[0].employee_name,
-			leave_type=self.leave_types[0].name,
+			employee=self.employee.name,
+			employee_name=self.employee.employee_name,
+			leave_type="_Test Leave Type",
 			from_date=add_to_date(getdate(), months=-13),
 			to_date=add_to_date(getdate(), months=-1),
 			new_leaves_allocated=10,
@@ -140,14 +140,14 @@ class TestLeaveAdjustment(HRMSTestSuite):
 		).submit()
 		# leave balance in previous period
 		leave_balance = get_leave_balance_on(
-			employee=self.employees[0].name,
-			leave_type=self.leave_types[0].name,
+			employee=self.employee.name,
+			leave_type="_Test Leave Type",
 			date=add_to_date(getdate(), months=-1),
 		)
 		self.assertEqual(leave_balance, 5.0)
 		# leave balance now, should be 0 because everything has expired
 		leave_balance = get_leave_balance_on(
-			employee=self.employees[0].name, leave_type=self.leave_types[0].name, date=getdate()
+			employee=self.employee.name, leave_type="_Test Leave Type", date=getdate()
 		)
 		self.assertEqual(leave_balance, 0.0)
 
@@ -157,8 +157,8 @@ class TestLeaveAdjustment(HRMSTestSuite):
 
 		leave_type = create_leave_type(leave_type_name="CF Adjustment", is_carry_forward=1)
 		leave_allocation = create_leave_allocation(
-			employee=self.employees[0].name,
-			employee_name=self.employees[0].employee_name,
+			employee=self.employee.name,
+			employee_name=self.employee.employee_name,
 			leave_type=leave_type.name,
 			from_date=add_to_date(getdate(), months=-13),
 			to_date=add_to_date(getdate(), months=-1),
@@ -173,8 +173,8 @@ class TestLeaveAdjustment(HRMSTestSuite):
 		).submit()
 
 		create_leave_allocation(
-			employee=self.employees[0].name,
-			employee_name=self.employees[0].employee_name,
+			employee=self.employee.name,
+			employee_name=self.employee.employee_name,
 			leave_type=leave_type.name,
 			from_date=add_to_date(getdate(), days=-15),
 			to_date=getdate(),
@@ -182,7 +182,7 @@ class TestLeaveAdjustment(HRMSTestSuite):
 			carry_forward=1,
 		).submit()
 		leave_balance = get_leave_balance_on(
-			employee=self.employees[0].name, leave_type=leave_type.name, date=getdate()
+			employee=self.employee.name, leave_type=leave_type.name, date=getdate()
 		)
 
 		# 5 carried forward + 10 new
@@ -194,8 +194,8 @@ class TestLeaveAdjustment(HRMSTestSuite):
 
 		leave_type = create_leave_type(leave_type_name="CF Adjustment", is_carry_forward=1)
 		leave_allocation = create_leave_allocation(
-			employee=self.employees[0].name,
-			employee_name=self.employees[0].employee_name,
+			employee=self.employee.name,
+			employee_name=self.employee.employee_name,
 			leave_type=leave_type.name,
 			from_date=add_to_date(getdate(), months=-13),
 			to_date=add_to_date(getdate(), months=-1),
@@ -210,8 +210,8 @@ class TestLeaveAdjustment(HRMSTestSuite):
 		).submit()
 
 		create_leave_allocation(
-			employee=self.employees[0].name,
-			employee_name=self.employees[0].employee_name,
+			employee=self.employee.name,
+			employee_name=self.employee.employee_name,
 			leave_type=leave_type.name,
 			from_date=add_to_date(getdate(), days=-25),
 			to_date=getdate(),
@@ -219,7 +219,7 @@ class TestLeaveAdjustment(HRMSTestSuite):
 			carry_forward=1,
 		).submit()
 		leave_balance = get_leave_balance_on(
-			employee=self.employees[0].name, leave_type=leave_type.name, date=getdate()
+			employee=self.employee.name, leave_type=leave_type.name, date=getdate()
 		)
 
 		# 15 carried forward + 5 new

@@ -13,7 +13,7 @@ class TestEmployeePromotion(HRMSTestSuite):
 		frappe.db.delete("Employee Promotion")
 
 	def test_submit_before_promotion_date(self):
-		employee = make_employee("employee@promotions.com")
+		employee = make_employee("employee@promotions.com", company="_Test Company")
 		promotion = frappe.get_doc(
 			{
 				"doctype": "Employee Promotion",

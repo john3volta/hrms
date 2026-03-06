@@ -155,7 +155,10 @@ class HRMSTestSuite(ERPNextTestSuite):
 		for x in records:
 			filters = get_filters(x)
 			if not frappe.db.exists(doctype, filters):
-				frappe.get_doc(x).insert()
+				doc = frappe.get_doc(x).insert()
+				if doctype == "Holiday List":
+					doc.get_weekly_off_dates()
+					doc.save()
 
 	def tearDown(self):
 		frappe.db.rollback()

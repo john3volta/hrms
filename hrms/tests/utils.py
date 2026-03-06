@@ -40,7 +40,6 @@ class HRMSTestSuite(ERPNextTestSuite):
 		cls.make_holiday_list_assignment()
 		cls.make_leave_types()
 		cls.make_leave_allocations()
-		cls.update_system_settings()
 		cls.update_email_account_settings()
 		# TODO: clean up
 		if frappe.db.get_value("Holiday List Assignment", {"assigned_to": "_Test Company"}, "docstatus") == 0:
@@ -145,14 +144,6 @@ class HRMSTestSuite(ERPNextTestSuite):
 			},
 		]
 		cls.make_records(["employee", "from_date", "to_date"], records, "leave_allocations")
-
-	@classmethod
-	def update_system_settings(cls):
-		system_settings = frappe.get_doc("System Settings")
-		system_settings.time_zone = "Asia/Kolkata"
-		system_settings.language = "en"
-		system_settings.currency_precision = system_settings.float_precision = 3
-		system_settings.save()
 
 	@classmethod
 	def update_email_account_settings(cls):

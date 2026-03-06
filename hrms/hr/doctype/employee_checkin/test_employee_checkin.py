@@ -38,7 +38,7 @@ class TestEmployeeCheckin(HRMSTestSuite):
 		frappe.db.set_single_value("HR Settings", "allow_geolocation_tracking", 0)
 
 	def test_geolocation_tracking(self):
-		employee = make_employee("test_add_log_based_on_employee_field@example.com")
+		employee = make_employee("test_add_log_based_on_employee_field@example.com", company="_Test Company")
 		checkin = make_checkin(employee)
 		checkin.latitude = 23.31773
 		checkin.longitude = 66.82876
@@ -67,7 +67,7 @@ class TestEmployeeCheckin(HRMSTestSuite):
 		)
 
 	def test_add_log_based_on_employee_field(self):
-		employee = make_employee("test_add_log_based_on_employee_field@example.com")
+		employee = make_employee("test_add_log_based_on_employee_field@example.com", company="_Test Company")
 		employee = frappe.get_doc("Employee", employee)
 		employee.attendance_device_id = "3344"
 		employee.save()
@@ -80,7 +80,7 @@ class TestEmployeeCheckin(HRMSTestSuite):
 		self.assertEqual(employee_checkin.log_type, "IN")
 
 	def test_mark_attendance_and_link_log(self):
-		employee = make_employee("test_mark_attendance_and_link_log@example.com")
+		employee = make_employee("test_mark_attendance_and_link_log@example.com", company="_Test Company")
 		logs = make_n_checkins(employee, 3)
 		mark_attendance_and_link_log(logs, "Skip", nowdate())
 		log_names = [log.name for log in logs]
@@ -105,7 +105,7 @@ class TestEmployeeCheckin(HRMSTestSuite):
 		self.assertEqual(attendance_count, 1)
 
 	def test_unlink_attendance_on_cancellation(self):
-		employee = make_employee("test_mark_attendance_and_link_log@example.com")
+		employee = make_employee("test_mark_attendance_and_link_log@example.com", company="_Test Company")
 		logs = make_n_checkins(employee, 3)
 
 		frappe.db.delete("Attendance", {"employee": employee})

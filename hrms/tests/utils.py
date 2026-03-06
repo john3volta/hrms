@@ -29,6 +29,7 @@ class HRMSTestSuite(ERPNextTestSuite):
 			"Accountant",
 			"Manager",
 			"Software Developer",
+			"UX Designer",
 		]
 		records = [{"doctype": "Designation", "designation_name": x} for x in designations]
 		cls.make_records(["designation_name"], records, "designations")

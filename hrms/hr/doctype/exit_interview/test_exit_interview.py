@@ -20,7 +20,7 @@ class TestExitInterview(HRMSTestSuite):
 		frappe.db.sql("delete from `tabExit Interview`")
 
 	def test_duplicate_interview(self):
-		employee = make_employee("employeeexitint1@example.com")
+		employee = make_employee("employeeexitint1@example.com", company="_Test Company")
 		frappe.db.set_value("Employee", employee, "relieving_date", getdate())
 		interview = create_exit_interview(employee)
 
@@ -28,7 +28,7 @@ class TestExitInterview(HRMSTestSuite):
 		self.assertRaises(frappe.DuplicateEntryError, doc.save)
 
 	def test_relieving_date_validation(self):
-		employee = make_employee("employeeexitint2@example.com")
+		employee = make_employee("employeeexitint2@example.com", company="_Test Company")
 		# unset relieving date
 		frappe.db.set_value("Employee", employee, "relieving_date", None)
 
@@ -41,7 +41,7 @@ class TestExitInterview(HRMSTestSuite):
 		self.assertTrue(interview.name)
 
 	def test_interview_date_updated_in_employee_master(self):
-		employee = make_employee("employeeexit3@example.com")
+		employee = make_employee("employeeexit3@example.com", company="_Test Company")
 		frappe.db.set_value("Employee", employee, "relieving_date", getdate())
 
 		interview = create_exit_interview(employee)
@@ -71,7 +71,7 @@ class TestExitInterview(HRMSTestSuite):
 			},
 		)
 
-		employee = make_employee("employeeexit3@example.com")
+		employee = make_employee("employeeexit3@example.com", company="_Test Company")
 		frappe.db.set_value("Employee", employee, "relieving_date", getdate())
 
 		interview = create_exit_interview(employee)
@@ -81,7 +81,7 @@ class TestExitInterview(HRMSTestSuite):
 		self.assertTrue("Subject: Exit Questionnaire Notification" in email_queue[0].message)
 
 	def test_status_on_discard(self):
-		employee = make_employee("test_status@example.com")
+		employee = make_employee("test_status@example.com", company="_Test Company")
 		frappe.db.set_value("Employee", employee, "relieving_date", getdate())
 		interview = create_exit_interview(employee)
 		interview.discard()

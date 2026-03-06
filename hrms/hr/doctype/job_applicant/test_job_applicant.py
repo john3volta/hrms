@@ -35,7 +35,9 @@ class TestJobApplicant(HRMSTestSuite):
 
 	def test_update_applicant_to_employee(self):
 		applicant = create_job_applicant()
-		job_offer = create_job_offer(job_applicant=applicant.name, status="Awaiting Response")
+		job_offer = create_job_offer(
+			job_applicant=applicant.name, status="Awaiting Response", company="_Test Company"
+		)
 		job_offer.save()
 
 		# before creating employee
@@ -43,7 +45,7 @@ class TestJobApplicant(HRMSTestSuite):
 		self.assertEqual(job_offer.status, "Awaiting Response")
 
 		# create employee
-		make_employee(user=applicant.name, job_applicant=applicant.name)
+		make_employee(user=applicant.name, job_applicant=applicant.name, company="_Test Company")
 
 		# after creating employee
 		applicant.reload()

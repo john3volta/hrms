@@ -107,7 +107,7 @@ def get_job_offer(applicant_name):
 	if job_offer:
 		return frappe.get_doc("Job Offer", job_offer)
 
-	job_offer = create_job_offer(job_applicant=applicant_name)
+	job_offer = create_job_offer(job_applicant=applicant_name, company="_Test Company")
 	job_offer.submit()
 	return job_offer
 

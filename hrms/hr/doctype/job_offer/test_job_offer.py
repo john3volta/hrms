@@ -94,6 +94,7 @@ def create_job_offer(**args):
 			"status": args.status or "Accepted",
 		}
 	)
+	job_offer.update(args)
 	return job_offer
 
 

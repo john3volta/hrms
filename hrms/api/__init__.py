@@ -656,11 +656,6 @@ def get_employee_advance_balance() -> list[dict]:
 	return advances
 
 
-@frappe.whitelist()
-def get_advance_account(company: str) -> str | None:
-	return frappe.db.get_value("Company", company, "default_employee_advance_account", cache=True)
-
-
 # Company
 @frappe.whitelist()
 def get_company_currencies() -> dict:

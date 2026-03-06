@@ -14,7 +14,7 @@ class TestEmployeeTransfer(HRMSTestSuite):
 		create_company()
 
 	def test_submit_before_transfer_date(self):
-		make_employee("employee2@transfers.com")
+		make_employee("employee2@transfers.com", company="Test Company")
 
 		transfer_obj = frappe.get_doc(
 			{
@@ -39,7 +39,7 @@ class TestEmployeeTransfer(HRMSTestSuite):
 		self.assertEqual(transfer.docstatus, 1)
 
 	def test_new_employee_creation(self):
-		make_employee("employee3@transfers.com")
+		make_employee("employee3@transfers.com", company="Test Company")
 
 		transfer = frappe.get_doc(
 			{

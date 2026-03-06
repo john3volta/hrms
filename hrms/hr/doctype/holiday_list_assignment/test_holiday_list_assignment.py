@@ -27,12 +27,13 @@ class IntegrationTestHolidayListAssignment(HRMSTestSuite):
 		self.holiday_list = make_holiday_list(
 			list_name="Test HLA", from_date=get_year_start(getdate()), to_date=get_year_ending(getdate())
 		)
+		self.employee = frappe.get_value("Employee", {"first_name": "_Test Employee"}, "name")
 
 	def test_exisitng_assignment(self):
 		from_date = get_year_start(getdate())
 		create_holiday_list_assignment(
 			"Employee",
-			assigned_to=self.employees[0].name,
+			assigned_to=self.employee,
 			holiday_list=self.holiday_list,
 			from_date=from_date,
 		)
@@ -41,7 +42,7 @@ class IntegrationTestHolidayListAssignment(HRMSTestSuite):
 			DuplicateAssignment,
 			create_holiday_list_assignment,
 			"Employee",
-			assigned_to=self.employees[0].name,
+			assigned_to=self.employee,
 			from_date=from_date,
 		)
 

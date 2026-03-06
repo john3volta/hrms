@@ -12,7 +12,26 @@ class HRMSTestSuite(ERPNextTestSuite):
 	def setUpClass(cls):
 		if not hasattr(cls, "globalTestRecords"):
 			cls.globalTestRecords = {}
+			cls.make_presets()
+		cls.make_presets()
 		cls.make_persistent_master_data()
+
+	@classmethod
+	def make_presets(cls):
+		cls.make_designations()
+
+	@classmethod
+	def make_designations(cls):
+		designations = [
+			"Engineer",
+			"Project Manager",
+			"Researcher",
+			"Accountant",
+			"Manager",
+			"Software Developer",
+		]
+		records = [{"doctype": "Designation", "designation_name": x} for x in designations]
+		cls.make_records(["designation_name"], records, "designations")
 
 	@classmethod
 	def make_persistent_master_data(cls):

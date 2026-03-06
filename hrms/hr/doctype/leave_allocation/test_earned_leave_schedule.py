@@ -20,7 +20,7 @@ class TestLeaveAllocation(HRMSTestSuite):
 		]:
 			frappe.db.delete(doctype)
 
-		employee = frappe.get_doc("Employee", "_T-Employee-00001")
+		employee = frappe.get_doc("Employee", {"first_name": "_Test Employee"})
 		self.original_doj = employee.date_of_joining
 
 		employee.date_of_joining = add_months(getdate(), -24)
@@ -352,7 +352,7 @@ class TestLeaveAllocation(HRMSTestSuite):
 			{
 				"doctype": "Leave Policy",
 				"title": "Test Earned Leave Policy",
-				"leave_policy_details": [{"leave_type": self.leave_types[0].name, "annual_allocation": 12}],
+				"leave_policy_details": [{"leave_type": "_Test Leave Type", "annual_allocation": 12}],
 			}
 		).insert()
 

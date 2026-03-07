@@ -8,7 +8,7 @@ import erpnext
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.payroll.doctype.salary_component.test_salary_component import create_salary_component
-from hrms.payroll.doctype.salary_slip.test_salary_slip import make_employee_salary_slip, setup_test
+from hrms.payroll.doctype.salary_slip.test_salary_slip import make_employee_salary_slip
 from hrms.payroll.doctype.salary_structure.test_salary_structure import (
 	make_salary_slip,
 	make_salary_structure,
@@ -17,9 +17,6 @@ from hrms.tests.utils import HRMSTestSuite
 
 
 class TestAdditionalSalary(HRMSTestSuite):
-	def setUp(self):
-		setup_test()
-
 	def test_recurring_additional_salary(self):
 		amount = 0
 		salary_component = None

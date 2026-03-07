@@ -39,8 +39,6 @@ from hrms.tests.test_utils import create_department
 from hrms.tests.utils import HRMSTestSuite
 from hrms.utils import get_date_range
 
-test_dependencies = ["Holiday List"]
-
 
 class TestPayrollEntry(HRMSTestSuite):
 	def setUp(self):

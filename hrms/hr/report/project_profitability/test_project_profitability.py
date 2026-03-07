@@ -10,8 +10,6 @@ from hrms.payroll.doctype.salary_slip.salary_slip import make_salary_slip_from_t
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_salary_structure_for_timesheet
 from hrms.tests.utils import HRMSTestSuite
 
-test_dependencies = ["Customer"]
-
 
 class TestProjectProfitability(HRMSTestSuite):
 	def setUp(self):

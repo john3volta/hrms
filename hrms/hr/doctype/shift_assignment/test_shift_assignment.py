@@ -20,8 +20,6 @@ from hrms.hr.doctype.shift_type.test_shift_type import make_shift_assignment, se
 from hrms.payroll.doctype.salary_component.test_salary_component import create_salary_component
 from hrms.tests.utils import HRMSTestSuite
 
-test_dependencies = ["Shift Type"]
-
 
 class TestShiftAssignment(HRMSTestSuite):
 	def test_overlapping_for_ongoing_shift(self):

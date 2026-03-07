@@ -9,8 +9,6 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 from hrms.hr.doctype.staffing_plan.staffing_plan import ParentCompanyError, SubsidiaryCompanyError
 from hrms.tests.utils import HRMSTestSuite
 
-test_dependencies = ["Designation"]
-
 
 class TestStaffingPlan(HRMSTestSuite):
 	def setUp(self):

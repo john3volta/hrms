@@ -18,8 +18,6 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
 from hrms.tests.utils import HRMSTestSuite
 
-test_dependencies = ["Salary Component", "Salary Slip", "Account"]
-
 
 class TestGratuity(HRMSTestSuite):
 	def setUp(self):

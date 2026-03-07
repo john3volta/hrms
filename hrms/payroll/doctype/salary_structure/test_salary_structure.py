@@ -22,8 +22,6 @@ from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_s
 from hrms.tests.test_utils import create_employee_grade
 from hrms.tests.utils import HRMSTestSuite
 
-test_dependencies = ["Fiscal Year"]
-
 
 class TestSalaryStructure(HRMSTestSuite):
 	def test_salary_structure_deduction_based_on_gross_pay(self):

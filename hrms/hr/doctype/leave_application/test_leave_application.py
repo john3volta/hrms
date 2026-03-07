@@ -45,8 +45,6 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 from hrms.tests.test_utils import add_date_to_holiday_list, get_first_sunday
 from hrms.tests.utils import HRMSTestSuite
 
-test_dependencies = ["Leave Block List"]
-
 
 class TestLeaveApplication(HRMSTestSuite):
 	def setUp(self):

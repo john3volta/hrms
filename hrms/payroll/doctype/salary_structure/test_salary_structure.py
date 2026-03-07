@@ -26,38 +26,12 @@ test_dependencies = ["Fiscal Year"]
 
 
 class TestSalaryStructure(HRMSTestSuite):
-	def setUp(self):
-		for dt in ["Salary Slip", "Salary Structure", "Salary Structure Assignment"]:
-			frappe.db.sql("delete from `tab%s`" % dt)
-
-		self.make_holiday_list()
-		frappe.db.set_value(
-			"Company",
-			erpnext.get_default_company(),
-			"default_holiday_list",
-			"Salary Structure Test Holiday List",
-		)
-		make_employee("test_employee@salary.com")
-		make_employee("test_employee_2@salary.com")
-
-	def make_holiday_list(self):
-		if not frappe.db.get_value("Holiday List", "Salary Structure Test Holiday List"):
-			holiday_list = frappe.get_doc(
-				{
-					"doctype": "Holiday List",
-					"holiday_list_name": "Salary Structure Test Holiday List",
-					"from_date": nowdate(),
-					"to_date": add_years(nowdate(), 1),
-					"weekly_off": "Sunday",
-				}
-			).insert()
-			holiday_list.get_weekly_off_dates()
-			holiday_list.save()
-
 	def test_salary_structure_deduction_based_on_gross_pay(self):
-		emp = make_employee("test_employee_3@salary.com")
+		emp = make_employee("test_employee_3@salary.com", company="_Test Company")
 
-		sal_struct = make_salary_structure("Salary Structure 2", "Monthly", dont_submit=True)
+		sal_struct = make_salary_structure(
+			"Salary Structure 2", "Monthly", dont_submit=True, company="_Test Company"
+		)
 
 		sal_struct.earnings = [sal_struct.earnings[0]]
 		sal_struct.earnings[0].amount_based_on_formula = 1
@@ -78,7 +52,7 @@ class TestSalaryStructure(HRMSTestSuite):
 
 	def test_amount_totals(self):
 		frappe.db.set_single_value("Payroll Settings", "include_holidays_in_total_working_days", 0)
-		emp_id = make_employee("test_employee_2@salary.com")
+		emp_id = make_employee("test_employee_2@salary.com", company="_Test Company")
 		salary_slip = frappe.get_value("Salary Slip", {"employee": emp_id})
 
 		if not salary_slip:
@@ -96,7 +70,9 @@ class TestSalaryStructure(HRMSTestSuite):
 			row.formula = "\n%s\n\n" % row.formula
 			row.condition = "\n%s\n\n" % row.condition
 
-		salary_structure = make_salary_structure("Salary Structure Sample", "Monthly", dont_submit=True)
+		salary_structure = make_salary_structure(
+			"Salary Structure Sample", "Monthly", dont_submit=True, company="_Test Company"
+		)
 		for table in ("earnings", "deductions"):
 			for row in salary_structure.get(table):
 				add_whitespaces(row)
@@ -113,10 +89,10 @@ class TestSalaryStructure(HRMSTestSuite):
 	def test_salary_structures_assignment(self):
 		company_currency = erpnext.get_default_currency()
 		salary_structure = make_salary_structure(
-			"Salary Structure Sample", "Monthly", currency=company_currency
+			"Salary Structure Sample", "Monthly", currency=company_currency, company="_Test Company"
 		)
 		employee = "test_assign_structure@salary.com"
-		employee_doc_name = make_employee(employee)
+		employee_doc_name = make_employee(employee, company="_Test Company")
 		# clear the already assigned structures
 		frappe.db.sql(
 			"""delete from `tabSalary Structure Assignment` where employee=%s and salary_structure=%s """,
@@ -151,8 +127,10 @@ class TestSalaryStructure(HRMSTestSuite):
 		self.assertEqual(base, 50000)
 
 	def test_multi_currency_salary_structure(self):
-		make_employee("test_muti_currency_employee@salary.com")
-		sal_struct = make_salary_structure("Salary Structure Multi Currency", "Monthly", currency="USD")
+		make_employee("test_muti_currency_employee@salary.com", company="_Test Company")
+		sal_struct = make_salary_structure(
+			"Salary Structure Multi Currency", "Monthly", currency="USD", company="_Test Company"
+		)
 		self.assertEqual(sal_struct.currency, "USD")
 
 

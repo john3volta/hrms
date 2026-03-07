@@ -14,9 +14,9 @@ class TestSalaryComponent(HRMSTestSuite):
 		salary_component.formula = "BS*.5"
 		salary_component.save()
 
-		salary_structure1 = make_salary_structure("Salary Structure 1", "Monthly")
-		salary_structure2 = make_salary_structure("Salary Structure 2", "Monthly")
-		salary_structure3 = make_salary_structure("Salary Structure 3", "Monthly")
+		salary_structure1 = make_salary_structure("Salary Structure 1", "Monthly", company="_Test Company")
+		salary_structure2 = make_salary_structure("Salary Structure 2", "Monthly", company="_Test Company")
+		salary_structure3 = make_salary_structure("Salary Structure 3", "Monthly", company="_Test Company")
 		salary_structure3.cancel()  # Details should not update for cancelled Salary Structures
 
 		OLD_FORMULA = "BS\n*.5"

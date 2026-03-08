@@ -10,9 +10,6 @@ class HRMSTestSuite(ERPNextTestSuite):
 
 	@classmethod
 	def setUpClass(cls):
-		if not hasattr(cls, "globalTestRecords"):
-			cls.globalTestRecords = {}
-			cls.make_presets()
 		cls.make_presets()
 		cls.make_persistent_master_data()
 

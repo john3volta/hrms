@@ -53,9 +53,9 @@ export function updateCurrencyLabels({ formFields, doc, baseFields = [], transac
 // function to update base currency fields data
 export function updateBaseFieldsAmount({doc, fields, exchangeRate}) {
 	if (!doc) return;
-	const excahnge_rate = flt(exchangeRate || doc.exchange_rate || 1, 9);
+	const exchange_rate = flt(exchangeRate || doc.exchange_rate || 1, 9);
 	fields.forEach(f => {
-		const val = flt(flt(doc[f]) * excahnge_rate);
+		const val = flt(flt(doc[f]) * exchange_rate);
 		doc["base_" + f] = val;
 	});
 }

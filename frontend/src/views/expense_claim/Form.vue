@@ -184,9 +184,12 @@ watch(
 watch(
 	() => expenseClaim.value.currency,
 	(currency) => {
-		setExchangeRate()
+		if (!currency) {
+			expenseClaim.value.exchange_rate = 0
+			return
+		}
 
-		if (!currency) return
+		setExchangeRate()
 		formFields.reload()
 	}
 )
@@ -503,12 +506,13 @@ function setExchangeRate() {
 	if (currency.value === companyCurrency.value) {
 		expenseClaim.value.exchange_rate = 1
 		if (exchange_rate_field) exchange_rate_field.hidden = 1
-	} else {
+	}
+	if (!expenseClaim.value.exchange_rate) {
 		exchangeRate.fetch({
 			from_currency: currency.value,
 			to_currency: companyCurrency.value,
 		})
-		if (exchange_rate_field) exchange_rate_field.hidden = 0
 	}
+	if (exchange_rate_field) exchange_rate_field.hidden = 0
 }
 </script>

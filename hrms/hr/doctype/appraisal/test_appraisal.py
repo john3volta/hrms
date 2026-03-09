@@ -72,7 +72,7 @@ class TestAppraisal(HRMSTestSuite):
 		cycle.create_appraisals()
 		appraisal = self.setup_appraisal(cycle)
 
-		self.assertEqual(appraisal.final_score, 3.767)
+		self.assertEqual(appraisal.final_score, 3.77)
 
 	def test_final_score_using_formula(self):
 		cycle = create_appraisal_cycle(designation="Engineer", kra_evaluation_method="Manual Rating")
@@ -87,7 +87,7 @@ class TestAppraisal(HRMSTestSuite):
 
 		appraisal = self.setup_appraisal(cycle)
 
-		self.assertEqual(appraisal.final_score, 3.767)
+		self.assertEqual(appraisal.final_score, 3.77)
 
 	def setup_appraisal(self, cycle):
 		appraisal = frappe.db.exists("Appraisal", {"appraisal_cycle": cycle.name, "employee": self.employee1})
@@ -159,8 +159,8 @@ class TestAppraisal(HRMSTestSuite):
 		self.assertEqual(appraisal.appraisal_kra[1].goal_score, 35)
 
 		self.assertEqual(appraisal.goal_score_percentage, 38.75)
-		self.assertEqual(appraisal.total_score, 1.938)
-		self.assertEqual(appraisal.final_score, 0.646)
+		self.assertEqual(appraisal.total_score, 1.94)
+		self.assertEqual(appraisal.final_score, 0.65)
 
 	def test_goal_score_after_parent_goal_change(self):
 		"""

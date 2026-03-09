@@ -159,8 +159,8 @@ class TestGoal(HRMSTestSuite):
 		parent1.reload()
 
 		self.assertEqual(parent2.progress, 0.0)
-		self.assertEqual(child1.progress, 16.667)
-		self.assertEqual(parent1.progress, 16.667)
+		self.assertEqual(child1.progress, 16.67)
+		self.assertEqual(parent1.progress, 16.67)
 
 	def test_update_kra_in_child_goals(self):
 		parent_goal = create_goal(self.employee1, "Development", 1)

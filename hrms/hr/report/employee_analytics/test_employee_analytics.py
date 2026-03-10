@@ -92,3 +92,4 @@ def create_company(company_name):
 			}
 		)
 		company = company.save()
+	return company.name

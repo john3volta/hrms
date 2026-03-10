@@ -9,6 +9,7 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
 from hrms.hr.doctype.overtime_type.test_overtime_type import create_overtime_type
 from hrms.hr.doctype.shift_type.test_shift_type import make_shift_assignment, setup_shift_type
+from hrms.payroll.doctype.salary_slip.test_salary_slip import make_earning_salary_component
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 from hrms.tests.utils import HRMSTestSuite
 
@@ -87,6 +88,7 @@ class TestOvertimeSlip(HRMSTestSuite):
 		month_start_date = get_first_day(date)
 
 		company = frappe.get_doc("Company", "_Test Company")
+		make_earning_salary_component(setup=True, company_list=["_Test Company"])
 		employee = make_employee("test_overtime_slip_01@example.com", company="_Test Company")
 		overtime_type = create_overtime_type(overtime_calculation_method="Fixed Hourly Rate")
 		shift_type = setup_shift_type(
@@ -116,6 +118,7 @@ class TestOvertimeSlip(HRMSTestSuite):
 			payable_account=company.default_payroll_payable_account,
 			currency=company.default_currency,
 			company=company.name,
+			cost_center="Main - _TC",
 		)
 
 		payroll_entry.create_overtime_slips()

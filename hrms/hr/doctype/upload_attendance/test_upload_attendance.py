@@ -18,7 +18,7 @@ class TestUploadAttendance(HRMSTestSuite):
 		)
 
 	def test_date_range(self):
-		employee = make_employee("test_employee@company.com")
+		employee = make_employee("test_employee@company.com", company="_Test Company")
 		employee_doc = frappe.get_doc("Employee", employee)
 		date_of_joining = "2018-01-02"
 		relieving_date = "2018-01-03"

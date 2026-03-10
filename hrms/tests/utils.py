@@ -38,7 +38,10 @@ class HRMSTestSuite(ERPNextTestSuite):
 		cls.make_holiday_list()
 		cls.make_holiday_list_assignment()
 		cls.make_leave_types()
+		cls.make_leave_period()
 		cls.make_leave_allocations()
+		cls.make_leave_applications()
+		cls.make_leave_block_lists()
 		cls.update_email_account_settings()
 		# TODO: clean up
 		if frappe.db.get_value("Holiday List Assignment", {"assigned_to": "_Test Company"}, "docstatus") == 0:
@@ -119,6 +122,18 @@ class HRMSTestSuite(ERPNextTestSuite):
 		cls.make_records(["leave_type_name"], records, "leave_types")
 
 	@classmethod
+	def make_leave_period(cls):
+		records = [
+			{
+				"doctype": "Leave Period",
+				"company": "_Test Company",
+				"from_date": "2013-01-01",
+				"to_date": "2019-12-31",
+			}
+		]
+		cls.make_records(["from_date", "to_date", "company"], records, "leave_periods")
+
+	@classmethod
 	def make_leave_allocations(cls):
 		"""Create test leave applications"""
 		# Create test leave applications here
@@ -128,7 +143,7 @@ class HRMSTestSuite(ERPNextTestSuite):
 				"doctype": "Leave Allocation",
 				"employee": "_T-Employee-00001",
 				"from_date": "2013-01-01",
-				"to_date": "2013-12-31",
+				"to_date": "2019-12-31",
 				"leave_type": "_Test Leave Type",
 				"new_leaves_allocated": 15,
 			},
@@ -143,6 +158,120 @@ class HRMSTestSuite(ERPNextTestSuite):
 			},
 		]
 		cls.make_records(["employee", "from_date", "to_date"], records, "leave_allocations")
+
+	@classmethod
+	def make_leave_applications(cls):
+		records = [
+			{
+				"company": "_Test Company",
+				"doctype": "Leave Application",
+				"employee": "_T-Employee-00001",
+				"from_date": "2013-05-01",
+				"description": "_Test Reason",
+				"leave_type": "_Test Leave Type",
+				"posting_date": "2013-01-02",
+				"to_date": "2013-05-05",
+			},
+			{
+				"company": "_Test Company",
+				"doctype": "Leave Application",
+				"employee": "_T-Employee-00002",
+				"from_date": "2013-05-01",
+				"description": "_Test Reason",
+				"leave_type": "_Test Leave Type",
+				"posting_date": "2013-01-02",
+				"to_date": "2013-05-05",
+			},
+			{
+				"company": "_Test Company",
+				"doctype": "Leave Application",
+				"employee": "_T-Employee-00001",
+				"from_date": "2013-01-15",
+				"description": "_Test Reason",
+				"leave_type": "_Test Leave Type LWP",
+				"posting_date": "2013-01-02",
+				"to_date": "2013-01-15",
+			},
+		]
+		cls.make_records(["employee", "from_date"], records, "leave_applications")
+
+	@classmethod
+	def make_leave_block_lists(cls):
+		records = [
+			{
+				"company": "_Test Company",
+				"doctype": "Leave Block List",
+				"leave_block_list_allowed": [
+					{
+						"allow_user": "test1@example.com",
+						"doctype": "Leave Block List Allow",
+						"parent": "_Test Leave Block List",
+						"parentfield": "leave_block_list_allowed",
+						"parenttype": "Leave Block List",
+					}
+				],
+				"leave_block_list_dates": [
+					{
+						"block_date": "2013-01-02",
+						"doctype": "Leave Block List Date",
+						"parent": "_Test Leave Block List",
+						"parentfield": "leave_block_list_dates",
+						"parenttype": "Leave Block List",
+						"reason": "First work day",
+					}
+				],
+				"leave_block_list_name": "_Test Leave Block List",
+				"year": "_Test Fiscal Year 2013",
+				"applies_to_all_departments": 1,
+			},
+			{
+				"company": "_Test Company",
+				"doctype": "Leave Block List",
+				"leave_type": "Casual Leave",
+				"leave_block_list_allowed": [
+					{
+						"allow_user": "test1@example.com",
+						"doctype": "Leave Block List Allow",
+						"parent": "_Test Leave Block List Casual Leave 1",
+						"parentfield": "leave_block_list_allowed",
+						"parenttype": "Leave Block List",
+					}
+				],
+				"leave_block_list_dates": [
+					{
+						"block_date": "2013-01-16",
+						"doctype": "Leave Block List Date",
+						"parent": "_Test Leave Block List Casual Leave 1",
+						"parentfield": "leave_block_list_dates",
+						"parenttype": "Leave Block List",
+						"reason": "First work day",
+					}
+				],
+				"leave_block_list_name": "_Test Leave Block List Casual Leave 1",
+				"year": "_Test Fiscal Year 2013",
+				"applies_to_all_departments": 1,
+			},
+			{
+				"company": "_Test Company",
+				"doctype": "Leave Block List",
+				"leave_type": "Casual Leave",
+				"leave_block_list_allowed": [],
+				"leave_block_list_dates": [
+					{
+						"block_date": "2013-01-19",
+						"doctype": "Leave Block List Date",
+						"parent": "_Test Leave Block List Casual Leave 2",
+						"parentfield": "leave_block_list_dates",
+						"parenttype": "Leave Block List",
+						"reason": "First work day",
+					}
+				],
+				"leave_block_list_name": "_Test Leave Block List Casual Leave 2",
+				"year": "_Test Fiscal Year 2013",
+				"applies_to_all_departments": 1,
+			},
+		]
+		cls.make_records(["leave_block_list_name"], records, "leave_block_lists")
 
 	@classmethod
 	def update_email_account_settings(cls):

@@ -19,7 +19,6 @@ class TestAttendanceRequest(HRMSTestSuite):
 	def setUp(self):
 		self.holiday_list = "Salary Slip Test Holiday List"
 		self.employee = get_employee()
-		frappe.db.set_value("Employee", self.employee.name, "holiday_list", self.holiday_list)
 
 	def test_attendance_request_overlap(self):
 		create_attendance_request(employee=self.employee.name, reason="On Duty", company="_Test Company")
@@ -53,11 +52,15 @@ class TestAttendanceRequest(HRMSTestSuite):
 	def test_on_duty_attendance_request(self):
 		"Test creation of Attendance from Attendance Request, on duty."
 		attendance_request = create_attendance_request(
-			employee=self.employee.name, reason="On Duty", company="_Test Company"
+			employee=self.employee.name,
+			reason="On Duty",
+			company="_Test Company",
+			from_date=getdate(),
+			to_date=getdate(),
 		)
 		records = self.get_attendance_records(attendance_request.name)
 
-		self.assertEqual(len(records), 2)
+		self.assertEqual(len(records), 1)
 		self.assertEqual(records[0].status, "Present")
 		self.assertEqual(records[0].docstatus, 1)
 
@@ -97,6 +100,7 @@ class TestAttendanceRequest(HRMSTestSuite):
 
 	def test_skip_attendance_on_holiday(self):
 		today = getdate()
+		frappe.db.delete("Holiday", {"parent": self.holiday_list})
 		add_date_to_holiday_list(today, self.holiday_list)
 
 		attendance_request = create_attendance_request(

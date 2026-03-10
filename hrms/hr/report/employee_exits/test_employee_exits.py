@@ -14,19 +14,20 @@ from hrms.tests.utils import HRMSTestSuite
 
 class TestEmployeeExits(HRMSTestSuite):
 	def setUp(self):
+		self.company = create_company("Test Company").name
 		self.create_records()
 
 	def create_records(self):
 		self.emp1 = make_employee(
 			"employeeexit1@example.com",
-			company="Test Company",
+			company=self.company,
 			date_of_joining=getdate("01-10-2021"),
 			relieving_date=add_days(getdate(), 14),
 			designation="Accountant",
 		)
 		self.emp2 = make_employee(
 			"employeeexit2@example.com",
-			company="Test Company",
+			company=self.company,
 			date_of_joining=getdate("01-12-2021"),
 			relieving_date=add_days(getdate(), 15),
 			designation="Accountant",
@@ -34,14 +35,14 @@ class TestEmployeeExits(HRMSTestSuite):
 
 		self.emp3 = make_employee(
 			"employeeexit3@example.com",
-			company="Test Company",
+			company=self.company,
 			date_of_joining=getdate("02-12-2021"),
 			relieving_date=add_days(getdate(), 29),
 			designation="Engineer",
 		)
 		self.emp4 = make_employee(
 			"employeeexit4@example.com",
-			company="Test Company",
+			company=self.company,
 			date_of_joining=getdate("01-12-2021"),
 			relieving_date=add_days(getdate(), 30),
 			designation="Engineer",

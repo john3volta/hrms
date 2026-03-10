@@ -11,8 +11,8 @@ from hrms.tests.utils import HRMSTestSuite
 class TestTrainingEvent(HRMSTestSuite):
 	def setUp(self):
 		create_training_program("Basic Training")
-		employee = make_employee("robert_loan@trainig.com")
-		employee2 = make_employee("suzie.tan@trainig.com")
+		employee = make_employee("robert_loan@trainig.com", company="_Test Company")
+		employee2 = make_employee("suzie.tan@trainig.com", company="_Test Company")
 		self.attendees = [{"employee": employee}, {"employee": employee2}]
 
 	def test_training_event_status_update(self):
@@ -34,13 +34,14 @@ class TestTrainingEvent(HRMSTestSuite):
 			self.assertEqual(entry.status, "Open")
 
 
-def create_training_program(training_program):
+def create_training_program(training_program, company="_Test Company"):
 	if not frappe.db.get_value("Training Program", training_program):
 		frappe.get_doc(
 			{
 				"doctype": "Training Program",
 				"training_program": training_program,
 				"description": training_program,
+				"company": company,
 			}
 		).insert()
 

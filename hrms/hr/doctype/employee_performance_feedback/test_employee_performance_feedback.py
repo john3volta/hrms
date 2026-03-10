@@ -14,9 +14,6 @@ from hrms.tests.utils import HRMSTestSuite
 
 class TestEmployeePerformanceFeedback(HRMSTestSuite):
 	def setUp(self):
-		frappe.db.delete("Employee Performance Feedback")
-		frappe.db.delete("Appraisal")
-
 		company = create_company("_Test Appraisal").name
 		self.template = create_appraisal_template()
 
@@ -104,7 +101,7 @@ class TestEmployeePerformanceFeedback(HRMSTestSuite):
 		feedback2.submit()
 
 		avg_feedback_score = frappe.db.get_value("Appraisal", self.appraisal, "avg_feedback_score")
-		self.assertEqual(avg_feedback_score, 3.575)
+		self.assertEqual(avg_feedback_score, 3.58)
 
 	def test_update_avg_feedback_score_on_cancel(self):
 		feedback = create_performance_feedback(

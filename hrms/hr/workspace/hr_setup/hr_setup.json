@@ -11,7 +11,7 @@
  "icon": "hr",
  "idx": 1,
  "is_hidden": 0,
- "label": "People",
+ "label": "HR Setup",
  "links": [
   {
    "hidden": 0,
@@ -384,10 +384,10 @@
    "type": "Link"
   }
  ],
- "modified": "2026-01-10 15:08:35.595514",
+ "modified": "2026-03-11 12:49:12.920080",
  "modified_by": "Administrator",
  "module": "HR",
- "name": "People",
+ "name": "HR Setup",
  "number_cards": [],
  "owner": "Administrator",
  "parent_page": "",
@@ -397,6 +397,6 @@
  "roles": [],
  "sequence_id": 1.0,
  "shortcuts": [],
- "title": "People",
+ "title": "HR Setup",
  "type": "Workspace"
 }

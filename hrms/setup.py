@@ -850,3 +850,8 @@ def get_salary_slip_loan_fields():
 			},
 		],
 	}
+
+
+def make_people_workspace_standard():
+	if frappe.db.exists("Workspace Sidebar", "People"):
+		frappe.db.set_value("Workspace Sidebar", "People", "standard", 1)

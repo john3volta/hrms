@@ -20,25 +20,26 @@ class TestLeaveControlPanel(HRMSTestSuite):
 		self.create_records()
 
 	def create_records(self):
-		self.leave_period = create_leave_period(date(2030, 1, 1), date(2030, 12, 31), "_Test Company")
+		self.company = create_company("Test Leave Control Panel").name
+		self.leave_period = create_leave_period(date(2030, 1, 1), date(2030, 12, 31), self.company)
 		self.leave_policy = create_leave_policy(leave_type="Casual Leave", annual_allocation=10)
 		self.leave_policy.submit()
 
 		self.emp1 = make_employee(
 			"employee1@example.com",
-			company="_Test Company",
+			company=self.company,
 		)
 		self.emp2 = make_employee(
 			"employee2@example.com",
-			company="_Test Company",
+			company=self.company,
 		)
 		self.emp3 = make_employee(
 			"employee3@example.com",
-			company="_Test Company",
+			company=self.company,
 		)
 		self.emp4 = make_employee(
 			"employee4@example.com",
-			company="_Test Company",
+			company=self.company,
 			date_of_joining=date(2030, 1, 5),
 		)
 
@@ -124,7 +125,7 @@ class TestLeaveControlPanel(HRMSTestSuite):
 
 		args = {
 			"doctype": "Leave Control Panel",
-			"company": "_Test Company",
+			"company": self.company,
 			"dates_based_on": "Leave Period",
 			"leave_period": self.leave_period.name,
 			"allocate_based_on_leave_policy": 1,

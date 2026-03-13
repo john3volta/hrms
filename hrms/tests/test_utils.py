@@ -62,6 +62,7 @@ def get_first_sunday(holiday_list="Salary Slip Test Holiday List", for_date=None
 		"Holiday",
 		{"parent": holiday_list, "holiday_date": ("between", (month_start_date, month_end_date))},
 		"holiday_date",
+		order_by="holiday_date asc",
 	)
 
 	return first_sunday

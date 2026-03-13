@@ -39,9 +39,9 @@ class HRMSTestSuite(ERPNextTestSuite):
 		cls.make_holiday_list_assignment()
 		cls.make_leave_types()
 		cls.make_leave_period()
+		cls.make_leave_block_lists()
 		cls.make_leave_allocations()
 		cls.make_leave_applications()
-		cls.make_leave_block_lists()
 		cls.update_email_account_settings()
 		# TODO: clean up
 		if frappe.db.get_value("Holiday List Assignment", {"assigned_to": "_Test Company"}, "docstatus") == 0:

@@ -47,7 +47,7 @@ class TestSalaryComponent(HRMSTestSuite):
 		self.assertEqual(ss2_detail.condition, "H < 8000")
 		ss3_detail.reload()
 		self.assertEqual(ss3_detail.condition, OLD_CONDITION)
-
+		salary_component.amount_based_on_formula = True
 		salary_component.update_salary_structures("formula", "BS*.3")
 		ss1_detail.reload()
 		self.assertEqual(ss1_detail.formula, "BS*.3")

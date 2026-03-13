@@ -2413,7 +2413,8 @@ def create_tax_slab(
 
 	if company:
 		currency = erpnext.get_company_currency(company)
-
+	if not currency:
+		currency = "INR"
 	slabs = [
 		{
 			"from_amount": 250000,

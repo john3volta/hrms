@@ -42,21 +42,6 @@ from hrms.utils import get_date_range
 
 class TestPayrollEntry(HRMSTestSuite):
 	def setUp(self):
-		for dt in [
-			"Salary Slip",
-			"Salary Detail",
-			"Salary Component",
-			"Salary Component Account",
-			"Payroll Entry",
-			"Salary Structure",
-			"Salary Structure Assignment",
-			"Employee Cost Center",
-			"Payroll Employee Detail",
-			"Additional Salary",
-			"Employee Benefit Ledger",
-		]:
-			frappe.db.delete(dt)
-
 		make_earning_salary_component(setup=True, company_list=["_Test Company"])
 		make_deduction_salary_component(setup=True, test_tax=False, company_list=["_Test Company"])
 
@@ -95,6 +80,7 @@ class TestPayrollEntry(HRMSTestSuite):
 			payable_account=company.default_payroll_payable_account,
 			currency=company.default_currency,
 			company=company.name,
+			cost_center="Main - _TC",
 		)
 
 	def test_multi_currency_payroll_entry(self):
@@ -714,6 +700,7 @@ class TestPayrollEntry(HRMSTestSuite):
 			payable_account=company.default_payroll_payable_account,
 			currency=company.default_currency,
 			company=company.name,
+			cost_center="Main - _TC",
 		)
 
 		# case 1: validate unmarked attendance
@@ -1025,6 +1012,7 @@ class TestPayrollEntry(HRMSTestSuite):
 			payable_account=company_doc.default_payroll_payable_account,
 			currency=company_doc.default_currency,
 			company="_Test Company",
+			cost_center="Main - _TC",
 		)
 		next_salary_slip = frappe.get_doc("Salary Slip", {"payroll_entry": next_month_payroll_entry.name})
 
@@ -1073,6 +1061,7 @@ class TestPayrollEntry(HRMSTestSuite):
 			payable_account=company.default_payroll_payable_account,
 			currency=company.default_currency,
 			company=company.name,
+			cost_center="Main - _TC",
 		)
 		payroll_entry.discard()
 		payroll_entry.reload()
@@ -1105,7 +1094,7 @@ def get_payroll_entry(**args):
 	payroll_entry.insert()
 
 	# Commit so that the first salary slip creation failure does not rollback the Payroll Entry insert.
-	frappe.db.commit()  # nosemgrep
+	# frappe.db.commit()  # nosemgrep
 
 	return payroll_entry
 

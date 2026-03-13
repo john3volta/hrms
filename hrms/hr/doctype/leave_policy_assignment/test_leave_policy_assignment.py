@@ -22,7 +22,7 @@ class TestLeavePolicyAssignment(HRMSTestSuite):
 		self.employee = employee
 
 	def test_grant_leaves(self):
-		leave_period = get_leave_period()
+		leave_period = get_leave_period(current=True)
 		leave_policy = create_leave_policy(annual_allocation=10)
 		leave_policy.submit()
 
@@ -56,7 +56,7 @@ class TestLeavePolicyAssignment(HRMSTestSuite):
 		self.assertEqual(leave_alloc_doc.leave_policy_assignment, assignments[0])
 
 	def test_allow_to_grant_all_leave_after_cancellation_of_every_leave_allocation(self):
-		leave_period = get_leave_period()
+		leave_period = get_leave_period(current=True)
 		leave_policy = create_leave_policy(annual_allocation=10)
 		leave_policy.submit()
 
@@ -78,7 +78,6 @@ class TestLeavePolicyAssignment(HRMSTestSuite):
 		allocation = frappe.db.get_value(
 			"Leave Allocation", {"leave_policy_assignment": assignments[0]}, "name"
 		)
-
 		leave_alloc_doc = frappe.get_doc("Leave Allocation", allocation)
 		leave_alloc_doc.cancel()
 		leave_alloc_doc.delete()
@@ -88,7 +87,7 @@ class TestLeavePolicyAssignment(HRMSTestSuite):
 		)
 
 	def test_pro_rated_leave_allocation(self):
-		leave_period = get_leave_period()
+		leave_period = get_leave_period(current=True)
 		leave_policy = create_leave_policy(annual_allocation=12)
 		leave_policy.submit()
 

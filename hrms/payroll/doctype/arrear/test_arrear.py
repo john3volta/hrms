@@ -27,7 +27,7 @@ class TestArrear(HRMSTestSuite):
 			company="_Test Company",
 			date_of_joining="2021-01-01",
 		)
-		make_payroll_period()
+		make_payroll_period(company="_Test Company")
 		current_payroll_period = frappe.get_last_doc("Payroll Period", filters={"company": "_Test Company"})
 
 		# Create initial salary structure with lower salary

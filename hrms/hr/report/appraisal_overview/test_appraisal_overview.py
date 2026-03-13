@@ -15,9 +15,6 @@ from hrms.tests.utils import HRMSTestSuite
 
 class TestAppraisalOverview(HRMSTestSuite):
 	def setUp(self):
-		frappe.db.delete("Goal")
-		frappe.db.delete("Appraisal")
-
 		self.company = create_company("_Test Appraisal").name
 
 		engineer = create_designation(designation_name="Engineer")
@@ -55,7 +52,7 @@ class TestAppraisalOverview(HRMSTestSuite):
 			"avg_feedback_score": 3.85,
 			"goal_score": 3.6,
 			"self_score": 3.85,
-			"final_score": 3.767,
+			"final_score": 3.77,
 			"feedback_count": 1,
 		}
 

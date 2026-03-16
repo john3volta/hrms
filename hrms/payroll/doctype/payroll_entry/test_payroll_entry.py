@@ -385,9 +385,10 @@ class TestPayrollEntry(HRMSTestSuite):
 		self.assertIsNotNone(payroll_entry.error_message)
 
 		frappe.db.set_value("Employee", employee, "status", "Active")
+
+		payroll_entry.create_salary_slips()
 		payroll_entry.submit()
 		payroll_entry.submit_salary_slips()
-
 		payroll_entry.reload()
 		self.assertEqual(payroll_entry.status, "Failed")
 		self.assertIsNotNone(payroll_entry.error_message)
@@ -397,6 +398,9 @@ class TestPayrollEntry(HRMSTestSuite):
 			set_salary_component_account(data, company_list=[company])
 
 		# Payroll Entry successful, status should change to Submitted
+
+		payroll_entry.create_salary_slips()
+		payroll_entry.submit()
 		payroll_entry.submit_salary_slips()
 		payroll_entry.reload()
 
@@ -916,7 +920,7 @@ class TestPayrollEntry(HRMSTestSuite):
 
 		frappe.db.set_value("Company", "_Test Company", "default_holiday_list", "_Test Holiday List")
 
-		make_payroll_period()
+		make_payroll_period(company="_Test Company")
 		emp = make_employee(
 			"test_employee_benefits@salary.com",
 			company="_Test Company",

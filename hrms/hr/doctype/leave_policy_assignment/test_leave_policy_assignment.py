@@ -160,7 +160,7 @@ class TestLeavePolicyAssignment(HRMSTestSuite):
 				"is_earned_leave": 1,
 				"allocate_on_day": "First Day",
 			}
-		).submit()
+		).save()
 
 		leave_policy = frappe.get_doc(
 			{

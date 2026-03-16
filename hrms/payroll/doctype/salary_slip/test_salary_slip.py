@@ -1799,17 +1799,19 @@ class TestSalarySlip(HRMSTestSuite):
 
 		setup()
 
-		frappe.db.delete("Income Tax Slab", {"currency": "INR"})
 		emp = make_employee(
 			"test_employee_tax_relief@salary.com",
 			company="_Test Company",
 			date_of_joining="2021-01-01",
 		)
-
 		payroll_period = frappe.get_doc("Payroll Period", "_Test Payroll Period")
 
 		create_tax_slab(
-			payroll_period, effective_date=payroll_period.start_date, apply_tax_relief=True, currency="INR"
+			payroll_period,
+			effective_date=payroll_period.start_date,
+			apply_tax_relief=True,
+			currency="INR",
+			company="_Test Company",
 		)
 
 		salary_structure_doc = make_salary_structure(
@@ -2097,7 +2099,10 @@ def make_salary_component(salary_components, test_tax, company_list=None):
 
 
 def set_salary_component_account(sal_comp, company_list=None):
-	company = erpnext.get_default_company()
+	company = erpnext.get_default_company() or "_Test Company"
+
+	if not company_list:
+		company_list = ["_Test Company"]
 
 	if company_list and company and company not in company_list:
 		company_list.append(company)

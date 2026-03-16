@@ -150,7 +150,7 @@ def make_salary_structure(
 	test_salary_structure_arrear=False,
 ):
 	if not currency:
-		currency = erpnext.get_default_currency()
+		currency = erpnext.get_default_currency() or "INR"
 
 	if frappe.db.exists("Salary Structure", salary_structure):
 		frappe.db.delete("Salary Structure", salary_structure)
@@ -231,7 +231,7 @@ def create_salary_structure_assignment(
 	leave_encashment_amount_per_day=None,
 ):
 	if not currency:
-		currency = erpnext.get_default_currency()
+		currency = erpnext.get_default_currency() or "INR"
 
 	if not allow_duplicate and frappe.db.exists("Salary Structure Assignment", {"employee": employee}):
 		frappe.db.sql("""delete from `tabSalary Structure Assignment` where employee=%s""", (employee))

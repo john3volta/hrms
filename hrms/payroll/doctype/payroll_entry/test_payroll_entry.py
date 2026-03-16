@@ -1112,7 +1112,7 @@ def make_payroll_entry(**args):
 def get_payment_account():
 	return frappe.get_value(
 		"Account",
-		{"account_type": "Cash", "company": erpnext.get_default_company(), "is_group": 0},
+		{"account_type": "Cash", "company": erpnext.get_default_company() or "_Test Company", "is_group": 0},
 		"name",
 	)
 

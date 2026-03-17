@@ -2099,6 +2099,9 @@ def make_salary_component(salary_components, test_tax, company_list=None):
 def set_salary_component_account(sal_comp, company_list=None):
 	company = erpnext.get_default_company() or "_Test Company"
 
+	if not company_list:
+		company_list = ["_Test Company"]
+
 	if company_list and company and company not in company_list:
 		company_list.append(company)
 

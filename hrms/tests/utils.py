@@ -35,6 +35,7 @@ class HRMSTestSuite(ERPNextTestSuite):
 	@classmethod
 	def make_persistent_master_data(cls):
 		cls.make_company()
+		cls.make_exchange_rate()
 		cls.make_holiday_list()
 		cls.make_holiday_list_assignment()
 		cls.make_leave_types()
@@ -42,11 +43,81 @@ class HRMSTestSuite(ERPNextTestSuite):
 		cls.make_leave_block_lists()
 		cls.make_leave_allocations()
 		cls.make_leave_applications()
+		cls.make_salary_components()
 		cls.update_email_account_settings()
 		# TODO: clean up
 		if frappe.db.get_value("Holiday List Assignment", {"assigned_to": "_Test Company"}, "docstatus") == 0:
 			frappe.get_doc("Holiday List Assignment", {"assigned_to": "_Test Company"}).submit()
 		frappe.db.commit()
+
+	@classmethod
+	def make_exchange_rate(cls):
+		records = [
+			{
+				"doctype": "Currency Exchange",
+				"date": "2016-01-01",
+				"exchange_rate": 60.0,
+				"from_currency": "USD",
+				"to_currency": "INR",
+				"for_buying": 1,
+				"for_selling": 0,
+			},
+			{
+				"doctype": "Currency Exchange",
+				"date": "2016-01-10",
+				"exchange_rate": 65.1,
+				"from_currency": "USD",
+				"to_currency": "INR",
+				"for_buying": 1,
+				"for_selling": 0,
+			},
+			{
+				"doctype": "Currency Exchange",
+				"date": "2016-01-30",
+				"exchange_rate": 62.9,
+				"from_currency": "USD",
+				"to_currency": "INR",
+				"for_buying": 1,
+				"for_selling": 1,
+			},
+		]
+		cls.make_records(["date", "from_currency", "to_currency"], records, "exchange_rates")
+
+	@classmethod
+	def make_salary_components(cls):
+		records = [
+			{
+				"doctype": "Salary Component",
+				"salary_component": "_Test Basic Salary",
+				"type": "Earning",
+				"is_tax_applicable": 1,
+			},
+			{
+				"doctype": "Salary Component",
+				"salary_component": "_Test Allowance",
+				"type": "Earning",
+				"is_tax_applicable": 1,
+			},
+			{
+				"doctype": "Salary Component",
+				"salary_component": "_Test Professional Tax",
+				"type": "Deduction",
+			},
+			{"doctype": "Salary Component", "salary_component": "_Test TDS", "type": "Deduction"},
+			{
+				"doctype": "Salary Component",
+				"salary_component": "Basic",
+				"type": "Earning",
+				"is_tax_applicable": 1,
+			},
+			{
+				"doctype": "Salary Component",
+				"salary_component": "Leave Encashment",
+				"type": "Earning",
+				"is_tax_applicable": 1,
+			},
+		]
+		cls.make_records(["salary_component"], records, "salary_components")
 
 	@classmethod
 	def make_company(cls):

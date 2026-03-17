@@ -2388,7 +2388,7 @@ def create_proof_submission(employee, payroll_period, amount):
 			"employee": employee,
 			"payroll_period": payroll_period.name,
 			"submission_date": submission_date,
-			"currency": erpnext.get_default_currency(),
+			"currency": erpnext.get_default_currency() or "INR",
 		}
 	)
 	proof_submission.append(
@@ -2505,7 +2505,7 @@ def create_additional_salary(employee, payroll_period, amount, company):
 			"payroll_date": salary_date,
 			"amount": amount,
 			"type": "Earning",
-			"currency": erpnext.get_default_currency(),
+			"currency": erpnext.get_default_currency() or "INR",
 		}
 	).submit()
 	return salary_date
@@ -2567,7 +2567,7 @@ def make_payroll_period(company=None):
 def make_holiday_list(
 	list_name=None, from_date=None, to_date=None, add_weekly_offs=True, weekly_off_days=None
 ):
-	fiscal_year = get_fiscal_year(nowdate(), company=erpnext.get_default_company())
+	fiscal_year = get_fiscal_year(nowdate(), company=erpnext.get_default_company() or "_Test Company")
 	name = list_name or "Salary Slip Test Holiday List"
 
 	frappe.delete_doc_if_exists("Holiday List", name, force=True)
@@ -2715,7 +2715,7 @@ def create_recurring_additional_salary(employee, salary_component, amount, from_
 			"to_date": to_date,
 			"amount": amount,
 			"type": "Earning",
-			"currency": erpnext.get_default_currency(),
+			"currency": erpnext.get_default_currency() or "INR",
 		}
 	).submit()
 

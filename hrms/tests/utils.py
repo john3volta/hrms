@@ -45,6 +45,7 @@ class HRMSTestSuite(ERPNextTestSuite):
 		cls.make_leave_applications()
 		cls.make_salary_components()
 		cls.update_email_account_settings()
+		cls.update_system_settings()
 		# TODO: clean up
 		if frappe.db.get_value("Holiday List Assignment", {"assigned_to": "_Test Company"}, "docstatus") == 0:
 			frappe.get_doc("Holiday List Assignment", {"assigned_to": "_Test Company"}).submit()
@@ -350,6 +351,12 @@ class HRMSTestSuite(ERPNextTestSuite):
 		email_account.enable_outgoing = 1
 		email_account.default_outgoing = 1
 		email_account.save()
+
+	@classmethod
+	def update_system_settings(cls):
+		system_settings = frappe.get_doc("System Settings")
+		system_settings.country = "India"
+		system_settings.save()
 
 	@classmethod
 	def make_records(self, key, records, attr):

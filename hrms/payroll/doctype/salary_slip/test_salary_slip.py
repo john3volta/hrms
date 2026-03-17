@@ -2097,13 +2097,13 @@ def make_salary_component(salary_components, test_tax, company_list=None):
 
 
 def set_salary_component_account(sal_comp, company_list=None):
-	company = erpnext.get_default_company() or "_Test Company"
-
-	if not company_list:
-		company_list = ["_Test Company"]
+	company = "_Test Company"
 
 	if company_list and company and company not in company_list:
 		company_list.append(company)
+	# sometimes company_list is [] and not None and that's intended (yes it's a tech debt, no I didn't write it and yes I'll fix it) hence the explicit None check
+	if company_list is None:
+		company_list = ["_Test Company"]
 
 	if not isinstance(sal_comp, Document):
 		sal_comp = frappe.get_doc("Salary Component", sal_comp)

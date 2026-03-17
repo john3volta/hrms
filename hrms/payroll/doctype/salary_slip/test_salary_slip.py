@@ -1799,19 +1799,17 @@ class TestSalarySlip(HRMSTestSuite):
 
 		setup()
 
+		frappe.db.delete("Income Tax Slab", {"currency": "INR"})
 		emp = make_employee(
 			"test_employee_tax_relief@salary.com",
 			company="_Test Company",
 			date_of_joining="2021-01-01",
 		)
+
 		payroll_period = frappe.get_doc("Payroll Period", "_Test Payroll Period")
 
 		create_tax_slab(
-			payroll_period,
-			effective_date=payroll_period.start_date,
-			apply_tax_relief=True,
-			currency="INR",
-			company="_Test Company",
+			payroll_period, effective_date=payroll_period.start_date, apply_tax_relief=True, currency="INR"
 		)
 
 		salary_structure_doc = make_salary_structure(
@@ -2101,9 +2099,6 @@ def make_salary_component(salary_components, test_tax, company_list=None):
 def set_salary_component_account(sal_comp, company_list=None):
 	company = erpnext.get_default_company() or "_Test Company"
 
-	if not company_list:
-		company_list = ["_Test Company"]
-
 	if company_list and company and company not in company_list:
 		company_list.append(company)
 
@@ -2388,7 +2383,7 @@ def create_proof_submission(employee, payroll_period, amount):
 			"employee": employee,
 			"payroll_period": payroll_period.name,
 			"submission_date": submission_date,
-			"currency": erpnext.get_default_currency() or "INR",
+			"currency": erpnext.get_default_currency(),
 		}
 	)
 	proof_submission.append(
@@ -2418,8 +2413,7 @@ def create_tax_slab(
 
 	if company:
 		currency = erpnext.get_company_currency(company)
-	if not currency:
-		currency = "INR"
+
 	slabs = [
 		{
 			"from_amount": 250000,
@@ -2505,7 +2499,7 @@ def create_additional_salary(employee, payroll_period, amount, company):
 			"payroll_date": salary_date,
 			"amount": amount,
 			"type": "Earning",
-			"currency": erpnext.get_default_currency() or "INR",
+			"currency": erpnext.get_default_currency(),
 		}
 	).submit()
 	return salary_date
@@ -2567,7 +2561,7 @@ def make_payroll_period(company=None):
 def make_holiday_list(
 	list_name=None, from_date=None, to_date=None, add_weekly_offs=True, weekly_off_days=None
 ):
-	fiscal_year = get_fiscal_year(nowdate(), company=erpnext.get_default_company() or "_Test Company")
+	fiscal_year = get_fiscal_year(nowdate(), company=erpnext.get_default_company())
 	name = list_name or "Salary Slip Test Holiday List"
 
 	frappe.delete_doc_if_exists("Holiday List", name, force=True)
@@ -2715,7 +2709,7 @@ def create_recurring_additional_salary(employee, salary_component, amount, from_
 			"to_date": to_date,
 			"amount": amount,
 			"type": "Earning",
-			"currency": erpnext.get_default_currency() or "INR",
+			"currency": erpnext.get_default_currency(),
 		}
 	).submit()
 

@@ -5,20 +5,33 @@ from erpnext.accounts.utils import get_fiscal_year
 from erpnext.tests.utils import ERPNextTestSuite
 
 
-class HRMSTestSuite(ERPNextTestSuite):
-	"""Class for creating HRMS test records"""
+class BootStrapTestData:
+	def __init__(self):
+		self.make_presets()
+		self.make_master_data()
 
-	@classmethod
-	def setUpClass(cls):
-		cls.make_presets()
-		cls.make_persistent_master_data()
+	def make_presets(self):
+		self.make_designations()
 
-	@classmethod
-	def make_presets(cls):
-		cls.make_designations()
+	def make_master_data(self):
+		self.make_company()
+		self.make_exchange_rate()
+		self.make_holiday_list()
+		self.make_holiday_list_assignment()
+		self.make_leave_types()
+		self.make_leave_period()
+		self.make_leave_block_lists()
+		self.make_leave_allocations()
+		self.make_leave_applications()
+		self.make_salary_components()
+		self.update_email_account_settings()
+		self.update_system_settings()
+		# TODO: clean up
+		if frappe.db.get_value("Holiday List Assignment", {"assigned_to": "_Test Company"}, "docstatus") == 0:
+			frappe.get_doc("Holiday List Assignment", {"assigned_to": "_Test Company"}).submit()
+		frappe.db.commit()
 
-	@classmethod
-	def make_designations(cls):
+	def make_designations(self):
 		designations = [
 			"Engineer",
 			"Project Manager",
@@ -30,29 +43,9 @@ class HRMSTestSuite(ERPNextTestSuite):
 			"Designer",
 		]
 		records = [{"doctype": "Designation", "designation_name": x} for x in designations]
-		cls.make_records(["designation_name"], records, "designations")
+		self.make_records(["designation_name"], records)
 
-	@classmethod
-	def make_persistent_master_data(cls):
-		cls.make_company()
-		cls.make_exchange_rate()
-		cls.make_holiday_list()
-		cls.make_holiday_list_assignment()
-		cls.make_leave_types()
-		cls.make_leave_period()
-		cls.make_leave_block_lists()
-		cls.make_leave_allocations()
-		cls.make_leave_applications()
-		cls.make_salary_components()
-		cls.update_email_account_settings()
-		cls.update_system_settings()
-		# TODO: clean up
-		if frappe.db.get_value("Holiday List Assignment", {"assigned_to": "_Test Company"}, "docstatus") == 0:
-			frappe.get_doc("Holiday List Assignment", {"assigned_to": "_Test Company"}).submit()
-		frappe.db.commit()
-
-	@classmethod
-	def make_exchange_rate(cls):
+	def make_exchange_rate(self):
 		records = [
 			{
 				"doctype": "Currency Exchange",
@@ -82,10 +75,9 @@ class HRMSTestSuite(ERPNextTestSuite):
 				"for_selling": 1,
 			},
 		]
-		cls.make_records(["date", "from_currency", "to_currency"], records, "exchange_rates")
+		self.make_records(["date", "from_currency", "to_currency"], records)
 
-	@classmethod
-	def make_salary_components(cls):
+	def make_salary_components(self):
 		records = [
 			{
 				"doctype": "Salary Component",
@@ -118,10 +110,9 @@ class HRMSTestSuite(ERPNextTestSuite):
 				"is_tax_applicable": 1,
 			},
 		]
-		cls.make_records(["salary_component"], records, "salary_components")
+		self.make_records(["salary_component"], records)
 
-	@classmethod
-	def make_company(cls):
+	def make_company(self):
 		records = [
 			{
 				"abbr": "_TC",
@@ -132,10 +123,9 @@ class HRMSTestSuite(ERPNextTestSuite):
 				"chart_of_accounts": "Standard",
 			}
 		]
-		cls.make_records(["company_name"], records, "companies")
+		self.make_records(["company_name"], records)
 
-	@classmethod
-	def make_holiday_list_assignment(cls):
+	def make_holiday_list_assignment(self):
 		fiscal_year = get_fiscal_year(getdate())
 		records = [
 			{
@@ -147,10 +137,9 @@ class HRMSTestSuite(ERPNextTestSuite):
 				"to_date": fiscal_year[2],
 			}
 		]
-		cls.make_records(["assigned_to", "from_date"], records, "holiday_list_assignment")
+		self.make_records(["assigned_to", "from_date"], records)
 
-	@classmethod
-	def make_holiday_list(cls):
+	def make_holiday_list(self):
 		fiscal_year = get_fiscal_year(getdate())
 		records = [
 			{
@@ -161,10 +150,9 @@ class HRMSTestSuite(ERPNextTestSuite):
 				"weekly_off": "Sunday",
 			}
 		]
-		cls.make_records(["from_date", "to_date", "holiday_list_name"], records, "holiday_list")
+		self.make_records(["from_date", "to_date", "holiday_list_name"], records)
 
-	@classmethod
-	def make_leave_types(cls):
+	def make_leave_types(self):
 		"""Create test leave types"""
 		# Create test leave types here
 		records = [
@@ -190,11 +178,9 @@ class HRMSTestSuite(ERPNextTestSuite):
 				"is_earned_leave": 1,
 			},
 		]
-		cls.leave_types = []
-		cls.make_records(["leave_type_name"], records, "leave_types")
+		self.make_records(["leave_type_name"], records)
 
-	@classmethod
-	def make_leave_period(cls):
+	def make_leave_period(self):
 		records = [
 			{
 				"doctype": "Leave Period",
@@ -203,10 +189,9 @@ class HRMSTestSuite(ERPNextTestSuite):
 				"to_date": "2019-12-31",
 			}
 		]
-		cls.make_records(["from_date", "to_date", "company"], records, "leave_periods")
+		self.make_records(["from_date", "to_date", "company"], records)
 
-	@classmethod
-	def make_leave_allocations(cls):
+	def make_leave_allocations(self):
 		"""Create test leave applications"""
 		# Create test leave applications here
 		records = [
@@ -229,10 +214,9 @@ class HRMSTestSuite(ERPNextTestSuite):
 				"new_leaves_allocated": 15,
 			},
 		]
-		cls.make_records(["employee", "from_date", "to_date"], records, "leave_allocations")
+		self.make_records(["employee", "from_date", "to_date"], records)
 
-	@classmethod
-	def make_leave_applications(cls):
+	def make_leave_applications(self):
 		records = [
 			{
 				"company": "_Test Company",
@@ -265,10 +249,9 @@ class HRMSTestSuite(ERPNextTestSuite):
 				"to_date": "2013-01-15",
 			},
 		]
-		cls.make_records(["employee", "from_date"], records, "leave_applications")
+		self.make_records(["employee", "from_date"], records)
 
-	@classmethod
-	def make_leave_block_lists(cls):
+	def make_leave_block_lists(self):
 		records = [
 			{
 				"company": "_Test Company",
@@ -343,23 +326,20 @@ class HRMSTestSuite(ERPNextTestSuite):
 				"applies_to_all_departments": 1,
 			},
 		]
-		cls.make_records(["leave_block_list_name"], records, "leave_block_lists")
+		self.make_records(["leave_block_list_name"], records)
 
-	@classmethod
-	def update_email_account_settings(cls):
+	def update_email_account_settings(self):
 		email_account = frappe.get_doc("Email Account", "Jobs")
 		email_account.enable_outgoing = 1
 		email_account.default_outgoing = 1
 		email_account.save()
 
-	@classmethod
-	def update_system_settings(cls):
+	def update_system_settings(self):
 		system_settings = frappe.get_doc("System Settings")
 		system_settings.country = "India"
 		system_settings.save()
 
-	@classmethod
-	def make_records(self, key, records, attr):
+	def make_records(self, key, records):
 		doctype = records[0].get("doctype")
 
 		def get_filters(record):
@@ -376,5 +356,11 @@ class HRMSTestSuite(ERPNextTestSuite):
 					doc.get_weekly_off_dates()
 					doc.save()
 
-	def tearDown(self):
-		frappe.db.rollback()
+
+BootStrapTestData()
+
+
+class HRMSTestSuite(ERPNextTestSuite):
+	"""Class for creating HRMS test records"""
+
+	pass

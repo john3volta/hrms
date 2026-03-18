@@ -392,8 +392,8 @@ def process_bulk_attendance_in_batches(data, chunk_size=20):
 				if not frappe.flags.in_test:
 					frappe.db.rollback(save_point=savepoint)
 				continue
-	if not frappe.flags.in_test:
-		frappe.db.commit()  # nosemgrep
+		if not frappe.flags.in_test:
+			frappe.db.commit()  # nosemgrep
 
 
 @frappe.whitelist()

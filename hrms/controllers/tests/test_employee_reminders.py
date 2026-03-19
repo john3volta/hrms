@@ -62,6 +62,10 @@ class TestEmployeeReminders(HRMSTestSuite):
 		self.test_employee_2 = test_employee_2
 		self.holiday_list_2 = test_holiday_list2
 
+		# Clear Email Queue
+		frappe.db.sql("delete from `tabEmail Queue`")
+		frappe.db.sql("delete from `tabEmail Queue Recipient`")
+
 	@classmethod
 	def get_test_holiday_dates(cls):
 		today_date = getdate()

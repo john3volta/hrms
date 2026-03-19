@@ -203,7 +203,7 @@ def get_additional_salary(
 	add_sal.overwrite_salary_structure_amount = overwrite_salary_structure
 
 	add_sal.amount = 5000
-	add_sal.currency = erpnext.get_default_currency()
+	add_sal.currency = "INR"
 	add_sal.save()
 	add_sal.submit()
 

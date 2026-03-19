@@ -13,9 +13,7 @@ from hrms.tests.utils import HRMSTestSuite
 
 class TestUploadAttendance(HRMSTestSuite):
 	def setUp(self):
-		frappe.db.set_value(
-			"Company", erpnext.get_default_company(), "default_holiday_list", "_Test Holiday List"
-		)
+		frappe.db.set_value("Company", "_Test Company", "default_holiday_list", "_Test Holiday List")
 
 	def test_date_range(self):
 		employee = make_employee("test_employee@company.com", company="_Test Company")

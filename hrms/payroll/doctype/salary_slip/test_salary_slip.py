@@ -921,7 +921,7 @@ class TestSalarySlip(HRMSTestSuite):
 		self.assertIsNotNone(get_email_by_subject("Test Salary Slip Email Template"))
 
 	def test_payroll_frequency(self):
-		fiscal_year = get_fiscal_year(nowdate(), company=erpnext.get_default_company())[0]
+		fiscal_year = get_fiscal_year(nowdate(), company="_Test Company")[0]
 		month = "%02d" % getdate(nowdate()).month
 		m = get_month_details(fiscal_year, month)
 
@@ -1956,7 +1956,7 @@ class TestSalarySlip(HRMSTestSuite):
 				"overwrite_salary_structure_amount": 1,
 				"amount": 0,
 				"payroll_date": payroll_period.start_date,
-				"currency": erpnext.get_default_currency(),
+				"currency": "INR",
 			}
 		).submit()
 
@@ -2363,8 +2363,8 @@ def create_exemption_declaration(employee, payroll_period):
 			"doctype": "Employee Tax Exemption Declaration",
 			"employee": employee,
 			"payroll_period": payroll_period,
-			"company": erpnext.get_default_company(),
-			"currency": erpnext.get_default_currency(),
+			"company": "_Test Company",
+			"currency": "INR",
 		}
 	)
 	declaration.append(
@@ -2386,7 +2386,7 @@ def create_proof_submission(employee, payroll_period, amount):
 			"employee": employee,
 			"payroll_period": payroll_period.name,
 			"submission_date": submission_date,
-			"currency": erpnext.get_default_currency(),
+			"currency": "INR",
 		}
 	)
 	proof_submission.append(
@@ -2412,7 +2412,7 @@ def create_tax_slab(
 	apply_tax_relief=False,
 ):
 	if not currency:
-		currency = erpnext.get_default_currency()
+		currency = "INR"
 
 	if company:
 		currency = erpnext.get_company_currency(company)
@@ -2502,7 +2502,7 @@ def create_additional_salary(employee, payroll_period, amount, company):
 			"payroll_date": salary_date,
 			"amount": amount,
 			"type": "Earning",
-			"currency": erpnext.get_default_currency(),
+			"currency": "INR",
 		}
 	).submit()
 	return salary_date
@@ -2529,7 +2529,7 @@ def make_leave_application(
 			to_date=to_date,
 			half_day=half_day,
 			half_day_date=half_day_date,
-			company=company or erpnext.get_default_company() or "_Test Company",
+			company=company or "_Test Company" or "_Test Company",
 			status="Approved",
 			leave_approver="test@example.com",
 		)
@@ -2542,7 +2542,7 @@ def make_leave_application(
 
 
 def make_payroll_period(company=None):
-	default_company = company or erpnext.get_default_company()
+	default_company = company or "_Test Company"
 	company_based_payroll_period = {
 		default_company: f"_Test Payroll Period {default_company}",
 		"_Test Company": "_Test Payroll Period",
@@ -2564,7 +2564,7 @@ def make_payroll_period(company=None):
 def make_holiday_list(
 	list_name=None, from_date=None, to_date=None, add_weekly_offs=True, weekly_off_days=None
 ):
-	fiscal_year = get_fiscal_year(nowdate(), company=erpnext.get_default_company())
+	fiscal_year = get_fiscal_year(nowdate(), company="_Test Company")
 	name = list_name or "Salary Slip Test Holiday List"
 
 	frappe.delete_doc_if_exists("Holiday List", name, force=True)
@@ -2705,14 +2705,14 @@ def create_recurring_additional_salary(employee, salary_component, amount, from_
 		{
 			"doctype": "Additional Salary",
 			"employee": employee,
-			"company": company or erpnext.get_default_company(),
+			"company": company or "_Test Company",
 			"salary_component": salary_component,
 			"is_recurring": 1,
 			"from_date": from_date,
 			"to_date": to_date,
 			"amount": amount,
 			"type": "Earning",
-			"currency": erpnext.get_default_currency(),
+			"currency": "INR",
 		}
 	).submit()
 

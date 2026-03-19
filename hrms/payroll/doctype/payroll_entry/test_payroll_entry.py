@@ -1076,7 +1076,7 @@ def get_payroll_entry(**args):
 	args = frappe._dict(args)
 
 	payroll_entry: PayrollEntry = frappe.new_doc("Payroll Entry")
-	payroll_entry.company = args.company or erpnext.get_default_company()
+	payroll_entry.company = args.company or "_Test Company"
 	payroll_entry.start_date = args.start_date or "2016-11-01"
 	payroll_entry.end_date = args.end_date or "2016-11-30"
 	payroll_entry.payment_account = get_payment_account()
@@ -1116,7 +1116,7 @@ def make_payroll_entry(**args):
 def get_payment_account():
 	return frappe.get_value(
 		"Account",
-		{"account_type": "Cash", "company": erpnext.get_default_company() or "_Test Company", "is_group": 0},
+		{"account_type": "Cash", "company": "_Test Company" or "_Test Company", "is_group": 0},
 		"name",
 	)
 

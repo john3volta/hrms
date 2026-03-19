@@ -29,7 +29,7 @@ class BootStrapTestData:
 		# TODO: clean up
 		if frappe.db.get_value("Holiday List Assignment", {"assigned_to": "_Test Company"}, "docstatus") == 0:
 			frappe.get_doc("Holiday List Assignment", {"assigned_to": "_Test Company"}).submit()
-		frappe.db.commit()
+		frappe.db.commit()  # nosemgrep
 
 	def make_designations(self):
 		designations = [

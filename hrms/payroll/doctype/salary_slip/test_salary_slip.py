@@ -2521,18 +2521,16 @@ def make_leave_application(
 	create_user("test@example.com")
 
 	leave_application = frappe.get_doc(
-		dict(
-			doctype="Leave Application",
-			employee=employee,
-			leave_type=leave_type,
-			from_date=from_date,
-			to_date=to_date,
-			half_day=half_day,
-			half_day_date=half_day_date,
-			company=company or "_Test Company" or "_Test Company",
-			status="Approved",
-			leave_approver="test@example.com",
-		)
+		doctype="Leave Application",
+		employee=employee,
+		leave_type=leave_type,
+		from_date=from_date,
+		to_date=to_date,
+		half_day=half_day,
+		half_day_date=half_day_date,
+		company=company or "_Test Company" or "_Test Company",
+		status="Approved",
+		leave_approver="test@example.com",
 	).insert()
 
 	if submit:

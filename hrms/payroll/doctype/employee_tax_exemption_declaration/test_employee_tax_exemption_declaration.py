@@ -429,13 +429,11 @@ def create_payroll_period(**args):
 		from datetime import date
 
 		payroll_period = frappe.get_doc(
-			dict(
-				doctype="Payroll Period",
-				name=name,
-				company=args.company or "_Test Company",
-				start_date=args.start_date or date(date.today().year, 1, 1),
-				end_date=args.end_date or date(date.today().year, 12, 31),
-			)
+			doctype="Payroll Period",
+			name=name,
+			company=args.company or "_Test Company",
+			start_date=args.start_date or date(date.today().year, 1, 1),
+			end_date=args.end_date or date(date.today().year, 12, 31),
 		).insert()
 		return payroll_period
 	else:

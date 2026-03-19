@@ -12,7 +12,6 @@ from hrms.tests.utils import HRMSTestSuite
 
 class TestGoal(HRMSTestSuite):
 	def setUp(self):
-		frappe.db.delete("Goal")
 		create_kras(["Development", "Quality"])
 
 		self.employee1 = make_employee("employee1@example.com", company="_Test Company")

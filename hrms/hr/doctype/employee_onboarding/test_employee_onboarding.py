@@ -15,15 +15,6 @@ from hrms.tests.utils import HRMSTestSuite
 
 
 class TestEmployeeOnboarding(HRMSTestSuite):
-	def setUp(self):
-		create_company()
-		if frappe.db.exists("Employee Onboarding", {"employee_name": "Test Engineer"}):
-			frappe.db.sql("delete from `tabEmployee Onboarding` where employee_name=%s", "Test Engineer")
-
-		project = "Employee Onboarding : test@engineer.com"
-		frappe.db.sql("delete from tabProject where project_name=%s", project)
-		frappe.db.sql("delete from tabTask where project=%s", project)
-
 	def test_employee_onboarding_incomplete_task(self):
 		onboarding = create_employee_onboarding()
 

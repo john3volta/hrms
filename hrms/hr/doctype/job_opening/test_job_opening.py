@@ -13,12 +13,7 @@ from hrms.tests.utils import HRMSTestSuite
 
 class TestJobOpening(HRMSTestSuite):
 	def setUp(self):
-		frappe.db.delete("Staffing Plan")
-		frappe.db.delete("Staffing Plan Detail")
-		frappe.db.delete("Job Opening")
-
 		make_company("_Test Opening Company", "_TOC")
-		frappe.db.delete("Employee", {"company": "_Test Opening Company"})
 
 	def test_vacancies_fulfilled(self):
 		make_employee("test_job_opening@example.com", company="_Test Opening Company", designation="Designer")

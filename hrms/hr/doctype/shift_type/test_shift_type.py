@@ -25,11 +25,6 @@ from hrms.tests.utils import HRMSTestSuite
 
 class TestShiftType(HRMSTestSuite):
 	def setUp(self):
-		frappe.db.delete("Shift Type")
-		frappe.db.delete("Shift Assignment")
-		frappe.db.delete("Employee Checkin")
-		frappe.db.delete("Attendance")
-
 		from_date = get_year_start(getdate())
 		to_date = get_year_ending(getdate())
 		self.holiday_list = make_holiday_list(from_date=from_date, to_date=to_date)

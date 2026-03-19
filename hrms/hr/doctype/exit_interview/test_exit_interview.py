@@ -16,9 +16,6 @@ from hrms.tests.utils import HRMSTestSuite
 
 
 class TestExitInterview(HRMSTestSuite):
-	def setUp(self):
-		frappe.db.sql("delete from `tabExit Interview`")
-
 	def test_duplicate_interview(self):
 		employee = make_employee("employeeexitint1@example.com", company="_Test Company")
 		frappe.db.set_value("Employee", employee, "relieving_date", getdate())

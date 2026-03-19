@@ -11,15 +11,6 @@ from hrms.tests.utils import HRMSTestSuite
 
 class TestLeaveAllocation(HRMSTestSuite):
 	def setUp(self):
-		for doctype in [
-			"Leave Period",
-			"Leave Application",
-			"Leave Allocation",
-			"Leave Policy Assignment",
-			"Leave Ledger Entry",
-		]:
-			frappe.db.delete(doctype)
-
 		employee = frappe.get_doc("Employee", {"first_name": "_Test Employee"})
 		self.original_doj = employee.date_of_joining
 

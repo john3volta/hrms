@@ -13,9 +13,6 @@ from hrms.tests.utils import HRMSTestSuite
 
 class TestShiftScheduleAssignment(HRMSTestSuite):
 	def setUp(self):
-		for dt in ["Shift Type", "Shift Schedule", "Shift Schedule Assignment", "Shift Assignment"]:
-			frappe.db.delete(dt)
-
 		self.employee = make_employee("test@scheduleassignment.com", company="_Test Company")
 		self.shift_type = setup_shift_type(
 			shift_type="Test Schedule Assignment", start_time="08:00:00", end_time="12:00:00"

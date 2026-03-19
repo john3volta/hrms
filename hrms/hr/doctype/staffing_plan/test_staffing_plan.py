@@ -12,8 +12,6 @@ from hrms.tests.utils import HRMSTestSuite
 
 class TestStaffingPlan(HRMSTestSuite):
 	def setUp(self):
-		for doctype in ["Staffing Plan", "Staffing Plan Detail"]:
-			frappe.db.delete(doctype)
 		make_company()
 
 	def test_staffing_plan(self):

@@ -15,10 +15,6 @@ from hrms.tests.utils import HRMSTestSuite
 
 
 class TestEmployeeReferral(HRMSTestSuite):
-	def setUp(self):
-		for d in ["Job Applicant", "Employee Referral"]:
-			frappe.db.delete(d)
-
 	def test_workflow_and_status_sync(self):
 		emp_ref = create_employee_referral()
 

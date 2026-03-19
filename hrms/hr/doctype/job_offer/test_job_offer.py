@@ -15,9 +15,6 @@ from hrms.tests.utils import HRMSTestSuite
 
 class TestJobOffer(HRMSTestSuite):
 	def setUp(self):
-		frappe.db.delete("Job Applicant")
-		frappe.db.delete("Job Offer")
-
 		create_designation(designation_name="Researcher")
 
 	def test_job_offer_creation_against_vacancies(self):

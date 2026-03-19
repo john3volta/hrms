@@ -1097,9 +1097,6 @@ def get_payroll_entry(**args):
 	payroll_entry.fill_employee_details()
 	payroll_entry.insert()
 
-	# Commit so that the first salary slip creation failure does not rollback the Payroll Entry insert.
-	# frappe.db.commit()  # nosemgrep
-
 	return payroll_entry
 
 

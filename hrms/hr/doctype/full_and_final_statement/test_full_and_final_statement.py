@@ -12,9 +12,6 @@ from hrms.tests.utils import HRMSTestSuite
 
 class TestFullandFinalStatement(HRMSTestSuite):
 	def setUp(self):
-		for dt in ["Full and Final Statement", "Asset", "Asset Movement", "Asset Movement Item"]:
-			frappe.db.delete(dt)
-
 		self.setup_fnf()
 
 	def setup_fnf(self):

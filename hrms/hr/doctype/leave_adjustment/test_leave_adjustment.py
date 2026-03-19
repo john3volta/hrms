@@ -16,8 +16,6 @@ from hrms.tests.utils import HRMSTestSuite
 
 class TestLeaveAdjustment(HRMSTestSuite):
 	def setUp(self):
-		for dt in ["Leave Adjustment", "Leave Allocation", "Leave Application", "Leave Ledger Entry"]:
-			frappe.db.delete(dt)
 		self.employee = frappe.get_doc("Employee", {"first_name": "_Test Employee"})
 		self.leave_allocation = create_leave_allocation(
 			employee=self.employee.name,

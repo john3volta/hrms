@@ -9,9 +9,6 @@ from hrms.tests.utils import HRMSTestSuite
 
 
 class TestEmployeePromotion(HRMSTestSuite):
-	def setUp(self):
-		frappe.db.delete("Employee Promotion")
-
 	def test_submit_before_promotion_date(self):
 		employee = make_employee("employee@promotions.com", company="_Test Company")
 		promotion = frappe.get_doc(

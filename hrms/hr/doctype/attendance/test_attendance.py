@@ -4,7 +4,6 @@
 from datetime import datetime
 
 import frappe
-from frappe.tests import IntegrationTestCase
 from frappe.utils import (
 	add_days,
 	add_months,
@@ -31,17 +30,12 @@ from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import
 	create_holiday_list_assignment,
 )
 from hrms.tests.test_utils import get_first_sunday
+from hrms.tests.utils import HRMSTestSuite
 
 
-class TestAttendance(IntegrationTestCase):
+class TestAttendance(HRMSTestSuite):
 	def setUp(self):
-		from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
-
-		from_date = get_year_start(add_months(getdate(), -1))
-		to_date = get_year_ending(getdate())
-		self.holiday_list = make_holiday_list(from_date=from_date, to_date=to_date)
-		frappe.db.delete("Attendance")
-		frappe.db.delete("Employee Checkin")
+		self.holiday_list = "Salary Slip Test Holiday List"
 
 	def test_duplicate_attendance(self):
 		employee = make_employee("test_duplicate_attendance@example.com", company="_Test Company")
@@ -144,7 +138,7 @@ class TestAttendance(IntegrationTestCase):
 		).insert()
 
 	def test_mark_absent(self):
-		employee = make_employee("test_mark_absent@example.com")
+		employee = make_employee("test_mark_absent@example.com", company="_Test Company")
 		date = nowdate()
 
 		attendance = mark_attendance(employee, date, "Absent")
@@ -158,7 +152,9 @@ class TestAttendance(IntegrationTestCase):
 		attendance_date = add_days(first_sunday, 1)
 
 		employee = make_employee(
-			"test_unmarked_days@example.com", date_of_joining=add_days(attendance_date, -1)
+			"test_unmarked_days@example.com",
+			date_of_joining=add_days(attendance_date, -1),
+			company="_Test Company",
 		)
 		frappe.db.set_value("Employee", employee, "holiday_list", self.holiday_list)
 
@@ -182,7 +178,9 @@ class TestAttendance(IntegrationTestCase):
 		attendance_date = add_days(first_sunday, 1)
 
 		employee = make_employee(
-			"test_unmarked_days@example.com", date_of_joining=add_days(attendance_date, -1)
+			"test_unmarked_days@example.com",
+			date_of_joining=add_days(attendance_date, -1),
+			company="_Test Company",
 		)
 
 		mark_attendance(employee, attendance_date, "Present")
@@ -228,7 +226,10 @@ class TestAttendance(IntegrationTestCase):
 		doj = add_days(date, 1)
 		relieving_date = add_days(date, 5)
 		employee = make_employee(
-			"test_unmarked_days_as_per_doj@example.com", date_of_joining=doj, relieving_date=relieving_date
+			"test_unmarked_days_as_per_doj@example.com",
+			date_of_joining=doj,
+			relieving_date=relieving_date,
+			company="_Test Company",
 		)
 
 		frappe.db.set_value("Employee", employee, "holiday_list", self.holiday_list)
@@ -270,14 +271,14 @@ class TestAttendance(IntegrationTestCase):
 		self.assertEqual(len(attendances), 1)
 
 	def test_get_events_returns_attendance(self):
-		employee = make_employee("calendar.user@example.com", company="_Test Company")
+		employee = frappe.get_doc("Employee", {"first_name": "_Test Employee"})
 
-		attendance_name = mark_attendance(employee, getdate(), status="Present")
+		attendance_name = mark_attendance(employee.name, getdate(), status="Present")
 		attendance = frappe.get_value("Attendance", attendance_name, "status")
 
 		self.assertEqual(attendance, "Present")
 
-		frappe.set_user("calendar.user@example.com")
+		frappe.set_user(employee.user_id)
 		try:
 			events = get_events(start=getdate(), end=getdate())
 		finally:
@@ -289,9 +290,6 @@ class TestAttendance(IntegrationTestCase):
 		self.assertEqual(attendance_events[0].get("status"), "Present")
 		self.assertEqual(
 			attendance_events[0].get("employee_name"),
-			frappe.db.get_value("Employee", employee, "employee_name"),
+			frappe.db.get_value("Employee", employee.name, "employee_name"),
 		)
 		self.assertEqual(attendance_events[0].get("attendance_date"), getdate())
-
-	def tearDown(self):
-		frappe.db.rollback()

@@ -124,8 +124,8 @@ class TestAttendanceRequest(HRMSTestSuite):
 
 		make_allocation_record(leave_type=leave_type.name, from_date=self.from_date, to_date=self.to_date)
 		today = getdate()
+		frappe.db.delete("Holiday", {"parent": self.holiday_list})
 		make_leave_application(self.employee.name, today, today, leave_type.name)
-
 		attendance_request = create_attendance_request(
 			employee=self.employee.name, reason="On Duty", company="_Test Company"
 		)

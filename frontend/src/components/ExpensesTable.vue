@@ -252,10 +252,10 @@ watch(
 		if (!fields) return
 
 		updateCurrencyLabels({
-		formFields: fields,
-		doc: props.expenseClaim,
-		baseFields: ["base_amount", "base_sanctioned_amount"],
-		transactionFields: ["amount", "sanctioned_amount"],
+			formFields: fields,
+			doc: props.expenseClaim,
+			baseFields: ["base_amount", "base_sanctioned_amount"],
+			transactionFields: ["amount", "sanctioned_amount"],
 		})
 	},
 	{ immediate: true }

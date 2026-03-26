@@ -267,29 +267,29 @@ watch(
 )
 
 watch(
-    () => [
-        expenseClaim.value.total_sanctioned_amount,
-        expenseClaim.value.total_advance_amount,
-        expenseClaim.value.grand_total,
-        expenseClaim.value.total_claimed_amount,
-        expenseClaim.value.total_taxes_and_charges,
-        expenseClaim.value.exchange_rate
-    ],
-    () => {
-        const fieldsToConvert = [
-            "total_sanctioned_amount",
-            "total_advance_amount",
-            "grand_total",
-            "total_claimed_amount",
-            "total_taxes_and_charges"
-        ];
-        updateBaseFieldsAmount({
+	() => [
+		expenseClaim.value.total_sanctioned_amount,
+		expenseClaim.value.total_advance_amount,
+		expenseClaim.value.grand_total,
+		expenseClaim.value.total_claimed_amount,
+		expenseClaim.value.total_taxes_and_charges,
+		expenseClaim.value.exchange_rate
+	],
+	() => {
+		const fieldsToConvert = [
+			"total_sanctioned_amount",
+			"total_advance_amount",
+			"grand_total",
+			"total_claimed_amount",
+			"total_taxes_and_charges"
+		];
+		updateBaseFieldsAmount({
 			doc: expenseClaim.value,
 			fields: fieldsToConvert,
 			exchangeRate: expenseClaim.value.exchange_rate,
 		});
-    },
-    { deep: true }
+	},
+	{ deep: true }
 );
 
 // helper functions

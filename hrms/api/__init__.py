@@ -506,6 +506,7 @@ def get_expense_claims(
 		"`tabExpense Claim`.posting_date",
 		"`tabExpense Claim`.employee",
 		"`tabExpense Claim`.employee_name",
+		"`tabExpense Claim`.currency",
 		"`tabExpense Claim`.approval_status",
 		"`tabExpense Claim`.status",
 		"`tabExpense Claim`.expense_approver",

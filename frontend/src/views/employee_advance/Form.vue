@@ -60,7 +60,6 @@ watch(
 		updateCurrencyLabels({
 			formFields: fields,
 			doc: employeeAdvance.value,
-			baseFields: ["base_paid_amount"],
 			transactionFields: ["paid_amount"],
 		})
 	},
@@ -79,7 +78,7 @@ watch(
 function getFilteredFields(fields) {
 	// reduce noise from the form view by excluding unnecessary fields
 	// eg: employee and other details can be fetched from the session user
-	const excludeFields = ["naming_series"]
+	const excludeFields = ["naming_series", "base_paid_amount"]
 	const extraFields = [
 		"employee",
 		"employee_name",

@@ -58,7 +58,7 @@ import ExpensesTable from "@/components/ExpensesTable.vue"
 import ExpenseTaxesTable from "@/components/ExpenseTaxesTable.vue"
 import ExpenseAdvancesTable from "@/components/ExpenseAdvancesTable.vue"
 import { getCompanyCurrency } from "@/data/currencies"
-import { updateCurrencyLabels, updateBaseFieldsAmount } from "@/composables/useCurrencyConversion"
+import { updateCurrencyLabels } from "@/composables/useCurrencyConversion"
 
 
 const dayjs = inject("$dayjs")
@@ -244,13 +244,6 @@ watch(
 		updateCurrencyLabels({
 			formFields: fields,
 			doc: expenseClaim.value,
-			baseFields: [
-				"base_total_sanctioned_amount",
-				"base_total_taxes_and_charges",
-				"base_total_advance_amount",
-				"base_grand_total",
-				"base_total_claimed_amount"
-			],
 			transactionFields: [
 				"total_sanctioned_amount",
 				"total_taxes_and_charges",
@@ -262,32 +255,6 @@ watch(
 	},
 	{ immediate: true }
 )
-
-watch(
-	() => [
-		expenseClaim.value.total_sanctioned_amount,
-		expenseClaim.value.total_advance_amount,
-		expenseClaim.value.grand_total,
-		expenseClaim.value.total_claimed_amount,
-		expenseClaim.value.total_taxes_and_charges,
-		expenseClaim.value.exchange_rate
-	],
-	() => {
-		const fieldsToConvert = [
-			"total_sanctioned_amount",
-			"total_advance_amount",
-			"grand_total",
-			"total_claimed_amount",
-			"total_taxes_and_charges"
-		];
-		updateBaseFieldsAmount({
-			doc: expenseClaim.value,
-			fields: fieldsToConvert,
-			exchangeRate: expenseClaim.value.exchange_rate,
-		});
-	},
-	{ deep: true }
-);
 
 // helper functions
 function getFilteredFields(fields) {
@@ -313,7 +280,12 @@ function getFilteredFields(fields) {
 
 	if (!props.id) excludeFields.push(...extraFields)
 
-	return fields.filter((field) => !excludeFields.includes(field.fieldname))
+	return fields.filter((field) => {
+		if (excludeFields.includes(field.fieldname)) return false
+
+		if (field.fieldname?.startsWith("base_")) return false
+		return true
+	})
 }
 
 function applyFilters(field) {

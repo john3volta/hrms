@@ -7,7 +7,7 @@ const flt = (value, precision) => {
 	return parseFloat(num.toFixed(targetPrecision));
 };
 
-export function updateCurrencyLabels({ formFields, doc, baseFields = [], transactionFields = []}) {
+export function updateCurrencyLabels({ formFields, doc, transactionFields = []}) {
 	if (!formFields || !doc) return
 	const companyCurrency = ref("")
 	// fetch company currency initially or when company changes
@@ -16,7 +16,7 @@ export function updateCurrencyLabels({ formFields, doc, baseFields = [], transac
 		companyCurrency.value = await getCompanyCurrency(doc.company)
 	}
 
-	const currencyFields = new Set([...baseFields, ...transactionFields])
+	const currencyFields = new Set([...transactionFields])
 	const updateLabels = () => {
 		if (!companyCurrency.value) return
 
@@ -26,10 +26,6 @@ export function updateCurrencyLabels({ formFields, doc, baseFields = [], transac
 
 			if (!field._original_label && field.label) {
 				field._original_label = field.label.replace(/\([^\)]*\)/g, "").trim()
-			}
-			if (baseFields.includes(field.fieldname)) {
-				field.label = `${field._original_label} (${companyCurrency.value})`
-				field.hidden = doc.currency === companyCurrency.value
 			}
 			if (transactionFields.includes(field.fieldname)) {
 				field.label = `${field._original_label} (${doc.currency})`
@@ -48,14 +44,4 @@ export function updateCurrencyLabels({ formFields, doc, baseFields = [], transac
 	)
 
 	return { updateLabels, companyCurrency }
-}
-
-// function to update base currency fields data
-export function updateBaseFieldsAmount({doc, fields, exchangeRate}) {
-	if (!doc) return;
-	const exchange_rate = flt(exchangeRate || doc.exchange_rate || 1, 9);
-	fields.forEach(f => {
-		const val = flt(flt(doc[f]) * exchange_rate);
-		doc["base_" + f] = val;
-	});
 }

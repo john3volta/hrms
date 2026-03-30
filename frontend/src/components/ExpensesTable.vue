@@ -140,7 +140,7 @@ import CustomIonModal from "@/components/CustomIonModal.vue"
 import { claimTypesByID } from "@/data/claims"
 import { formatCurrency } from "@/utils/formatters"
 
-import { updateCurrencyLabels, updateBaseFieldsAmount } from "@/composables/useCurrencyConversion"
+import { updateCurrencyLabels } from "@/composables/useCurrencyConversion"
 
 const props = defineProps({
 	expenseClaim: {
@@ -199,7 +199,7 @@ const expensesTableFields = createResource({
 	url: "hrms.api.get_doctype_fields",
 	params: { doctype: "Expense Claim Detail" },
 	transform(data) {
-		const excludeFields = ["description_sb", "amounts_sb"]
+		const excludeFields = ["description_sb", "amounts_sb", "base_amount", "base_sanctioned_amount"]
 		return data.filter((field) => !excludeFields.includes(field.fieldname))
 	},
 })
@@ -250,39 +250,10 @@ watch(
 		updateCurrencyLabels({
 			formFields: fields,
 			doc: props.expenseClaim,
-			baseFields: ["base_amount", "base_sanctioned_amount"],
 			transactionFields: ["amount", "sanctioned_amount"],
 		})
 	},
 	{ immediate: true }
 )
-
-watch(
-	() => [expenseItem.value.amount, expenseItem.value.sanctioned_amount],
-	() => {
-		if (expenseItem.value) {
-			updateBaseFieldsAmount({
-				doc: expenseItem.value,
-				fields: ['amount', 'sanctioned_amount'],
-				exchangeRate: props.expenseClaim.exchange_rate,
-			});
-		}
-	}
-);
-
-watch(
-	() => props.expenseClaim.exchange_rate,
-	(exchangeRate) => {
-		if (props.expenseClaim.expenses) {
-			props.expenseClaim.expenses.forEach(row => {
-				updateBaseFieldsAmount({
-					doc: row,
-					fields: ['amount', 'sanctioned_amount'],
-					exchangeRate: exchangeRate
-				});
-			});
-		}
-	}
-);
 
 </script>

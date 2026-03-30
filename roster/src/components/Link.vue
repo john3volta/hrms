@@ -88,9 +88,6 @@ const reloadOptions = (searchTextVal) => {
 
 const handleQueryUpdate = debounce((newQuery) => {
 	const val = newQuery || "";
-
-	if (val === "" && props.modelValue) return;
-
 	if (searchText.value === val) return;
 	searchText.value = val;
 	reloadOptions(val);

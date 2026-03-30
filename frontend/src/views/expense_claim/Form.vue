@@ -18,7 +18,6 @@
 				<template #expenses="{ isFormReadOnly }">
 					<ExpensesTable
 						v-model:expenseClaim="expenseClaim"
-						:currency="currency"
 						:isReadOnly="isReadOnly || isFormReadOnly"
 						@addExpenseItem="addExpenseItem"
 						@updateExpenseItem="updateExpenseItem"
@@ -29,7 +28,6 @@
 				<template #taxes="{ isFormReadOnly }">
 					<ExpenseTaxesTable
 						v-model:expenseClaim="expenseClaim"
-						:currency="currency"
 						:isReadOnly="isReadOnly || isFormReadOnly"
 						@addExpenseTax="addExpenseTax"
 						@updateExpenseTax="updateExpenseTax"

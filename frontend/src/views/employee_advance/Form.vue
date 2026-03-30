@@ -98,7 +98,7 @@ function applyFilters(fields) {
 	return fields.map((field) => {
 		if (field.fieldname === "advance_account") {
 			if (!employeeAdvance.value.currency) return field
-			
+
 			field.linkFilters = {
 				root_type: "Asset",
 				is_group: 0,

@@ -51,9 +51,11 @@ const searchText = ref("");
 const value = computed({
 	get: () => props.modelValue,
 	set: (val) => {
-		const newVal = val && typeof val === "object" && val.value !== undefined ? val.value : val;
-		console.log(newVal);
-		emit("update:modelValue", newVal || "");
+		if (typeof val === "string") {
+			emit("update:modelValue", val);
+		} else {
+			emit("update:modelValue", val?.value || "");
+		}
 	},
 });
 

@@ -43,7 +43,7 @@
 						:currency="currency"
 						:isReadOnly="isReadOnly || isFormReadOnly"
 					/>
-			
+
 				</template>
 			</FormView>
 		</ion-content>
@@ -93,7 +93,6 @@ const expenseClaim = ref({
 	doctype: "Expense Claim",
 })
 
-const currency = computed(() => expenseClaim.value.currency)
 const companyCurrency = computed(() => getCompanyCurrency(expenseClaim.value.company))
 
 // get form fields
@@ -326,7 +325,7 @@ function applyFilters(field) {
 			account_type: "Payable",
 			company: expenseClaim.value.company,
 			is_group: 0,
-			account_currency: currency.value,
+			account_currency: expenseClaim.value.currency,
 		}
 	} else if (field.fieldname === "cost_center") {
 		field.linkFilters = {
@@ -503,16 +502,10 @@ function setExchangeRate() {
 		(field) => field.fieldname === "exchange_rate"
 	)
 
-	if (currency.value === companyCurrency.value) {
-		expenseClaim.value.exchange_rate = 1
-		if (exchange_rate_field) exchange_rate_field.hidden = 1
-	}
-	if (!expenseClaim.value.exchange_rate) {
-		exchangeRate.fetch({
-			from_currency: currency.value,
-			to_currency: companyCurrency.value,
-		})
-	}
+	exchangeRate.fetch({
+		from_currency: expenseClaim.value.currency,
+		to_currency: companyCurrency.value,
+	})
 	if (exchange_rate_field) exchange_rate_field.hidden = 0
 }
 </script>

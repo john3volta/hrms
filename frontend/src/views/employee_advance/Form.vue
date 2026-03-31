@@ -51,27 +51,18 @@ const formFields = createResource({
 })
 formFields.reload()
 
-// scripts
 watch(
-	() => [formFields.data, employeeAdvance.value.currency],
-	([fields, currency]) => {
-		if (!fields || !currency) return
+	() => employeeAdvance.value.currency,
+	(currency) => {
+		if (!currency || !formFields.data) return
 
 		updateCurrencyLabels({
-			formFields: fields,
+			formFields: formFields.data,
 			doc: employeeAdvance.value,
 			transactionFields: ["paid_amount"],
 		})
 	},
 	{ immediate: true }
-)
-
-watch(
-	() => employeeAdvance.value.currency,
-	(currency) => {
-		if (!currency) return
-		formFields.reload()
-	}
 )
 
 // helper functions

@@ -1,5 +1,5 @@
-import { ref, watch } from "vue"
-import { getCompanyCurrency, currencyPrecision } from "@/data/currencies"
+import { watch } from "vue"
+import { currencyPrecision } from "@/data/currencies"
 
 const flt = (value, precision) => {
 	const num = parseFloat(value) || 0;
@@ -9,17 +9,9 @@ const flt = (value, precision) => {
 
 export function updateCurrencyLabels({ formFields, doc, transactionFields = []}) {
 	if (!formFields || !doc) return
-	const companyCurrency = ref("")
-	// fetch company currency initially or when company changes
-	const fetchCompanyCurrency = async () => {
-		if (!doc.company) return
-		companyCurrency.value = await getCompanyCurrency(doc.company)
-	}
-
 	const currencyFields = new Set([...transactionFields])
-	const updateLabels = () => {
-		if (!companyCurrency.value) return
 
+	const updateLabels = () => {
 		formFields.forEach((field) => {
 			if (!field?.fieldname) return
 			if (!currencyFields.has(field.fieldname)) return
@@ -35,13 +27,10 @@ export function updateCurrencyLabels({ formFields, doc, transactionFields = []})
 
 	// update labels
 	watch(
-		() => [doc.company, doc.currency],
-		async () => {
-			await fetchCompanyCurrency()
-			updateLabels()
-		},
+		() => doc.currency,
+		updateLabels,
 		{ immediate: true }
 	)
 
-	return { updateLabels, companyCurrency }
+	return { updateLabels}
 }

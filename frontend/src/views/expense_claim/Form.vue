@@ -38,7 +38,7 @@
 				<template #advances="{ isFormReadOnly }">
 					<ExpenseAdvancesTable
 						v-model:expenseClaim="expenseClaim"
-						:currency="currency"
+						:currency="expenseClaim.currency"
 						:isReadOnly="isReadOnly || isFormReadOnly"
 					/>
 
@@ -108,7 +108,20 @@ const formFields = createResource({
 	onSuccess(_data) {
 		expenseApproverDetails.reload()
 		companyDetails.reload()
+
+		updateCurrencyLabels({
+			formFields: formFields.data,
+			doc: expenseClaim.value,
+			transactionFields: [
+				"total_sanctioned_amount",
+				"total_taxes_and_charges",
+				"total_advance_amount",
+				"grand_total",
+				"total_claimed_amount"
+			],
+		})
 	},
+
 })
 formFields.reload()
 
@@ -234,26 +247,6 @@ watch(
 			expense.cost_center = expenseClaim.value.cost_center
 		})
 	}
-)
-
-watch(
-	() => [formFields.data, expenseClaim.value.currency],
-	([fields, currency]) => {
-		if (!fields || !currency) return
-
-		updateCurrencyLabels({
-			formFields: fields,
-			doc: expenseClaim.value,
-			transactionFields: [
-				"total_sanctioned_amount",
-				"total_taxes_and_charges",
-				"total_advance_amount",
-				"grand_total",
-				"total_claimed_amount"
-			],
-		})
-	},
-	{ immediate: true }
 )
 
 // helper functions

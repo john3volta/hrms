@@ -48,7 +48,7 @@ class AttendanceRequest(Document):
 			self.name = "New Attendance Request"
 
 		Request = frappe.qb.DocType("Attendance Request")
-		overlapping_request = (
+		query = (
 			frappe.qb.from_(Request)
 			.select(Request.name)
 			.where(
@@ -58,7 +58,12 @@ class AttendanceRequest(Document):
 				& (self.to_date >= Request.from_date)
 				& (self.from_date <= Request.to_date)
 			)
-		).run(as_dict=True)
+		)
+
+		if self.shift_type:
+			query = query.where(Request.shift_type == self.shift_type)
+
+		overlapping_request = query.run()
 
 		if overlapping_request:
 			self.throw_overlap_error(overlapping_request[0].name)

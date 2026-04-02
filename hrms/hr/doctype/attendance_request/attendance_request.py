@@ -62,6 +62,7 @@ class AttendanceRequest(Document):
 			"Shift Assignment",
 			filters={
 				"docstatus": 1,
+				"status": "Active",
 				"employee": self.employee,
 				"start_date": ("<=", self.from_date),
 				"end_date": (">=", self.to_date),

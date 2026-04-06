@@ -107,6 +107,9 @@ const formFields = createResource({
 	},
 	onSuccess(_data) {
 		expenseApproverDetails.reload()
+		if (!expenseClaim.value.currency) {
+			employeeCurrency.reload()
+		}
 		companyDetails.reload()
 
 		updateCurrencyLabels({
@@ -155,6 +158,22 @@ const expenseApproverDetails = createResource({
 	},
 })
 
+const employeeCurrency = createResource({
+	url: "frappe.client.get_value",
+	makeParams() {
+		return {
+			doctype: "Employee",
+			fieldname: ["salary_currency"],
+			filters: { name: currEmployee.value },
+		};
+	},
+	onSuccess(data) {
+		if (data?.salary_currency) {
+			expenseClaim.value.currency = data.salary_currency;
+		}
+	}
+});
+
 const companyDetails = createResource({
 	url: "hrms.api.get_company_cost_center_and_expense_account",
 	params: { company: expenseClaim.value.company },
@@ -182,6 +201,7 @@ watch(
 		}
 		currEmployee.value = employee_id
 		expenseApproverDetails.fetch({ employee: currEmployee.value })
+		employeeCurrency.fetch();
 	}
 )
 watch(

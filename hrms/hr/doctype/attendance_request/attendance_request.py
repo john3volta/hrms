@@ -42,8 +42,8 @@ class AttendanceRequest(Document):
 				message_table.append(
 					[
 						format_date(warning["date"]),
-						warning["reason"],
-						warning["action"],
+						_(warning["reason"]),
+						_(warning["action"]),
 					]
 				)
 			frappe.msgprint(

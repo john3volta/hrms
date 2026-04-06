@@ -205,9 +205,10 @@ const expensesTableFields = createResource({
 })
 expensesTableFields.reload()
 
+const expenseClaimRef = computed(() => props.expenseClaim)
 useCurrencyConversion(
 	expensesTableFields,
-	props.expenseClaim,
+	expenseClaimRef,
 	["amount", "sanctioned_amount"]
 )
 

@@ -1,11 +1,4 @@
 import { watch } from "vue"
-import { currencyPrecision } from "@/data/currencies"
-
-const flt = (value, precision) => {
-	const num = parseFloat(value) || 0;
-	const targetPrecision = precision !== undefined ? precision : (currencyPrecision.data || 2);
-	return parseFloat(num.toFixed(targetPrecision));
-};
 
 export function updateCurrencyLabels({ formFields, doc, transactionFields = []}) {
 	if (!formFields || !doc) return

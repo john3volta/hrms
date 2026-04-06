@@ -386,7 +386,7 @@ const props = defineProps({
 		default: false,
 	},
 })
-const emit = defineEmits(["validateForm", "update:modelValue"])
+const emit = defineEmits(["validateForm", "update:modelValue", "formReloaded"])
 const router = useRouter()
 const { downloadPDF } = useDownloadPDF()
 
@@ -719,6 +719,7 @@ function resetForm() {
 	nextTick(() => {
 		isFormDirty.value = false
 		isFormUpdated.value = true
+		emit("formReloaded")
 	})
 }
 function handleDownload() {

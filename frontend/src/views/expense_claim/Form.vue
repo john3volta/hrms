@@ -13,6 +13,7 @@
 				:showAttachmentView="true"
 				@validateForm="validateForm"
 				:showDownloadPDFButton="true"
+				@formReloaded="onFormReloaded"
 			>
 				<!-- Child Tables -->
 				<template #expenses="{ isFormReadOnly }">
@@ -163,6 +164,10 @@ function addUnallocatedAdvances(data) {
 			allocated_amount: 0,
 		})
 	})
+}
+
+function onFormReloaded() {
+	advances.reload()
 }
 
 const expenseApproverDetails = createResource({

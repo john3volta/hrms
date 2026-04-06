@@ -105,7 +105,6 @@ jobs:
       - name: Run Patch Tests
         run: |
           cd ~/frappe-bench/
-          bench remove-app payments --force
           bench remove-app lending --force
           jq 'del(.install_apps)' ~/frappe-bench/sites/test_site/site_config.json > tmp.json
           mv tmp.json ~/frappe-bench/sites/test_site/site_config.json

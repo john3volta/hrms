@@ -40,7 +40,6 @@
 						v-model:expenseClaim="expenseClaim"
 						:isReadOnly="isReadOnly || isFormReadOnly"
 					/>
-
 				</template>
 			</FormView>
 		</ion-content>

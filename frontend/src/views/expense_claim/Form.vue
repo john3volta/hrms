@@ -38,7 +38,6 @@
 				<template #advances="{ isFormReadOnly }">
 					<ExpenseAdvancesTable
 						v-model:expenseClaim="expenseClaim"
-						:currency="expenseClaim.currency"
 						:isReadOnly="isReadOnly || isFormReadOnly"
 					/>
 

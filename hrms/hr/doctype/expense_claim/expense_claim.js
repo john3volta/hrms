@@ -141,9 +141,9 @@ frappe.ui.form.on("Expense Claim", {
 	},
 
 	currency: function (frm) {
+		frm.trigger("set_exchange_rate");
 		frm.trigger("update_fields_label");
 		frm.trigger("update_child_fields_label");
-		frm.trigger("set_exchange_rate");
 	},
 
 	set_exchange_rate: function (frm) {
@@ -459,7 +459,6 @@ frappe.ui.form.on("Expense Claim", {
 	},
 
 	get_advances: function (frm) {
-		frappe.model.clear_table(frm.doc, "advances");
 		if (frm.doc.employee) {
 			return frappe.call({
 				method: "hrms.hr.doctype.expense_claim.expense_claim.get_advances",
@@ -467,6 +466,7 @@ frappe.ui.form.on("Expense Claim", {
 					expense_claim: frm.doc,
 				},
 				callback: function (r, rt) {
+					frappe.model.clear_table(frm.doc, "advances");
 					if (r.message) {
 						$.each(r.message, function (i, d) {
 							var row = frappe.model.add_child(

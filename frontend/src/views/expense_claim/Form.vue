@@ -212,15 +212,7 @@ watch(
 )
 watch(
 	() => expenseClaim.value.currency,
-	(currency) => {
-		if (!currency) {
-			expenseClaim.value.exchange_rate = 0
-			return
-		}
-
-		setExchangeRate()
-		formFields.reload()
-	}
+	() => setExchangeRate()
 )
 watch(
 	() => expenseClaim.value.expenses,

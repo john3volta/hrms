@@ -18,7 +18,7 @@
 <script setup>
 import { IonPage, IonContent } from "@ionic/vue"
 import { createResource } from "frappe-ui"
-import { ref, inject } from "vue"
+import { ref, inject, watch } from "vue"
 
 import FormView from "@/components/FormView.vue"
 import { useCurrencyConversion } from "@/composables/useCurrencyConversion"
@@ -85,7 +85,7 @@ function applyFilters(fields) {
 				root_type: "Asset",
 				is_group: 0,
 				account_type: "Receivable",
-				account_currency: ["in", [employeeAdvance.value.currency]],
+				account_currency: employeeAdvance.value.currency,
 				company: employeeAdvance.value.company,
 			}
 		}
@@ -93,6 +93,13 @@ function applyFilters(fields) {
 		return field
 	})
 }
+
+watch(
+	() => employeeAdvance.value.currency,
+	() => {
+		applyFilters(formFields.data)
+	}
+)
 
 function validateForm() {}
 </script>

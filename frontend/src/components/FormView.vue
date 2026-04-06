@@ -553,7 +553,6 @@ const docList = createListResource({
 const documentResource = createDocumentResource({
 	doctype: props.doctype,
 	name: props.id,
-	fields: "*",
 	setValue: {
 		onSuccess() {
 			toast({
@@ -674,7 +673,7 @@ async function handleDocUpdate(action) {
 		} else if (action == "cancel") {
 			params.docstatus = 2
 		}
-		
+
 		await documentResource.setValue.submit(params)
 		await documentResource.get.promise
 		resetForm()

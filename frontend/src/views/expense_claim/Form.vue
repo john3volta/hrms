@@ -125,27 +125,45 @@ useCurrencyConversion(
 	]
 )
 
-// resources
+// resources & helper functions
 const advances = createResource({
 	url: "hrms.hr.doctype.expense_claim.expense_claim.get_advances",
-	params: { expense_claim: expenseClaim.value },
-	auto: true,
-	transform(data) {
-		if (!data) return []
-		return data.map((item) => ({
-			...item,
-			selected: parseFloat(item.allocated_amount || 0) > 0,
-			allocated_amount: item.allocated_amount || 0
-		}))
+	makeParams() {
+		return { expense_claim: expenseClaim.value }
 	},
 	onSuccess(data) {
-		// Only replace if the resource found data
-		if (data && data.length > 0) {
-			expenseClaim.value.advances = data
-			calculateTotalAdvance()
-		}
+		selectAllocatedAdvances()
+		addUnallocatedAdvances(data)
 	},
 })
+
+function selectAllocatedAdvances() {
+	if (props.id) {
+		expenseClaim.value?.advances?.map((advance) => (advance.selected = true))
+	} else {
+		expenseClaim.value.advances = []
+	}
+}
+
+function addUnallocatedAdvances(data) {
+	// only show advances for selection in a draft claim
+	const isDraft = expenseClaim.value?.docstatus == 0 || !expenseClaim.value?.docstatus
+	if (!isDraft) return
+
+	const allocatedAdvances = new Set(
+		expenseClaim.value?.advances?.map((advance) => advance.employee_advance)
+	)
+
+	return data.forEach((advance) => {
+		if (props.id && allocatedAdvances.has(advance.employee_advance)) return
+
+		expenseClaim.value?.advances?.push({
+			...advance,
+			selected: false,
+			allocated_amount: 0,
+		})
+	})
+}
 
 const expenseApproverDetails = createResource({
 	url: "hrms.api.get_expense_approval_details",
@@ -198,9 +216,10 @@ watch(
 		}
 		currEmployee.value = employee_id
 		expenseApproverDetails.fetch({ employee: currEmployee.value })
-		employeeCurrency.fetch();
-	}
+		employeeCurrency.fetch()
+	},
 )
+
 watch(
 	() => expenseClaim.value.company,
 	(company) => {
@@ -208,17 +227,18 @@ watch(
 		companyDetails.fetch({ company: employeeCompany.value })
 	}
 )
+
 watch(
 	() => expenseClaim.value.currency,
 	() => setExchangeRate()
 )
+
 watch(
-	() => expenseClaim.value.expenses,
-	(_) => {
-		if (!props.id && expenseClaim.value.docstatus === 0) {
-			advances.reload()
-		}
-	}
+	() => expenseClaim.value.name,
+	() => {
+		advances.reload()
+	},
+	{ immediate: true }
 )
 
 watch(
@@ -227,26 +247,6 @@ watch(
 		calculateTotalAdvance()
 	},
 	{ deep: true }
-)
-
-watch(
-	() => expenseClaim.value,
-	(newDoc) => {
-		if (newDoc?.advances?.length > 0) {
-			let needsRecalc = false
-			newDoc.advances.forEach(advance => {
-				// Reapply the "selected" flag if money is allocated
-				if (parseFloat(advance.allocated_amount || 0) > 0 && !advance.selected) {
-					advance.selected = true
-					needsRecalc = true
-				}
-			})
-			if (needsRecalc) {
-				calculateTotalAdvance()
-			}
-		}
-	},
-	{ immediate: true }
 )
 
 watch(

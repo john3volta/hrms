@@ -134,6 +134,7 @@ import EmptyState from "@/components/EmptyState.vue"
 import CustomIonModal from "@/components/CustomIonModal.vue"
 
 import { formatCurrency } from "@/utils/formatters"
+import { useCurrencyConversion } from "@/composables/useCurrencyConversion"
 
 const props = defineProps({
 	expenseClaim: {
@@ -210,6 +211,13 @@ const taxesTableFields = createResource({
 	},
 })
 taxesTableFields.reload()
+
+const expenseClaimRef = computed(() => props.expenseClaim)
+useCurrencyConversion(
+	taxesTableFields,
+	expenseClaimRef,
+	["tax_amount", "total"]
+)
 
 const modalTitle = computed(() => {
 	if (props.isReadOnly) return __("Expense Tax")

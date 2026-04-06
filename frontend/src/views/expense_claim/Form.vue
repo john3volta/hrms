@@ -57,7 +57,7 @@ import ExpensesTable from "@/components/ExpensesTable.vue"
 import ExpenseTaxesTable from "@/components/ExpenseTaxesTable.vue"
 import ExpenseAdvancesTable from "@/components/ExpenseAdvancesTable.vue"
 import { getCompanyCurrency } from "@/data/currencies"
-import { updateCurrencyLabels } from "@/composables/useCurrencyConversion"
+import { useCurrencyConversion } from "@/composables/useCurrencyConversion"
 
 
 const dayjs = inject("$dayjs")
@@ -110,22 +110,21 @@ const formFields = createResource({
 			employeeCurrency.reload()
 		}
 		companyDetails.reload()
-
-		updateCurrencyLabels({
-			formFields: formFields.data,
-			doc: expenseClaim.value,
-			transactionFields: [
-				"total_sanctioned_amount",
-				"total_taxes_and_charges",
-				"total_advance_amount",
-				"grand_total",
-				"total_claimed_amount"
-			],
-		})
 	},
-
 })
 formFields.reload()
+
+useCurrencyConversion(
+	formFields,
+	expenseClaim,
+	[
+		"total_sanctioned_amount",
+		"total_taxes_and_charges",
+		"total_advance_amount",
+		"grand_total",
+		"total_claimed_amount"
+	]
+)
 
 // resources
 const advances = createResource({

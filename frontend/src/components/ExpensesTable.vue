@@ -140,7 +140,7 @@ import CustomIonModal from "@/components/CustomIonModal.vue"
 import { claimTypesByID } from "@/data/claims"
 import { formatCurrency } from "@/utils/formatters"
 
-import { updateCurrencyLabels } from "@/composables/useCurrencyConversion"
+import { useCurrencyConversion } from "@/composables/useCurrencyConversion"
 
 const props = defineProps({
 	expenseClaim: {
@@ -202,15 +202,14 @@ const expensesTableFields = createResource({
 		const excludeFields = ["description_sb", "amounts_sb", "base_amount", "base_sanctioned_amount"]
 		return data.filter((field) => !excludeFields.includes(field.fieldname))
 	},
-	onSuccess(data) {
-		updateCurrencyLabels({
-			formFields: data,
-			doc: props.expenseClaim,
-			transactionFields: ["amount", "sanctioned_amount"],
-		})
-	}
 })
 expensesTableFields.reload()
+
+useCurrencyConversion(
+	expensesTableFields,
+	props.expenseClaim,
+	["amount", "sanctioned_amount"]
+)
 
 const modalTitle = computed(() => {
 	if (props.isReadOnly) return __("Expense Item")
@@ -247,18 +246,5 @@ watch(
 			isFirstRender.value = false
 		}
 	}
-)
-
-watch(
-	() => props.expenseClaim.currency,
-	(currency) => {
-		if (!currency) return
-
-		updateCurrencyLabels({
-			formFields: expensesTableFields.data,
-			doc: props.expenseClaim,
-			transactionFields: ["amount", "sanctioned_amount"],
-		})
-	},
 )
 </script>

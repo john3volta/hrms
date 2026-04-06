@@ -18,10 +18,10 @@
 <script setup>
 import { IonPage, IonContent } from "@ionic/vue"
 import { createResource } from "frappe-ui"
-import { ref, watch, inject } from "vue"
+import { ref, inject } from "vue"
 
 import FormView from "@/components/FormView.vue"
-import { updateCurrencyLabels } from "@/composables/useCurrencyConversion"
+import { useCurrencyConversion } from "@/composables/useCurrencyConversion"
 
 const employee = inject("$employee")
 
@@ -51,18 +51,10 @@ const formFields = createResource({
 })
 formFields.reload()
 
-watch(
-	() => employeeAdvance.value.currency,
-	(currency) => {
-		if (!currency || !formFields.data) return
-
-		updateCurrencyLabels({
-			formFields: formFields.data,
-			doc: employeeAdvance.value,
-			transactionFields: ["paid_amount"],
-		})
-	},
-	{ immediate: true }
+useCurrencyConversion(
+	formFields,
+	employeeAdvance,
+	["paid_amount"]
 )
 
 // helper functions

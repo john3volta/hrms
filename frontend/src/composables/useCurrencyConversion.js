@@ -1,29 +1,37 @@
 import { watch } from "vue"
 
-export function updateCurrencyLabels({ formFields, doc, transactionFields = []}) {
-	if (!formFields || !doc) return
-	const currencyFields = new Set([...transactionFields])
+export function useCurrencyConversion(formFields, doc, fieldsToConvert = []) {
+	const currencyFields = new Set([...fieldsToConvert])
 
 	const updateLabels = () => {
-		formFields.forEach((field) => {
+		formFields.data?.forEach((field) => {
 			if (!field?.fieldname) return
 			if (!currencyFields.has(field.fieldname)) return
 
 			if (!field._original_label && field.label) {
 				field._original_label = field.label.replace(/\([^\)]*\)/g, "").trim()
 			}
-			if (transactionFields.includes(field.fieldname)) {
-				field.label = `${field._original_label} (${doc.currency})`
+			if (currencyFields.has(field.fieldname)) {
+				field.label = `${field._original_label} (${doc.value.currency})`
 			}
 		})
 	}
 
-	// update labels
 	watch(
-		() => doc.currency,
-		updateLabels,
+		() => doc.value?.currency,
+		() => {
+			updateLabels()
+		},
 		{ immediate: true }
 	)
 
-	return { updateLabels}
+	watch(
+		() => formFields.data,
+		() => {
+			updateLabels()
+		},
+		{ deep: true, immediate: true }
+	)
+
+	return { updateLabels }
 }

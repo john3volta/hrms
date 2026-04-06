@@ -202,6 +202,13 @@ const expensesTableFields = createResource({
 		const excludeFields = ["description_sb", "amounts_sb", "base_amount", "base_sanctioned_amount"]
 		return data.filter((field) => !excludeFields.includes(field.fieldname))
 	},
+	onSuccess(data) {
+		updateCurrencyLabels({
+			formFields: data,
+			doc: props.expenseClaim,
+			transactionFields: ["amount", "sanctioned_amount"],
+		})
+	}
 })
 expensesTableFields.reload()
 
@@ -243,17 +250,15 @@ watch(
 )
 
 watch(
-	() => expensesTableFields.data,
-	(fields) => {
-		if (!fields) return
+	() => props.expenseClaim.currency,
+	(currency) => {
+		if (!currency) return
 
 		updateCurrencyLabels({
-			formFields: fields,
+			formFields: expensesTableFields.data,
 			doc: props.expenseClaim,
 			transactionFields: ["amount", "sanctioned_amount"],
 		})
 	},
-	{ immediate: true }
 )
-
 </script>

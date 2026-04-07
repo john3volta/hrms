@@ -37,15 +37,32 @@ class EmployeeAdvance(Document):
 			default_advance_account = frappe.db.get_value(
 				"Company", self.company, "default_employee_advance_account"
 			)
-			if default_advance_account:
+			same_currency = self.currency == erpnext.get_company_currency(self.company)
+
+			if default_advance_account and same_currency:
 				self.advance_account = default_advance_account
-			else:
+				return
+
+			if not same_currency:
 				frappe.throw(
-					_(
-						'Advance Account is mandatory. Please set the <a href="/app/company/{0}#default_employee_advance_account" target="_blank">Default Employee Advance Account</a> in the Company record {0} and submit this document.'
-					).format(self.company),
-					title=_("Missing Advance Account"),
+					_("Please set the Advance Account {0} or in {1}").format(
+						get_link_to_form("Employee Advance", self.name + "#advance_account", _("here")),
+						get_link_to_form("Employee", self.employee + "#salary_information", self.employee),
+					),
+					title=_("Advance Account Required"),
 				)
+
+			frappe.throw(
+				_(
+					"Advance Account is mandatory. Please set the {0} in the Company {1} and submit this document."
+				).format(
+					get_link_to_form(
+						"Company", self.company + "#hr_and_payroll_tab", "Default Employee Advance Account"
+					),
+					frappe.bold(self.company),
+				),
+				title=_("Missing Advance Account"),
+			)
 
 	def on_cancel(self):
 		self.ignore_linked_doctypes = ("GL Entry", "Payment Ledger Entry", "Advance Payment Ledger Entry")

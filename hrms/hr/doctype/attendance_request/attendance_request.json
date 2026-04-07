@@ -129,7 +129,7 @@
   },
   {
    "default": "0",
-   "description": "Check if any of the day(s) selected for request is(are) holiday(s)",
+   "description": "Select if any of the days selected for request are holidays",
    "fieldname": "include_holidays",
    "fieldtype": "Check",
    "label": "Include Holidays"
@@ -137,7 +137,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-06 15:27:42.043838",
+ "modified": "2026-04-07 11:05:03.480492",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Attendance Request",

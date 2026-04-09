@@ -10,6 +10,10 @@ on:
       - '**.csv'
       - 'crowdin.yml'
       - '.mergify.yml'
+      - '**.vue'
+      - '**.pot'
+      - '**.po'
+
   workflow_dispatch:
 
 concurrency:

@@ -5,14 +5,13 @@ name: Skipped Tests
 on:
   pull_request:
     paths:
-      - "**.js"
       - "**.css"
-      - "**.svg"
+      - "**.js"
       - "**.md"
       - "**.html"
-      - 'crowdin.yml'
-      - '.coderabbit.yml'
-      - '.mergify.yml'
+      - "**.csv"
+      - "**.po"
+      - "**.pot"
       - 'crowdin.yml'
       - '.mergify.yml'
       - '**.vue'

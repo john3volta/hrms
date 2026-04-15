@@ -185,6 +185,7 @@ def get_custom_fields():
 				"label": _("Employment Type"),
 				"options": "Employment Type",
 				"insert_after": "department",
+				"in_list_view": 1,
 			},
 			{
 				"fieldname": "job_applicant",
@@ -849,3 +850,8 @@ def get_salary_slip_loan_fields():
 			},
 		],
 	}
+
+
+def make_people_workspace_standard():
+	if frappe.db.exists("Workspace Sidebar", "People"):
+		frappe.db.set_value("Workspace Sidebar", "People", "standard", 1)

@@ -48,7 +48,7 @@ def validate_onboarding_process(doc, method=None):
 def publish_update(doc, method=None):
 	import hrms
 
-	hrms.refetch_resource("hrms:employee", doc.user_id)
+	hrms.refetch_resource("hrms:employee", getattr(doc, "user_id", None))
 
 
 def update_job_applicant_and_offer(doc, method=None):
@@ -87,12 +87,12 @@ def update_job_applicant_and_offer(doc, method=None):
 
 def update_approver_role(doc, method=None):
 	"""Adds relevant approver role for the user linked to Employee"""
-	if doc.leave_approver:
+	if getattr(doc, "leave_approver", None):
 		user = frappe.get_doc("User", doc.leave_approver)
 		user.flags.ignore_permissions = True
 		user.add_roles("Leave Approver")
 
-	if doc.expense_approver:
+	if getattr(doc, "expense_approver", None):
 		user = frappe.get_doc("User", doc.expense_approver)
 		user.flags.ignore_permissions = True
 		user.add_roles("Expense Approver")

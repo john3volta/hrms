@@ -86,6 +86,16 @@
    "label": "Date of Joining"
   },
   {
+   "fieldname": "relieving_date",
+   "fieldtype": "Date",
+   "label": "Relieving Date"
+  },
+  {
+   "fieldname": "reason_for_leaving",
+   "fieldtype": "Small Text",
+   "label": "Reason for Leaving"
+  },
+  {
    "fieldname": "employment_type",
    "fieldtype": "Data",
    "label": "Employment Type"
@@ -135,16 +145,6 @@
    "fieldname": "cell_number",
    "fieldtype": "Data",
    "label": "Cell Number"
-  },
-  {
-   "fieldname": "relieving_date",
-   "fieldtype": "Date",
-   "label": "Relieving Date"
-  },
-  {
-   "fieldname": "reason_for_leaving",
-   "fieldtype": "Small Text",
-   "label": "Reason for Leaving"
   }
  ],
  "icon": "fa fa-user",

@@ -28,7 +28,7 @@ class EmployeeMaster(Employee):
 
 def validate_onboarding_process(doc, method=None):
 	"""Validates Employee Creation for linked Employee Onboarding"""
-	if not doc.job_applicant:
+	if not getattr(doc, "job_applicant", None):
 		return
 
 	employee_onboarding = frappe.get_all(
@@ -53,7 +53,7 @@ def publish_update(doc, method=None):
 
 def update_job_applicant_and_offer(doc, method=None):
 	"""Updates Job Applicant and Job Offer status as 'Accepted' and submits them"""
-	if not doc.job_applicant:
+	if not getattr(doc, "job_applicant", None):
 		return
 
 	applicant_status_before_change = frappe.db.get_value("Job Applicant", doc.job_applicant, "status")

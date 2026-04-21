@@ -16,6 +16,8 @@
   "column_break_basic",
   "status",
   "date_of_joining",
+  "relieving_date",
+  "reason_for_leaving",
   "employment_type",
   "company_section",
   "hr_organization",
@@ -115,7 +117,8 @@
    "fieldname": "user_id",
    "fieldtype": "Link",
    "label": "User",
-   "options": "User"
+   "options": "User",
+   "unique": 1
   },
   {
    "fieldname": "contact_section",
@@ -132,6 +135,16 @@
    "fieldname": "cell_number",
    "fieldtype": "Data",
    "label": "Cell Number"
+  },
+  {
+   "fieldname": "relieving_date",
+   "fieldtype": "Date",
+   "label": "Relieving Date"
+  },
+  {
+   "fieldname": "reason_for_leaving",
+   "fieldtype": "Small Text",
+   "label": "Reason for Leaving"
   }
  ],
  "icon": "fa fa-user",

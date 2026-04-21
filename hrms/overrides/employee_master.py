@@ -6,7 +6,7 @@ from frappe import _
 from frappe.model.naming import set_name_by_naming_series
 from frappe.utils import add_years, cint, get_link_to_form, getdate
 
-from frappe.model.document import Document as Employee
+from hrms.hr.doctype.employee.employee import Employee
 
 
 class EmployeeMaster(Employee):

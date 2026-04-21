@@ -19,8 +19,7 @@
   "base_sanctioned_amount",
   "accounting_dimensions_section",
   "cost_center",
-  "dimension_col_break",
-  "project"
+  "dimension_col_break"
  ],
  "fields": [
   {
@@ -114,13 +113,6 @@
   {
    "fieldname": "dimension_col_break",
    "fieldtype": "Column Break"
-  },
-  {
-   "allow_on_submit": 1,
-   "fieldname": "project",
-   "fieldtype": "Link",
-   "label": "Project",
-   "options": "Project"
   },
   {
    "fieldname": "description_sb",

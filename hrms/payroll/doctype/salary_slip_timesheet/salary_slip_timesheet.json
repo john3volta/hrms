@@ -5,26 +5,28 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "time_sheet",
-  "working_hours"
+  "employee_id",
+  "activity_type",
+  "hours"
  ],
  "fields": [
   {
-   "fieldname": "time_sheet",
-   "fieldtype": "Link",
+   "fieldname": "employee_id",
+   "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Time Sheet",
-   "options": "Timesheet",
-   "reqd": 1
+   "label": "Employee ID"
   },
   {
-   "fetch_from": "time_sheet.total_hours",
-   "fieldname": "working_hours",
+   "fieldname": "activity_type",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Activity Type"
+  },
+  {
+   "fieldname": "hours",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Working Hours",
-   "no_copy": 1,
-   "read_only": 1
+   "label": "Hours"
   }
  ],
  "istable": 1,

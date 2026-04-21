@@ -52,14 +52,6 @@ frappe.ui.form.on("Expense Claim", {
 			};
 		});
 
-		frm.set_query("task", function () {
-			return {
-				filters: {
-					project: frm.doc.project,
-				},
-			};
-		});
-
 		frm.set_query("employee", function () {
 			return {
 				query: "erpnext.controllers.queries.employee_query",
@@ -412,7 +404,7 @@ frappe.ui.form.on("Expense Claim", {
 	},
 
 	toggle_fields: function (frm) {
-		frm.toggle_reqd("mode_of_payment", frm.doc.is_paid);
+		// MODE_OF_PAYMENT_REMOVED
 	},
 
 	employee: function (frm) {
@@ -421,24 +413,6 @@ frappe.ui.form.on("Expense Claim", {
 
 	cost_center: function (frm) {
 		frm.events.set_child_cost_center(frm);
-	},
-
-	mode_of_payment: async function (frm) {
-		if (frm.doc.mode_of_payment) {
-			var mode_of_payment_type = (
-				await frappe.db.get_value("Mode of Payment", frm.doc.mode_of_payment, "type")
-			)?.message?.type;
-			frm.set_query("bank_or_cash_account", function () {
-				return {
-					filters: [
-						["account_type", "=", mode_of_payment_type],
-						["company", "=", frm.doc.company],
-						["is_group", "=", 0],
-						["account_currency", "=", frm.doc.currency],
-					],
-				};
-			});
-		}
 	},
 
 	set_child_cost_center: function (frm) {

@@ -11,7 +11,6 @@ from hrms.utils.compat import (
 	get_reference_details,
 )
 from hrms.utils.compat import get_account_currency
-from hrms.utils.compat import get_exchange_rate
 
 from hrms.hr.doctype.expense_claim.expense_claim import get_outstanding_amount_for_claim
 
@@ -84,14 +83,15 @@ def get_payment_entry_for_employee(dt, dn, party_amount=None, bank_account=None,
 	)
 
 	# bank or cash
-	bank = get_bank_cash_account(doc, bank_account)
+	# BANK_ACCOUNT_REMOVED
+	bank = get_bank_cash_account(doc)
 
 	pe = frappe.new_doc("Payment Entry")
 	pe.payment_type = payment_type
 	pe.company = doc.company
 	pe.cost_center = doc.get("cost_center")
 	pe.posting_date = nowdate()
-	pe.mode_of_payment = doc.get("mode_of_payment")
+	# MODE_OF_PAYMENT_REMOVED
 	pe.party_type = "Employee"
 	pe.party = doc.get("employee")
 	pe.contact_person = doc.get("contact_person")
@@ -120,9 +120,8 @@ def get_payment_entry_for_employee(dt, dn, party_amount=None, bank_account=None,
 	pe.set_missing_ref_details()
 
 	# fetching current exchange rate for advance payment entry
-	current_exchange_rate = get_exchange_rate(
-		pe.paid_to_account_currency, pe.paid_from_account_currency, pe.posting_date
-	)
+	# FX_REMOVED
+	current_exchange_rate = 1
 	paid_amount, received_amount = get_paid_amount_and_received_amount(
 		doc,
 		party_account_currency,
@@ -298,9 +297,8 @@ def get_total_amount_and_exchange_rate(ref_doc, party_account_currency, company_
 	if not exchange_rate:
 		# Get the exchange rate from the original ref doc
 		# or get it based on the posting date of the ref doc.
-		exchange_rate = ref_doc.get("conversion_rate") or get_exchange_rate(
-			party_account_currency, company_currency, ref_doc.posting_date
-		)
+		# FX_REMOVED
+		exchange_rate = ref_doc.get("conversion_rate") or 1
 
 	return total_amount, exchange_rate
 

@@ -145,7 +145,6 @@ frappe.ui.form.on("Employee Advance", {
 				employee_advance_name: frm.doc.name,
 				return_amount: flt(frm.doc.paid_amount - frm.doc.claimed_amount),
 				advance_account: frm.doc.advance_account,
-				mode_of_payment: frm.doc.mode_of_payment,
 				currency: frm.doc.currency,
 			},
 			callback: function (r) {

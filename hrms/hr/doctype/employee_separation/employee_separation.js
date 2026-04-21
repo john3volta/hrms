@@ -19,22 +19,6 @@ frappe.ui.form.on("Employee Separation", {
 				__("View"),
 			);
 		}
-		if (frm.doc.project) {
-			frm.add_custom_button(
-				__("Project"),
-				function () {
-					frappe.set_route("Form", "Project", frm.doc.project);
-				},
-				__("View"),
-			);
-			frm.add_custom_button(
-				__("Task"),
-				function () {
-					frappe.set_route("List", "Task", { project: frm.doc.project });
-				},
-				__("View"),
-			);
-		}
 	},
 
 	employee_separation_template: function (frm) {

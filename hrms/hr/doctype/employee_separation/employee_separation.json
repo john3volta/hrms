@@ -16,7 +16,6 @@
   "boarding_status",
   "resignation_letter_date",
   "boarding_begins_on",
-  "project",
   "table_for_activity",
   "employee_separation_template",
   "activities",
@@ -82,13 +81,6 @@
    "label": "HR Organization",
    "options": "HR Organization",
    "reqd": 1
-  },
-  {
-   "fieldname": "project",
-   "fieldtype": "Link",
-   "label": "Project",
-   "options": "Project",
-   "read_only": 1
   },
   {
    "fetch_from": "employee.department",

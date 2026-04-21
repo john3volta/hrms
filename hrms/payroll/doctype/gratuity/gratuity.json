@@ -26,7 +26,6 @@
   "payroll_date",
   "salary_component",
   "cost_center",
-  "mode_of_payment",
   "expense_account",
   "payable_account"
  ],
@@ -86,14 +85,6 @@
    "label": "Expense Account",
    "mandatory_depends_on": "eval: !doc.pay_via_salary_slip",
    "options": "Account"
-  },
-  {
-   "depends_on": "eval: !doc.pay_via_salary_slip",
-   "fieldname": "mode_of_payment",
-   "fieldtype": "Link",
-   "label": "Mode of Payment",
-   "mandatory_depends_on": "eval: !doc.pay_via_salary_slip",
-   "options": "Mode of Payment"
   },
   {
    "fieldname": "gratuity_rule",

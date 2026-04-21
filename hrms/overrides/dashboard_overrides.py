@@ -39,10 +39,8 @@ def get_dashboard_for_employee(data):
 					"Salary Structure Assignment",
 					"Salary Slip",
 					"Additional Salary",
-					"Timesheet",
 					"Employee Incentive",
 					"Retention Bonus",
-					"Bank Account",
 					"Overtime Slip",
 					"Arrear",
 					"Payroll Correction",
@@ -56,7 +54,7 @@ def get_dashboard_for_employee(data):
 		]
 	)
 
-	data["non_standard_fieldnames"].update({"Bank Account": "party", "Employee Grievance": "raised_by"})
+	data["non_standard_fieldnames"].update({"Employee Grievance": "raised_by"})
 	data.update(
 		{
 			"heatmap": True,
@@ -77,23 +75,15 @@ def get_dashboard_for_holiday_list(data):
 
 
 def get_dashboard_for_timesheet(data):
-	data["transactions"].append({"label": _("Payroll"), "items": ["Salary Slip"]})
-
+	# PROJECT_TASK_REMOVED
 	return data
 
 
 def get_dashboard_for_project(data):
-	data["transactions"].append(
-		{"label": _("Claims"), "items": ["Expense Claim"]},
-	)
-
+	# PROJECT_TASK_REMOVED
 	return data
 
 
 def get_dashboard_for_bank_account(data):
-	for section in data["transactions"]:
-		if section.get("label") == "Transactions":
-			section["items"].append("Payroll Entry")
-			break
-
+	# BANK_ACCOUNT_REMOVED
 	return data

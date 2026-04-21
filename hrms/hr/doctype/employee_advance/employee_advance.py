@@ -258,9 +258,8 @@ class EmployeeAdvance(Document):
 @frappe.whitelist()
 def make_bank_entry(dt, dn):
 	doc = frappe.get_doc(dt, dn)
-	payment_account = get_same_currency_bank_cash_account(
-		doc.hr_organization, doc.currency, doc.mode_of_payment
-	)
+	# MODE_OF_PAYMENT_REMOVED
+	payment_account = get_same_currency_bank_cash_account(doc.hr_organization, doc.currency)
 
 	je = frappe.new_doc("Journal Entry")
 	je.posting_date = nowdate()
@@ -325,15 +324,16 @@ def make_return_entry(
 	return_amount,
 	advance_account,
 	currency,
-	mode_of_payment=None,
 ):
-	bank_cash_account = get_same_currency_bank_cash_account(company, currency, mode_of_payment)
+	# MODE_OF_PAYMENT_REMOVED
+	bank_cash_account = get_same_currency_bank_cash_account(company, currency)
 
 	advance_account_currency = frappe.db.get_value("Account", advance_account, "account_currency")
 
 	je = frappe.new_doc("Journal Entry")
 	je.posting_date = nowdate()
-	je.voucher_type = get_voucher_type(mode_of_payment)
+	# MODE_OF_PAYMENT_REMOVED
+	je.voucher_type = get_voucher_type()
 	je.company = company
 	je.remark = "Return against Employee Advance: " + employee_advance_name
 	je.multi_currency = 1 if advance_account_currency != compat.get_company_currency(company) else 0
@@ -370,16 +370,14 @@ def make_return_entry(
 	return je.as_dict()
 
 
-def get_same_currency_bank_cash_account(company, currency, mode_of_payment=None):
+def get_same_currency_bank_cash_account(company, currency):
 	company_currency = compat.get_company_currency(company)
 	if currency == company_currency:
-		return get_default_bank_cash_account(company, account_type="Cash", mode_of_payment=mode_of_payment)
+		# MODE_OF_PAYMENT_REMOVED
+		return get_default_bank_cash_account(company, account_type="Cash")
 
 	account = None
-	if mode_of_payment:
-		from hrms.utils.compat import get_bank_cash_account
-
-		account = get_bank_cash_account(mode_of_payment, company).get("account")
+	# MODE_OF_PAYMENT_REMOVED
 
 	if not account:
 		accounts = frappe.get_all(
@@ -405,12 +403,8 @@ def get_same_currency_bank_cash_account(company, currency, mode_of_payment=None)
 	)
 
 
-def get_voucher_type(mode_of_payment=None):
+def get_voucher_type():
 	voucher_type = "Cash Entry"
-
-	if mode_of_payment:
-		mode_of_payment_type = frappe.get_cached_value("Mode of Payment", mode_of_payment, "type")
-		if mode_of_payment_type == "Bank":
-			voucher_type = "Bank Entry"
+	# MODE_OF_PAYMENT_REMOVED
 
 	return voucher_type

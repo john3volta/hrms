@@ -336,13 +336,8 @@ class SalarySlip(TransactionBase):
 					_("Salary Slip of employee {0} already created for this period").format(self.employee)
 				)
 		else:
-			for data in self.timesheets:
-				if frappe.db.get_value("Timesheet", data.time_sheet, "status") == "Payrolled":
-					frappe.throw(
-						_("Salary Slip of employee {0} already created for time sheet {1}").format(
-							self.employee, data.time_sheet
-						)
-					)
+			# TIMESHEET_LINK_REMOVED
+			pass
 
 	def get_date_details(self):
 		if not self.end_date:
@@ -398,7 +393,10 @@ class SalarySlip(TransactionBase):
 			).run(as_dict=1)
 
 			for data in timesheets:
-				self.append("timesheets", {"time_sheet": data.name, "working_hours": data.total_hours})
+				self.append(
+					"timesheets",
+					{"employee_id": self.employee, "activity_type": data.name, "hours": data.total_hours},
+				)
 
 	def check_sal_struct(self):
 		ss = frappe.qb.DocType("Salary Structure")
@@ -449,7 +447,7 @@ class SalarySlip(TransactionBase):
 			self.salary_structure = self._salary_structure_doc.name
 			self.hour_rate = self._salary_structure_doc.hour_rate
 			self.base_hour_rate = flt(self.hour_rate) * flt(self.exchange_rate)
-			self.total_working_hours = sum([d.working_hours or 0.0 for d in self.timesheets]) or 0.0
+			self.total_working_hours = sum([d.hours or 0.0 for d in self.timesheets]) or 0.0
 			wages_amount = self.hour_rate * self.total_working_hours
 
 			self.add_earning_for_hourly_wages(self, self._salary_structure_doc.salary_component, wages_amount)
@@ -2200,13 +2198,8 @@ class SalarySlip(TransactionBase):
 			msgprint(_("{0}: Employee email not found, hence email not sent").format(self.employee_name))
 
 	def update_status(self, salary_slip=None):
-		for data in self.timesheets:
-			if data.time_sheet:
-				timesheet = frappe.get_doc("Timesheet", data.time_sheet)
-				timesheet.salary_slip = salary_slip
-				timesheet.flags.ignore_validate_update_after_submit = True
-				timesheet.set_status()
-				timesheet.save()
+		# TIMESHEET_LINK_REMOVED
+		pass
 
 	def set_status(self, status=None):
 		"""Get and update status"""
@@ -2227,7 +2220,7 @@ class SalarySlip(TransactionBase):
 			"Employee", self.employee, ["bank_name", "bank_ac_no", "salary_mode"], as_dict=1
 		)
 		if account_details:
-			self.mode_of_payment = account_details.salary_mode
+			# MODE_OF_PAYMENT_REMOVED
 			self.bank_name = account_details.bank_name
 			self.bank_account_no = account_details.bank_ac_no
 
@@ -2267,8 +2260,8 @@ class SalarySlip(TransactionBase):
 		if self.timesheets:
 			self.total_working_hours = 0
 			for timesheet in self.timesheets:
-				if timesheet.working_hours:
-					self.total_working_hours += timesheet.working_hours
+				if timesheet.hours:
+					self.total_working_hours += timesheet.hours
 
 		wages_amount = self.total_working_hours * self.hour_rate
 		self.base_hour_rate = flt(self.hour_rate) * flt(self.exchange_rate)
@@ -2605,7 +2598,10 @@ def set_missing_values(time_sheet, target):
 	target.end_date = doc.end_date
 	target.posting_date = doc.modified
 	target.total_working_hours = doc.total_hours
-	target.append("timesheets", {"time_sheet": doc.name, "working_hours": doc.total_hours})
+	target.append(
+		"timesheets",
+		{"employee_id": doc.employee, "activity_type": doc.name, "hours": doc.total_hours},
+	)
 
 
 def throw_error_message(row, error, title, description=None):

@@ -12,7 +12,6 @@
   "column_break_7",
   "hr_organization",
   "boarding_status",
-  "project",
   "details_section",
   "employee",
   "employee_name",
@@ -121,13 +120,6 @@
    "fieldtype": "Link",
    "label": "Employee Grade",
    "options": "Employee Grade"
-  },
-  {
-   "fieldname": "project",
-   "fieldtype": "Link",
-   "label": "Project",
-   "options": "Project",
-   "read_only": 1
   },
   {
    "fieldname": "table_for_activity",

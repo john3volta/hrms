@@ -804,7 +804,7 @@ class PayrollEntry(Document):
 			"account": account,
 			"exchange_rate": flt(exchange_rate),
 			"cost_center": cost_center,
-			"project": self.project,
+			# PROJECT_TASK_REMOVED
 		}
 
 		if entry_type == "debit":
@@ -1028,7 +1028,7 @@ class PayrollEntry(Document):
 			self.update_accounting_dimensions(
 				{
 					"account": self.payment_account,
-					"bank_account": self.bank_account,
+					# BANK_ACCOUNT_REMOVED
 					"credit_in_account_currency": flt(amount, precision),
 					"exchange_rate": flt(exchange_rate),
 					"cost_center": self.cost_center,

@@ -73,8 +73,7 @@ def get_conditions(filters):
 	if filters.get("year"):
 		conditions.append("year(start_date) = '%s' " % (filters["year"]))
 
-	if filters.get("mode_of_payment"):
-		conditions.append("sal.mode_of_payment = '%s' " % (filters["mode_of_payment"]))
+	# MODE_OF_PAYMENT_REMOVED
 
 	return " and ".join(conditions)
 

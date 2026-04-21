@@ -14,7 +14,6 @@ from hrms.utils import compat
 from hrms.utils.compat import (
 	validate_docs_for_voucher_types,
 )
-from hrms.utils.compat import get_bank_cash_account
 from hrms.utils.compat import make_gl_entries
 from hrms.utils.compat import (
 	create_gain_loss_journal,
@@ -64,8 +63,7 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		self.calculate_taxes()
 		self.set_status()
 		self.validate_company_and_department()
-		if self.task and not self.project:
-			self.project = frappe.db.get_value("Task", self.task, "project")
+		# PROJECT_TASK_REMOVED
 
 	def set_status(self, update=False):
 		status = {"0": "Draft", "1": "Submitted", "2": "Cancelled"}[cstr(self.docstatus or 0)]
@@ -148,7 +146,7 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		if self.approval_status == "Draft":
 			frappe.throw(_("""Approval Status must be 'Approved' or 'Rejected'"""))
 
-		self.update_task_and_project()
+		# PROJECT_TASK_REMOVED
 		self.make_gl_entries()
 		update_reimbursed_amount(self)
 		self.update_claimed_amount_in_employee_advance()
@@ -162,7 +160,7 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 			self.repost_accounting_entries()
 
 	def on_cancel(self):
-		self.update_task_and_project()
+		# PROJECT_TASK_REMOVED
 		self.ignore_linked_doctypes = (
 			"GL Entry",
 			"Stock Ledger Entry",
@@ -183,23 +181,8 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 			frappe.get_doc("Employee Advance", d.employee_advance).update_claimed_amount()
 
 	def update_task_and_project(self):
-		if self.task:
-			task = frappe.get_doc("Task", self.task)
-
-			ExpenseClaim = frappe.qb.DocType("Expense Claim")
-			task.total_expense_claim = (
-				frappe.qb.from_(ExpenseClaim)
-				.select(Sum(ExpenseClaim.total_sanctioned_amount))
-				.where(
-					(ExpenseClaim.docstatus == 1)
-					& (ExpenseClaim.project == self.project)
-					& (ExpenseClaim.task == self.task)
-				)
-			).run()[0][0]
-
-			task.save()
-		elif self.project:
-			frappe.get_doc("Project", self.project).update_project()
+		# PROJECT_TASK_REMOVED
+		return
 
 	def make_gl_entries(self, cancel=False):
 		if flt(self.total_sanctioned_amount) > 0:
@@ -225,7 +208,6 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 						"against_voucher_type": self.doctype,
 						"against_voucher": self.name,
 						"cost_center": self.cost_center,
-						"project": self.project,
 						"transaction_exchange_rate": self.exchange_rate,
 					},
 					account_currency=self.currency,
@@ -244,7 +226,6 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 						"debit_in_transaction_currency": data.sanctioned_amount,
 						"against": self.employee,
 						"cost_center": data.cost_center or self.cost_center,
-						"project": data.project or self.project,
 						"transaction_exchange_rate": self.exchange_rate,
 					},
 					account_currency=self.currency,
@@ -272,7 +253,6 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 					"advance_voucher_no": data.employee_advance,
 					"transaction_exchange_rate": self.exchange_rate,
 					"cost_center": self.cost_center,
-					"project": self.project,
 				}
 				if not make_payment_via_je:
 					gl_dict.update(
@@ -286,45 +266,8 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		self.add_tax_gl_entries(gl_entry)
 
 		if self.is_paid and self.grand_total:
-			# payment entry
-			payment_account = get_bank_cash_account(self.mode_of_payment, self.hr_organization).get("account")
-			gl_entry.append(
-				self.get_gl_dict(
-					{
-						"account": payment_account,
-						"credit": self.base_grand_total,
-						"credit_in_account_currency": self.grand_total,
-						"credit_in_transaction_currency": self.grand_total,
-						"against": self.employee,
-						"transaction_exchange_rate": self.exchange_rate,
-						"cost_center": self.cost_center,
-						"project": self.project,
-					},
-					account_currency=self.currency,
-					item=self,
-				)
-			)
-
-			gl_entry.append(
-				self.get_gl_dict(
-					{
-						"account": self.payable_account,
-						"party_type": "Employee",
-						"party": self.employee,
-						"against": payment_account,
-						"debit": self.base_grand_total,
-						"debit_in_account_currency": self.grand_total,
-						"debit_in_transaction_currency": self.grand_total,
-						"against_voucher": self.name,
-						"against_voucher_type": self.doctype,
-						"transaction_exchange_rate": self.exchange_rate,
-						"cost_center": self.cost_center,
-						"project": self.project,
-					},
-					account_currency=self.currency,
-					item=self,
-				)
-			)
+			# MODE_OF_PAYMENT_REMOVED
+			pass
 
 		return gl_entry
 
@@ -340,7 +283,6 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 						"debit_in_transaction_currency": tax.tax_amount,
 						"against": self.employee,
 						"cost_center": tax.cost_center or self.cost_center,
-						"project": tax.project or self.project,
 						"against_voucher_type": self.doctype,
 						"against_voucher": self.name,
 						"transaction_exchange_rate": self.exchange_rate,
@@ -436,8 +378,8 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 				)
 
 		if self.is_paid:
-			if not self.mode_of_payment:
-				frappe.throw(_("Mode of payment is required to make a payment").format(self.employee))
+			# MODE_OF_PAYMENT_REMOVED
+			pass
 
 	def calculate_total_amount(self):
 		self.total_claimed_amount = 0

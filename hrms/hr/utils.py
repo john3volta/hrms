@@ -859,20 +859,12 @@ def get_ec_matching_query(
 	# get matching Expense Claim query
 	filters = []
 	ec = qb.DocType("Expense Claim")
-
-	mode_of_payments = [
-		x["parent"]
-		for x in frappe.db.get_all(
-			"Mode of Payment Account", filters={"default_account": bank_account}, fields=["parent"]
-		)
-	]
 	company_currency = get_company_currency(company)
 
 	filters.append(ec.docstatus == 1)
 	filters.append(ec.is_paid == 1)
 	filters.append(ec.clearance_date.isnull())
-	if mode_of_payments:
-		filters.append(ec.mode_of_payment.isin(mode_of_payments))
+	# MODE_OF_PAYMENT_REMOVED
 
 	if common_filters:
 		ref_rank = frappe.qb.terms.Case().when(ec.employee == common_filters.party, 1).else_(0) + 1

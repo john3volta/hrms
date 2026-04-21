@@ -31,7 +31,6 @@
   "salary_structure",
   "payroll_entry",
   "current_payroll_period",
-  "mode_of_payment",
   "column_break_wyhp",
   "salary_slip_based_on_timesheet",
   "section_break_gerh",
@@ -376,12 +375,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "mode_of_payment",
-   "fieldtype": "Select",
-   "label": "Mode Of Payment",
-   "read_only": 1
-  },
-  {
    "fieldname": "absent_days",
    "fieldtype": "Float",
    "label": "Absent Days",
@@ -446,7 +439,7 @@
    "fieldname": "exchange_rate",
    "fieldtype": "Float",
    "hidden": 1,
-   "label": "Exchange Rate",
+   "label": "Exchange Rate (reserved)",
    "print_hide": 1,
    "reqd": 1
   },

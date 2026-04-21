@@ -10,14 +10,6 @@ frappe.ui.form.on("Salary Slip", {
 			];
 		});
 
-		frm.fields_dict["timesheets"].grid.get_field("time_sheet").get_query = function () {
-			return {
-				filters: {
-					employee: frm.doc.employee,
-				},
-			};
-		};
-
 		frm.set_query("salary_component", "earnings", function () {
 			return {
 				filters: {
@@ -309,7 +301,7 @@ frappe.ui.form.on("Salary Slip", {
 });
 
 frappe.ui.form.on("Salary Slip Timesheet", {
-	time_sheet: function (frm) {
+	hours: function (frm) {
 		set_totals(frm);
 	},
 	timesheets_remove: function (frm) {

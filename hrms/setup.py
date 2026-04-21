@@ -286,46 +286,6 @@ def get_custom_fields():
 				"insert_after": "salary_cb",
 			},
 		],
-		"Project": [
-			{
-				"fieldname": "total_expense_claim",
-				"fieldtype": "Currency",
-				"label": _("Total Expense Claim (via Expense Claims)"),
-				"read_only": 1,
-				"insert_after": "total_costing_amount",
-			},
-		],
-		"Task": [
-			{
-				"fieldname": "total_expense_claim",
-				"fieldtype": "Currency",
-				"label": _("Total Expense Claim (via Expense Claim)"),
-				"options": "Company:company:default_currency",
-				"read_only": 1,
-				"insert_after": "total_costing_amount",
-			},
-		],
-		"Timesheet": [
-			{
-				"fieldname": "salary_slip",
-				"fieldtype": "Link",
-				"label": _("Salary Slip"),
-				"no_copy": 1,
-				"options": "Salary Slip",
-				"print_hide": 1,
-				"read_only": 1,
-				"insert_after": "column_break_3",
-			},
-		],
-		"Terms and Conditions": [
-			{
-				"default": "1",
-				"fieldname": "hr",
-				"fieldtype": "Check",
-				"label": _("HR"),
-				"insert_after": "buying",
-			},
-		],
 	}
 
 

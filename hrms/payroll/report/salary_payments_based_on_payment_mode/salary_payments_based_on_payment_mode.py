@@ -5,8 +5,7 @@
 import frappe
 from frappe import _
 
-import erpnext
-
+from hrms.utils import compat
 from hrms.payroll.report.provident_fund_deductions.provident_fund_deductions import get_conditions
 
 
@@ -116,7 +115,7 @@ def get_data(filters, mode_of_payments):
 		data.append({"branch": "Total Deductions", mode_of_payments[0]: total_deductions})
 		data.append({"branch": "Total Net Pay", mode_of_payments[0]: total_row.get("total")})
 
-		currency = erpnext.get_company_currency(filters.company)
+		currency = compat.get_company_currency(filters.company)
 		report_summary = get_report_summary(gross_pay, total_deductions, total_row.get("total"), currency)
 
 	return data, total_row, report_summary

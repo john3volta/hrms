@@ -4,7 +4,7 @@
 import frappe
 from frappe.utils import nowdate
 
-from erpnext.setup.doctype.employee.test_employee import make_employee
+# ERPNEXT_TEST_REMOVED
 
 from hrms.hr.doctype.job_offer.test_job_offer import create_job_offer
 from hrms.tests.test_utils import create_job_applicant

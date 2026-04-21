@@ -4,9 +4,9 @@
 import frappe
 from frappe.utils import flt, nowdate
 
-import erpnext
-from erpnext.accounts.doctype.account.test_account import create_account
-from erpnext.setup.doctype.employee.test_employee import make_employee
+from hrms.utils import compat
+# ERPNEXT_TEST_REMOVED
+# ERPNEXT_TEST_REMOVED
 
 from hrms.hr.doctype.employee_advance.employee_advance import (
 	EmployeeAdvanceOverPayment,
@@ -407,7 +407,7 @@ def make_employee_advance(employee_name, args=None, do_not_submit=False):
 	doc.employee = employee_name
 	doc.company = "_Test Company"
 	doc.purpose = "For site visit"
-	doc.currency = emp_details.salary_currency or erpnext.get_company_currency("_Test company")
+	doc.currency = emp_details.salary_currency or compat.get_company_currency("_Test company")
 	doc.advance_amount = 1000
 	doc.posting_date = nowdate()
 	doc.advance_account = emp_details.employee_advance_account or "_Test Employee Advance - _TC"

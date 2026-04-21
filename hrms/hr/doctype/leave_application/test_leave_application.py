@@ -14,7 +14,7 @@ from frappe.utils import (
 	nowdate,
 )
 
-from erpnext.setup.doctype.employee.test_employee import make_employee
+# ERPNEXT_TEST_REMOVED
 
 from hrms.hr.doctype.attendance.attendance import mark_attendance
 from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import (

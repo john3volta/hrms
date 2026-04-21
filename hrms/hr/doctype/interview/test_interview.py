@@ -9,8 +9,8 @@ from frappe import _
 from frappe.core.doctype.user_permission.test_user_permission import create_user
 from frappe.utils import add_days, get_datetime, get_time, getdate, nowtime
 
-from erpnext.setup.doctype.designation.test_designation import create_designation
-from erpnext.setup.doctype.employee.test_employee import make_employee
+# ERPNEXT_TEST_REMOVED
+# ERPNEXT_TEST_REMOVED
 
 from hrms.hr.doctype.interview.interview import (
 	DuplicateInterviewRoundError,

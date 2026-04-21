@@ -5,7 +5,7 @@
 import frappe
 from frappe import _
 
-from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
+from hrms.utils.compat import get_holiday_list_for_employee
 
 
 def execute(filters=None):

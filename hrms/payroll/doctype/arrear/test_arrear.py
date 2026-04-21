@@ -5,7 +5,7 @@ import calendar
 import frappe
 from frappe.utils import add_days, add_months, getdate
 
-from erpnext.setup.doctype.employee.test_employee import make_employee
+# ERPNEXT_TEST_REMOVED
 
 from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_payroll_period,

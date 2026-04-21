@@ -4,7 +4,7 @@
 import frappe
 from frappe.utils import getdate
 
-from erpnext.setup.doctype.employee.test_employee import make_employee
+# ERPNEXT_TEST_REMOVED
 
 from hrms.payroll.doctype.payroll_entry.payroll_entry import get_start_end_dates
 from hrms.payroll.doctype.payroll_entry.test_payroll_entry import make_payroll_entry

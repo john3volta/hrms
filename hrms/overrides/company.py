@@ -6,7 +6,7 @@ import json
 import frappe
 from frappe import _
 
-from erpnext.accounts.doctype.account.account import get_account_currency
+from hrms.utils.compat import get_account_currency
 
 
 def make_company_fixtures(doc, method=None):

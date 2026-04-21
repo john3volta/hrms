@@ -3,7 +3,7 @@
 
 import frappe
 
-from erpnext.setup.doctype.employee.test_employee import make_employee
+# ERPNEXT_TEST_REMOVED
 
 from hrms.hr.page.organizational_chart.organizational_chart import get_children
 from hrms.tests.test_utils import create_company

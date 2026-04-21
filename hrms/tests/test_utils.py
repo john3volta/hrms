@@ -1,9 +1,9 @@
 import frappe
 from frappe.utils import add_months, get_first_day, get_last_day, getdate, now_datetime
 
-from erpnext.setup.doctype.department.department import get_abbreviated_name
-from erpnext.setup.doctype.designation.test_designation import create_designation
-from erpnext.setup.utils import enable_all_roles_and_domains
+from hrms.utils.compat import get_abbreviated_name
+from hrms.utils.compat import create_designation
+from hrms.utils.compat import enable_all_roles_and_domains
 
 
 def before_tests():
@@ -26,7 +26,7 @@ def before_tests():
 				"fy_end_date": f"{year}-12-31",
 				"language": "english",
 				"company_tagline": "Testing",
-				"email": "test@erpnext.com",
+				"email": "test@compat.com",
 				"password": "test",
 				"chart_of_accounts": "Standard",
 			}

@@ -6,7 +6,7 @@ import frappe
 from frappe import _
 from frappe.utils import flt
 
-from erpnext.accounts.report.financial_statements import get_period_list
+from hrms.utils.compat import get_period_list
 
 
 def execute(filters=None):

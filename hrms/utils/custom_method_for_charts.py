@@ -1,8 +1,8 @@
 import frappe
 from frappe.utils import get_first_day, get_last_day, getdate
 
-from erpnext import get_default_company
-from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
+from hrms.utils.compat import get_default_company
+from hrms.utils.compat import get_holiday_list_for_employee
 
 from hrms.utils.holiday_list import get_assigned_holiday_list
 
@@ -13,7 +13,7 @@ def get_upcoming_holidays():
 	if employee:
 		holiday_list = get_holiday_list_for_employee(employee, raise_exception=False, as_on=getdate())
 	else:
-		default_company = get_default_company()
+		default_company = frappe.defaults.get_global_default("company")
 		holiday_list = get_assigned_holiday_list(default_company, as_on=getdate())
 
 	if not holiday_list:

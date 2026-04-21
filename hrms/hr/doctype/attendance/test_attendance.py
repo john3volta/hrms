@@ -17,7 +17,7 @@ from frappe.utils import (
 )
 from frappe.utils.user import add_role
 
-from erpnext.setup.doctype.employee.test_employee import make_employee
+# ERPNEXT_TEST_REMOVED
 
 from hrms.hr.doctype.attendance.attendance import (
 	DuplicateAttendanceError,

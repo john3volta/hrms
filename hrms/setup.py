@@ -542,21 +542,6 @@ def create_default_role_profiles():
 
 def get_post_install_patches():
 	return (
-		"erpnext.patches.v13_0.move_tax_slabs_from_payroll_period_to_income_tax_slab",
-		"erpnext.patches.v13_0.move_doctype_reports_and_notification_from_hr_to_payroll",
-		"erpnext.patches.v13_0.move_payroll_setting_separately_from_hr_settings",
-		"erpnext.patches.v13_0.update_start_end_date_for_old_shift_assignment",
-		"erpnext.patches.v13_0.updates_for_multi_currency_payroll",
-		"erpnext.patches.v13_0.update_reason_for_resignation_in_employee",
-		"erpnext.patches.v13_0.set_company_in_leave_ledger_entry",
-		"erpnext.patches.v13_0.rename_stop_to_send_birthday_reminders",
-		"erpnext.patches.v13_0.set_training_event_attendance",
-		"erpnext.patches.v14_0.set_payroll_cost_centers",
-		"erpnext.patches.v13_0.update_employee_advance_status",
-		"erpnext.patches.v13_0.update_expense_claim_status_for_paid_advances",
-		"erpnext.patches.v14_0.delete_employee_transfer_property_doctype",
-		"erpnext.patches.v13_0.set_payroll_entry_status",
-		# HRMS
 		"create_country_fixtures",
 		"update_allocate_on_in_leave_type",
 		"update_performance_module_changes",

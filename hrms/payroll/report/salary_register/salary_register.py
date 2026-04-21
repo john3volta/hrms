@@ -6,8 +6,7 @@ import frappe
 from frappe import _
 from frappe.utils import flt
 
-import erpnext
-
+from hrms.utils import compat
 salary_slip = frappe.qb.DocType("Salary Slip")
 salary_detail = frappe.qb.DocType("Salary Detail")
 salary_component = frappe.qb.DocType("Salary Component")
@@ -20,7 +19,7 @@ def execute(filters=None):
 	currency = None
 	if filters.get("currency"):
 		currency = filters.get("currency")
-	company_currency = erpnext.get_company_currency(filters.get("company"))
+	company_currency = compat.get_company_currency(filters.get("company"))
 
 	salary_slips = get_salary_slips(filters, company_currency)
 	if not salary_slips:

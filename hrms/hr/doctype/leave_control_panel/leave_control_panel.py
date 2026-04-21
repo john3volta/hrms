@@ -6,7 +6,7 @@ import frappe
 from frappe.model.document import Document
 from frappe.utils import cint, flt, get_link_to_form
 
-from erpnext import get_default_company
+from hrms.utils.compat import get_default_company
 
 from hrms.hr.utils import validate_bulk_tool_fields
 
@@ -177,7 +177,7 @@ class LeaveControlPanel(Document):
 			"Leave Period",
 			{
 				"is_active": 1,
-				"company": self.company or get_default_company(),
+				"company": self.company or frappe.defaults.get_global_default("company"),
 			},
 			"name",
 			order_by="from_date desc",

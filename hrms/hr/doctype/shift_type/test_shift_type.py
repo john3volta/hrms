@@ -13,7 +13,7 @@ from frappe.utils import (
 	now_datetime,
 )
 
-from erpnext.setup.doctype.employee.test_employee import make_employee
+# ERPNEXT_TEST_REMOVED
 
 from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import assign_holiday_list
 from hrms.hr.doctype.leave_application.test_leave_application import get_first_sunday

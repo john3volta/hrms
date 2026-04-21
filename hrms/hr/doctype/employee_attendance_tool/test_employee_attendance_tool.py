@@ -4,7 +4,7 @@
 import frappe
 from frappe.utils import add_days, getdate
 
-from erpnext.setup.doctype.employee.test_employee import make_employee
+# ERPNEXT_TEST_REMOVED
 
 from hrms.hr.doctype.attendance.attendance import mark_attendance
 from hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool import (

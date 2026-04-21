@@ -1,8 +1,8 @@
 import frappe
 from frappe.utils import getdate
 
-from erpnext.accounts.utils import get_fiscal_year
-from erpnext.tests.utils import ERPNextTestSuite
+from hrms.utils.compat import get_fiscal_year
+from frappe.tests.utils import FrappeTestCase as ERPNextTestSuite
 
 
 class BootStrapTestData:

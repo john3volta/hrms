@@ -5,7 +5,7 @@
 import frappe
 from frappe.utils import add_days, add_months, flt, get_year_ending, get_year_start, getdate
 
-from erpnext.setup.doctype.employee.test_employee import make_employee
+# ERPNEXT_TEST_REMOVED
 
 from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import assign_holiday_list
 from hrms.hr.doctype.leave_application.test_leave_application import make_allocation_record

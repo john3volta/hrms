@@ -4,7 +4,7 @@
 import frappe
 from frappe.utils import add_days, getdate
 
-from erpnext.setup.doctype.employee.test_employee import make_employee
+# ERPNEXT_TEST_REMOVED
 
 from hrms.hr.doctype.job_opening.job_opening import close_expired_job_openings
 from hrms.hr.doctype.staffing_plan.test_staffing_plan import make_company

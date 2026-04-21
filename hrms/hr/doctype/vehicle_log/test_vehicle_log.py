@@ -4,7 +4,7 @@
 import frappe
 from frappe.utils import cstr, flt, nowdate, random_string
 
-from erpnext.setup.doctype.employee.test_employee import make_employee
+# ERPNEXT_TEST_REMOVED
 
 from hrms.hr.doctype.vehicle_log.vehicle_log import make_expense_claim
 from hrms.tests.utils import HRMSTestSuite

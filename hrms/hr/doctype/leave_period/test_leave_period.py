@@ -3,8 +3,7 @@
 
 import frappe
 
-import erpnext
-
+from hrms.utils import compat
 from hrms.tests.utils import HRMSTestSuite
 
 

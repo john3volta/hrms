@@ -4,8 +4,8 @@
 import frappe
 from frappe.utils import add_days, now_datetime, today
 
-from erpnext.setup.doctype.employee.test_employee import make_employee
-from erpnext.stock.doctype.purchase_receipt.test_purchase_receipt import make_purchase_receipt
+# ERPNEXT_TEST_REMOVED
+# ERPNEXT_TEST_REMOVED
 
 from hrms.tests.utils import HRMSTestSuite
 

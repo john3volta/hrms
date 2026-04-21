@@ -3,8 +3,8 @@
 
 import frappe
 
-from erpnext.setup.doctype.designation.test_designation import create_designation
-from erpnext.setup.doctype.employee.test_employee import make_employee
+# ERPNEXT_TEST_REMOVED
+# ERPNEXT_TEST_REMOVED
 
 from hrms.hr.doctype.appraisal_cycle.appraisal_cycle import get_appraisal_cycle_summary
 from hrms.hr.doctype.appraisal_cycle.test_appraisal_cycle import create_appraisal_cycle

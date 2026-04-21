@@ -4,8 +4,8 @@
 import frappe
 from frappe.utils import getdate
 
-import erpnext
-from erpnext.setup.doctype.employee.test_employee import make_employee
+from hrms.utils import compat
+# ERPNEXT_TEST_REMOVED
 
 from hrms.hr.doctype.upload_attendance.upload_attendance import get_data
 from hrms.tests.utils import HRMSTestSuite

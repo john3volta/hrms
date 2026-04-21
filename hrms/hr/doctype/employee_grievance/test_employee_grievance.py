@@ -4,7 +4,7 @@
 import frappe
 from frappe.utils import today
 
-from erpnext.setup.doctype.employee.test_employee import make_employee
+# ERPNEXT_TEST_REMOVED
 
 from hrms.tests.utils import HRMSTestSuite
 

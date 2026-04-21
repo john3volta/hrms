@@ -6,8 +6,8 @@ from frappe import _, bold
 from frappe.query_builder.functions import Abs, Sum
 from frappe.utils import cstr, flt, get_datetime, get_link_to_form
 
-from erpnext.accounts.general_ledger import make_gl_entries
-from erpnext.controllers.accounts_controller import AccountsController
+from hrms.utils.compat import make_gl_entries
+from hrms.utils.compat import AccountsController
 
 
 class Gratuity(AccountsController):

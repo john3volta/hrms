@@ -7,8 +7,8 @@ from frappe import _, bold
 from frappe.model.document import Document
 from frappe.utils import flt, format_date, get_link_to_form, getdate
 
-from erpnext.accounts.general_ledger import make_gl_entries
-from erpnext.controllers.accounts_controller import AccountsController
+from hrms.utils.compat import make_gl_entries
+from hrms.utils.compat import AccountsController
 
 from hrms.hr.doctype.leave_application.leave_application import get_leaves_for_period
 from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import create_leave_ledger_entry

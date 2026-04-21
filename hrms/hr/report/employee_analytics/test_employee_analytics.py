@@ -2,7 +2,7 @@ import frappe
 from frappe import _
 from frappe.desk.page.setup_wizard.setup_wizard import make_records
 
-from erpnext.setup.doctype.employee.test_employee import make_employee
+# ERPNEXT_TEST_REMOVED
 
 from hrms.hr.report.employee_analytics.employee_analytics import execute
 from hrms.tests.utils import HRMSTestSuite

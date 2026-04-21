@@ -4,11 +4,11 @@
 import frappe
 from frappe.utils import flt, nowdate, random_string, today
 
-from erpnext import get_company_currency
-from erpnext.accounts.doctype.account.test_account import create_account
-from erpnext.accounts.doctype.payment_entry.test_payment_entry import get_payment_entry
-from erpnext.setup.doctype.employee.test_employee import make_employee
-from erpnext.setup.utils import get_exchange_rate
+from hrms.utils.compat import get_company_currency
+# ERPNEXT_TEST_REMOVED
+# ERPNEXT_TEST_REMOVED
+# ERPNEXT_TEST_REMOVED
+from hrms.utils.compat import get_exchange_rate
 
 from hrms.hr.doctype.expense_claim.expense_claim import (
 	MismatchError,
@@ -498,13 +498,7 @@ class TestExpenseClaim(HRMSTestSuite):
 		self.assertEqual(expense_claim.total_amount_reimbursed, 5500)
 
 	def test_expense_claim_against_delivery_trip(self):
-		from erpnext.stock.doctype.delivery_trip.test_delivery_trip import (
-			create_address,
-			create_delivery_trip,
-			create_driver,
-			create_vehicle,
-		)
-		from erpnext.tests.utils import create_test_contact_and_address
+		# ERPNEXT_TEST_REMOVED
 
 		driver = create_driver()
 		create_vehicle()

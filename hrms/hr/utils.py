@@ -31,9 +31,9 @@ from frappe.utils import (
 	nowdate,
 )
 
-import erpnext
-from erpnext import get_company_currency
-from erpnext.setup.doctype.employee.employee import (
+from hrms.utils import compat
+from hrms.utils.compat import get_company_currency
+from hrms.utils.compat import (
 	InactiveEmployeeStatusError,
 	get_holiday_list_for_employee,
 )
@@ -711,21 +711,21 @@ def get_holidays_for_employee(employee, start_date, end_date, raise_exception=Tr
 	return holidays
 
 
-@erpnext.allow_regional
+@compat.allow_regional
 def calculate_annual_eligible_hra_exemption(doc):
 	# Don't delete this method, used for localization
 	# Indian HRA Exemption Calculation
 	return {}
 
 
-@erpnext.allow_regional
+@compat.allow_regional
 def calculate_hra_exemption_for_period(doc):
 	# Don't delete this method, used for localization
 	# Indian HRA Exemption Calculation
 	return {}
 
 
-@erpnext.allow_regional
+@compat.allow_regional
 def calculate_tax_with_marginal_relief(tax_slab, tax_amount, annual_taxable_earning):
 	# Don't delete this method, used for localization
 	# Indian TDS Calculation
@@ -815,7 +815,7 @@ def validate_loan_repay_from_salary(doc, method=None):
 			frappe.throw(_("Please select a Company"))
 
 		employee_currency = get_employee_currency(doc.applicant)
-		company_currency = erpnext.get_company_currency(doc.company)
+		company_currency = compat.get_company_currency(doc.company)
 		if employee_currency != company_currency:
 			frappe.throw(
 				_(

@@ -56,7 +56,7 @@ class PayrollCorrection(Document):
 	@frappe.whitelist()
 	def fetch_salary_slip_details(self):
 		# Fetch salary slip details with LWP for the employee in the payroll period
-		if not (self.employee and self.payroll_period and self.company):
+		if not (self.employee and self.payroll_period and self.hr_organization):
 			return {"months": [], "slip_details": []}
 
 		slips = frappe.get_all(
@@ -65,7 +65,7 @@ class PayrollCorrection(Document):
 				"employee": self.employee,
 				"docstatus": 1,
 				"current_payroll_period": self.payroll_period,
-				"company": self.company,
+				"hr_organization": self.hr_organization,
 				"leave_without_pay": [">", 0],
 			},
 			fields=[
@@ -192,7 +192,7 @@ class PayrollCorrection(Document):
 				{
 					"doctype": "Additional Salary",
 					"employee": self.employee,
-					"company": self.company,
+					"hr_organization": self.hr_organization,
 					"payroll_date": self.payroll_date,
 					"salary_component": component.salary_component,
 					"currency": self.currency,
@@ -219,7 +219,7 @@ class PayrollCorrection(Document):
 					"doctype": "Employee Benefit Ledger",
 					"employee": self.employee,
 					"employee_name": self.employee_name,
-					"company": self.company,
+					"hr_organization": self.hr_organization,
 					"payroll_period": self.payroll_period,
 					"salary_component": component.salary_component,
 					"transaction_type": "Accrual",

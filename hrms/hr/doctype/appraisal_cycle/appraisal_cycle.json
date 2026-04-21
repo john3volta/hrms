@@ -9,7 +9,7 @@
  "field_order": [
   "overview_tab",
   "cycle_name",
-  "company",
+  "hr_organization",
   "status",
   "column_break_3",
   "start_date",
@@ -106,12 +106,12 @@
    "label": "Get Employees"
   },
   {
-   "fieldname": "company",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "Company",
-   "options": "Company",
+   "label": "HR Organization",
+   "options": "HR Organization",
    "reqd": 1
   },
   {

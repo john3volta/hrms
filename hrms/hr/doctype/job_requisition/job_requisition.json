@@ -14,7 +14,7 @@
   "no_of_positions",
   "expected_compensation",
   "column_break_4",
-  "company",
+  "hr_organization",
   "status",
   "section_break_7",
   "requested_by",
@@ -70,10 +70,10 @@
    "reqd": 1
   },
   {
-   "fieldname": "company",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
-   "label": "Company",
-   "options": "Company",
+   "label": "HR Organization",
+   "options": "HR Organization",
    "reqd": 1
   },
   {

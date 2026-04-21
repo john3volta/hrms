@@ -27,7 +27,7 @@ def create_employee_benefit_ledger_entry(ref_doc, args=None, delete=False):
 		"doctype": "Employee Benefit Ledger",
 		"employee": ref_doc.employee,
 		"employee_name": ref_doc.employee_name,
-		"company": ref_doc.company,
+		"hr_organization": ref_doc.hr_organization,
 		"posting_date": ref_doc.posting_date,
 		"salary_slip": ref_doc.name,
 		"payroll_period": args.get("payroll_period"),

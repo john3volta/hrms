@@ -9,7 +9,7 @@
   "leave_type",
   "transaction_type",
   "transaction_name",
-  "company",
+  "hr_organization",
   "leaves",
   "column_break_7",
   "from_date",
@@ -113,11 +113,11 @@
    "options": "Holiday List"
   },
   {
-   "fetch_from": "employee.company",
-   "fieldname": "company",
+   "fetch_from": "employee.hr_organization",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
-   "label": "Company",
-   "options": "Company",
+   "label": "HR Organization",
+   "options": "HR Organization",
    "read_only": 1,
    "reqd": 1
   }

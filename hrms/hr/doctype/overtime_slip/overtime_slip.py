@@ -83,7 +83,7 @@ class OvertimeSlip(Document):
 		if salary_structure:
 			payroll_frequency = frappe.db.get_value("Salary Structure", salary_structure, "payroll_frequency")
 			date_details = get_start_end_dates(
-				payroll_frequency, date, frappe.db.get_value("Employee", self.employee, "company")
+				payroll_frequency, date, frappe.db.get_value("Employee", self.employee, "hr_organization")
 			)
 			self.start_date = date_details.start_date
 			self.end_date = date_details.end_date
@@ -179,7 +179,7 @@ class OvertimeSlip(Document):
 			additional_salary = frappe.get_doc(
 				{
 					"doctype": "Additional Salary",
-					"company": self.company,
+					"hr_organization": self.hr_organization,
 					"employee": self.employee,
 					"salary_component": salary_component,
 					"amount": flt(total_amount, precision),

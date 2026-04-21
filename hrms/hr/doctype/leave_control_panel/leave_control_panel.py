@@ -127,7 +127,7 @@ class LeaveControlPanel(Document):
 			if all_employees := frappe.get_list(
 				"Employee",
 				filters=self.get_filters() + advanced_filters,
-				fields=["name", "employee", "employee_name", "company", "department", "date_of_joining"],
+				fields=["name", "employee", "employee_name", "hr_organization", "department", "date_of_joining"],
 			):
 				return self.get_employees_without_allocations(all_employees, from_date, to_date)
 
@@ -177,7 +177,7 @@ class LeaveControlPanel(Document):
 			"Leave Period",
 			{
 				"is_active": 1,
-				"company": self.company or frappe.defaults.get_global_default("company"),
+				"hr_organization": self.hr_organization or frappe.defaults.get_global_default("company"),
 			},
 			"name",
 			order_by="from_date desc",
@@ -185,7 +185,7 @@ class LeaveControlPanel(Document):
 
 	def get_filters(self):
 		filter_fields = [
-			"company",
+			"hr_organization",
 			"employment_type",
 			"branch",
 			"department",

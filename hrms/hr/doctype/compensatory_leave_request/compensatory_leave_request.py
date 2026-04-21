@@ -71,7 +71,7 @@ class CompensatoryLeaveRequest(Document):
 			frappe.throw(msg)
 
 	def on_submit(self):
-		company = frappe.db.get_value("Employee", self.employee, "company")
+		company = frappe.db.get_value("Employee", self.employee, "hr_organization")
 		date_difference = date_diff(self.work_end_date, self.work_from_date) + 1
 		if self.half_day:
 			date_difference -= 0.5

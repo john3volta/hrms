@@ -338,7 +338,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			doc.employee = self.employee
 			doc.employee_name = self.employee_name
 			doc.attendance_date = date
-			doc.company = self.company
+			doc.hr_organization = self.hr_organization
 			doc.leave_type = self.leave_type
 			doc.leave_application = self.name
 			doc.status = status
@@ -385,7 +385,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			self.from_date,
 			self.to_date,
 			self.employee,
-			self.company,
+			self.hr_organization,
 			all_lists=True,
 			leave_type=self.leave_type,
 		)
@@ -397,7 +397,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 
 	def validate_block_days(self):
 		block_dates = get_applicable_block_dates(
-			self.from_date, self.to_date, self.employee, self.company, leave_type=self.leave_type
+			self.from_date, self.to_date, self.employee, self.hr_organization, leave_type=self.leave_type
 		)
 
 		if block_dates and self.status == "Approved":
@@ -629,7 +629,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			)
 
 	def validate_optional_leave(self):
-		leave_period = get_leave_period(self.from_date, self.to_date, self.company)
+		leave_period = get_leave_period(self.from_date, self.to_date, self.hr_organization)
 		if not leave_period:
 			frappe.throw(_("Cannot find active Leave Period"))
 		optional_holiday_list = frappe.db.get_value(
@@ -1312,11 +1312,11 @@ def get_events(start, end, filters=None):
 	events = []
 
 	employee = frappe.db.get_value(
-		"Employee", filters={"user_id": frappe.session.user}, fieldname=["name", "company"], as_dict=True
+		"Employee", filters={"user_id": frappe.session.user}, fieldname=["name", "hr_organization"], as_dict=True
 	)
 
 	if employee:
-		employee, company = employee.name, employee.company
+		employee, company = employee.name, employee.hr_organization
 	else:
 		employee = ""
 		company = frappe.db.get_single_value("Global Defaults", "default_company")
@@ -1335,7 +1335,7 @@ def get_events(start, end, filters=None):
 def add_department_leaves(events, start, end, employee, company):
 	if department := frappe.db.get_value("Employee", employee, "department"):
 		department_employees = frappe.get_list(
-			"Employee", filters={"department": department, "company": company}, pluck="name"
+			"Employee", filters={"department": department, "hr_organization": company}, pluck="name"
 		)
 		filters = [["employee", "in", department_employees]]
 		add_leaves(events, start, end, filters=filters)

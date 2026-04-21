@@ -60,7 +60,7 @@ def create_shift_schedule_assignment(
 			"doctype": "Shift Schedule Assignment",
 			"shift_schedule": shift_schedule,
 			"employee": employee,
-			"company": company,
+			"hr_organization": company,
 			"shift_status": status,
 			"shift_location": shift_location,
 			"enabled": 0 if end_date else 1,
@@ -96,10 +96,10 @@ def swap_shift(
 
 	if tgt_shift:
 		tgt_shift_doc = frappe.get_doc("Shift Assignment", tgt_shift)
-		tgt_company = tgt_shift_doc.company
+		tgt_company = tgt_shift_doc.hr_organization
 		break_shift(tgt_shift_doc, tgt_date)
 	else:
-		tgt_company = frappe.db.get_value("Employee", tgt_employee, "company")
+		tgt_company = frappe.db.get_value("Employee", tgt_employee, "hr_organization")
 
 	src_shift_doc = frappe.get_doc("Shift Assignment", src_shift)
 	break_shift(src_shift_doc, src_date)
@@ -116,7 +116,7 @@ def swap_shift(
 	if tgt_shift:
 		insert_shift(
 			src_shift_doc.employee,
-			src_shift_doc.company,
+			src_shift_doc.hr_organization,
 			tgt_shift_doc.shift_type,
 			src_date,
 			src_date,
@@ -136,7 +136,7 @@ def break_shift(assignment: str | ShiftAssignment, date: str) -> None:
 		frappe.throw(_("Cannot break shift before start date"))
 
 	employee = assignment.employee
-	company = assignment.company
+	company = assignment.hr_organization
 	shift_type = assignment.shift_type
 	status = assignment.status
 	end_date = assignment.end_date
@@ -168,7 +168,7 @@ def insert_shift(
 	filters = {
 		"doctype": "Shift Assignment",
 		"employee": employee,
-		"company": company,
+		"hr_organization": company,
 		"shift_type": shift_type,
 		"status": status,
 		"shift_location": shift_location,

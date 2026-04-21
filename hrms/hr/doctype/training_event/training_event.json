@@ -15,7 +15,7 @@
   "column_break_2",
   "type",
   "level",
-  "company",
+  "hr_organization",
   "section_break_4",
   "trainer_name",
   "trainer_email",
@@ -89,10 +89,10 @@
    "options": "\nBeginner\nIntermediate\nAdvance"
   },
   {
-   "fieldname": "company",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
-   "label": "Company",
-   "options": "Company"
+   "label": "HR Organization",
+   "options": "HR Organization"
   },
   {
    "fieldname": "section_break_4",

@@ -11,7 +11,7 @@
   "employee",
   "employee_name",
   "column_break_3",
-  "company",
+  "hr_organization",
   "department",
   "shift_details_section",
   "shift_type",
@@ -65,11 +65,11 @@
    "fieldtype": "Column Break"
   },
   {
-   "fetch_from": "employee.company",
-   "fieldname": "company",
+   "fetch_from": "employee.hr_organization",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
-   "label": "Company",
-   "options": "Company",
+   "label": "HR Organization",
+   "options": "HR Organization",
    "reqd": 1
   },
   {

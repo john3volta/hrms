@@ -17,7 +17,7 @@
   "leave_type",
   "no_of_days",
   "quick_filters_section",
-  "company",
+  "hr_organization",
   "branch",
   "department",
   "column_break1",
@@ -31,10 +31,10 @@
  ],
  "fields": [
   {
-   "fieldname": "company",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
-   "label": "Company",
-   "options": "Company",
+   "label": "HR Organization",
+   "options": "HR Organization",
    "remember_last_selected_value": 1
   },
   {

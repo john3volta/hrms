@@ -22,7 +22,7 @@ class ShiftAssignmentTool(Document):
 			advanced_filters = []
 
 		quick_filter_fields = [
-			"company",
+			"hr_organization",
 			"branch",
 			"department",
 			"designation",
@@ -188,7 +188,7 @@ class ShiftAssignmentTool(Document):
 		else:
 			frappe.throw(_("Invalid Action"))
 
-		mandatory_fields.extend(["company", "start_date"])
+		mandatory_fields.extend(["hr_organization", "start_date"])
 
 		validate_bulk_tool_fields(self, mandatory_fields, employees, "start_date", "end_date")
 
@@ -221,7 +221,7 @@ class ShiftAssignmentTool(Document):
 					if self.action == "Assign Shift Schedule"
 					else create_shift_assignment(
 						d,
-						self.company,
+						self.hr_organization,
 						self.shift_type,
 						self.start_date,
 						self.end_date,
@@ -310,7 +310,7 @@ class ShiftAssignmentTool(Document):
 		assignment = frappe.new_doc("Shift Schedule Assignment")
 		assignment.shift_schedule = self.shift_schedule
 		assignment.employee = employee
-		assignment.company = self.company
+		assignment.hr_organization = self.hr_organization
 		assignment.shift_status = self.status
 		assignment.shift_location = self.shift_location
 		assignment.enabled = 0 if self.end_date else 1
@@ -332,7 +332,7 @@ def create_shift_assignment(
 ) -> str:
 	assignment = frappe.new_doc("Shift Assignment")
 	assignment.employee = employee
-	assignment.company = company
+	assignment.hr_organization = company
 	assignment.shift_type = shift_type
 	assignment.start_date = start_date
 	assignment.end_date = end_date

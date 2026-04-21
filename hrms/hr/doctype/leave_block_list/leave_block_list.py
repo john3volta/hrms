@@ -67,11 +67,11 @@ def get_applicable_block_lists(employee=None, company=None, all_lists=False, lea
 		employee = frappe.db.get_value("Employee", {"user_id": frappe.session.user})
 
 	if not company and employee:
-		company = frappe.db.get_value("Employee", employee, "company")
+		company = frappe.db.get_value("Employee", employee, "hr_organization")
 
 	if company:
 		# global
-		conditions = {"applies_to_all_departments": 1, "company": company}
+		conditions = {"applies_to_all_departments": 1, "hr_organization": company}
 		if leave_type:
 			conditions["leave_type"] = ["IN", (leave_type, "", None)]
 

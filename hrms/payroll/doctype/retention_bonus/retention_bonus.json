@@ -13,7 +13,7 @@
   "employee_name",
   "department",
   "column_break_6",
-  "company",
+  "hr_organization",
   "date_of_joining",
   "bonus_section",
   "salary_component",
@@ -25,10 +25,10 @@
  ],
  "fields": [
   {
-   "fieldname": "company",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
-   "label": "Company",
-   "options": "Company",
+   "label": "HR Organization",
+   "options": "HR Organization",
    "reqd": 1
   },
   {

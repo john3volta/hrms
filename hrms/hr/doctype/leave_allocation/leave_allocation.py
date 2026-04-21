@@ -53,7 +53,7 @@ class LeaveAllocation(Document):
 		self.validate_leave_allocation_days()
 
 	def validate_leave_allocation_days(self):
-		company = frappe.db.get_value("Employee", self.employee, "company")
+		company = frappe.db.get_value("Employee", self.employee, "hr_organization")
 		leave_period = get_leave_period(self.from_date, self.to_date, company)
 		max_leaves_allowed = frappe.db.get_value("Leave Type", self.leave_type, "max_leaves_allowed")
 
@@ -123,7 +123,7 @@ class LeaveAllocation(Document):
 				"transaction_type": "Leave Allocation",
 				"transaction_name": self.name,
 				"employee": self.employee,
-				"company": self.company,
+				"hr_organization": self.hr_organization,
 				"leave_type": self.leave_type,
 				"is_carry_forward": 0,
 				"docstatus": 1,

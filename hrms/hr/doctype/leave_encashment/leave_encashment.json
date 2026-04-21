@@ -11,7 +11,7 @@
   "employee",
   "employee_name",
   "department",
-  "company",
+  "hr_organization",
   "column_break_4",
   "leave_period",
   "leave_type",
@@ -152,11 +152,11 @@
    "fieldtype": "Column Break"
   },
   {
-   "fetch_from": "employee.company",
-   "fieldname": "company",
+   "fetch_from": "employee.hr_organization",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
-   "label": "Company",
-   "options": "Company",
+   "label": "HR Organization",
+   "options": "HR Organization",
    "reqd": 1
   },
   {

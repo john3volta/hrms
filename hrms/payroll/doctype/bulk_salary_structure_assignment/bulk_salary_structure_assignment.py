@@ -19,7 +19,7 @@ class BulkSalaryStructureAssignment(Document):
 	@frappe.whitelist()
 	def get_employees(self, advanced_filters: list) -> list:
 		quick_filter_fields = [
-			"company",
+			"hr_organization",
 			"employment_type",
 			"branch",
 			"department",
@@ -62,7 +62,7 @@ class BulkSalaryStructureAssignment(Document):
 
 	@frappe.whitelist()
 	def bulk_assign_structure(self, employees: list) -> None:
-		mandatory_fields = ["salary_structure", "from_date", "company"]
+		mandatory_fields = ["salary_structure", "from_date", "hr_organization"]
 		validate_bulk_tool_fields(self, mandatory_fields, employees)
 
 		if len(employees) <= 30:
@@ -86,7 +86,7 @@ class BulkSalaryStructureAssignment(Document):
 				assignment = create_salary_structure_assignment(
 					employee=d["employee"],
 					salary_structure=self.salary_structure,
-					company=self.company,
+					company=self.hr_organization,
 					currency=self.currency,
 					payroll_payable_account=self.payroll_payable_account,
 					from_date=self.from_date,

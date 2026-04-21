@@ -12,7 +12,7 @@
   "employee_name",
   "column_break_4",
   "posting_date",
-  "company",
+  "hr_organization",
   "department",
   "currency_section",
   "currency",
@@ -126,11 +126,11 @@
    "read_only": 1
   },
   {
-   "fetch_from": "employee.company",
-   "fieldname": "company",
+   "fetch_from": "employee.hr_organization",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
-   "label": "Company",
-   "options": "Company",
+   "label": "HR Organization",
+   "options": "HR Organization",
    "read_only": 1,
    "reqd": 1
   },

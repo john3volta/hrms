@@ -10,7 +10,7 @@
   "employee_name",
   "salary_component",
   "column_break_llqa",
-  "company",
+  "hr_organization",
   "payroll_period",
   "reference_doctype",
   "reference_document",
@@ -40,10 +40,10 @@
    "label": "Employee Name"
   },
   {
-   "fetch_from": "employee.company",
-   "fieldname": "company",
+   "fetch_from": "employee.hr_organization",
+   "fieldname": "hr_organization",
    "fieldtype": "Data",
-   "label": "Company"
+   "label": "HR Organization"
   },
   {
    "fieldname": "transaction_type",

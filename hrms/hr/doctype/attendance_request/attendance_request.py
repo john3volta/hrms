@@ -169,7 +169,7 @@ class AttendanceRequest(Document):
 			doc.employee = self.employee
 			doc.attendance_date = date
 			doc.shift = self.shift
-			doc.company = self.company
+			doc.hr_organization = self.hr_organization
 			doc.attendance_request = self.name
 			doc.status = status
 			doc.half_day_status = "Absent" if status == "Half Day" else None

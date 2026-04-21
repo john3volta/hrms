@@ -13,7 +13,7 @@
   "employee_name",
   "email",
   "column_break_5",
-  "company",
+  "hr_organization",
   "status",
   "date",
   "employee_details_section",
@@ -74,11 +74,11 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "company",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
    "in_standard_filter": 1,
-   "label": "Company",
-   "options": "Company",
+   "label": "HR Organization",
+   "options": "HR Organization",
    "reqd": 1
   },
   {

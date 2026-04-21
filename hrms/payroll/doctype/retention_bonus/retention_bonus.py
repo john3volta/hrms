@@ -17,7 +17,7 @@ class RetentionBonus(Document):
 			frappe.throw(_("Bonus Payment Date cannot be a past date"))
 
 	def on_submit(self):
-		company = frappe.db.get_value("Employee", self.employee, "company")
+		company = frappe.db.get_value("Employee", self.employee, "hr_organization")
 		additional_salary = self.get_additional_salary()
 
 		if not additional_salary:
@@ -26,7 +26,7 @@ class RetentionBonus(Document):
 			additional_salary.salary_component = self.salary_component
 			additional_salary.amount = self.bonus_amount
 			additional_salary.payroll_date = self.bonus_payment_date
-			additional_salary.company = company
+			additional_salary.hr_organization = company
 			additional_salary.overwrite_salary_structure_amount = 0
 			additional_salary.ref_doctype = self.doctype
 			additional_salary.ref_docname = self.name
@@ -60,7 +60,7 @@ class RetentionBonus(Document):
 				"employee": self.employee,
 				"salary_component": self.salary_component,
 				"payroll_date": self.bonus_payment_date,
-				"company": self.company,
+				"hr_organization": self.hr_organization,
 				"docstatus": 1,
 				"ref_doctype": self.doctype,
 				"ref_docname": self.name,

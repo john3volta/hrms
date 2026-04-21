@@ -31,7 +31,7 @@ def get_employees(
 	for field, value in {
 		"department": department,
 		"branch": branch,
-		"company": company,
+		"hr_organization": company,
 		"employment_type": employment_type,
 		"designation": designation,
 		"grade": employee_grade,

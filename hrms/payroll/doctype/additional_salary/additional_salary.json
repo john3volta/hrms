@@ -12,7 +12,7 @@
   "employee_name",
   "department",
   "column_break_5",
-  "company",
+  "hr_organization",
   "is_recurring",
   "disabled",
   "from_date",
@@ -110,10 +110,10 @@
    "read_only": 1
   },
   {
-   "fieldname": "company",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
-   "label": "Company",
-   "options": "Company",
+   "label": "HR Organization",
+   "options": "HR Organization",
    "reqd": 1
   },
   {

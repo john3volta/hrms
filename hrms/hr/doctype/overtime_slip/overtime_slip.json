@@ -11,7 +11,7 @@
   "employee",
   "employee_name",
   "column_break_xsxd",
-  "company",
+  "hr_organization",
   "department",
   "amended_from",
   "section_break_fvyh",
@@ -74,11 +74,11 @@
    "options": "Department"
   },
   {
-   "fetch_from": "employee.company",
-   "fieldname": "company",
+   "fetch_from": "employee.hr_organization",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
-   "label": "Company",
-   "options": "Company",
+   "label": "HR Organization",
+   "options": "HR Organization",
    "reqd": 1
   },
   {

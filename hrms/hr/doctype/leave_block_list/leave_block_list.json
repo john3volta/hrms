@@ -9,7 +9,7 @@
  "engine": "InnoDB",
  "field_order": [
   "leave_block_list_name",
-  "company",
+  "hr_organization",
   "applies_to_all_departments",
   "column_break_4",
   "leave_type",
@@ -29,11 +29,11 @@
    "unique": 1
   },
   {
-   "fieldname": "company",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Company",
-   "options": "Company",
+   "label": "HR Organization",
+   "options": "HR Organization",
    "remember_last_selected_value": 1,
    "reqd": 1
   },

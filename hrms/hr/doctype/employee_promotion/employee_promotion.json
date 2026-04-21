@@ -12,7 +12,7 @@
   "salary_currency",
   "column_break_3",
   "promotion_date",
-  "company",
+  "hr_organization",
   "details_section",
   "promotion_details",
   "salary_details_section",
@@ -56,11 +56,11 @@
    "reqd": 1
   },
   {
-   "fetch_from": "employee.company",
-   "fieldname": "company",
+   "fetch_from": "employee.hr_organization",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
-   "label": "Company",
-   "options": "Company"
+   "label": "HR Organization",
+   "options": "HR Organization"
   },
   {
    "description": "Set the properties that should be updated in the Employee master on promotion submission",

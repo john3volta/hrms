@@ -27,10 +27,10 @@ class EmployeeTransfer(Document):
 			new_employee = update_employee_work_history(
 				new_employee, self.transfer_details, date=self.transfer_date
 			)
-			if self.new_company and self.company != self.new_company:
+			if self.new_company and self.hr_organization != self.new_company:
 				new_employee.internal_work_history = []
 				new_employee.date_of_joining = self.transfer_date
-				new_employee.company = self.new_company
+				new_employee.hr_organization = self.new_company
 			# move user_id to new employee before insert
 			if employee.user_id and not self.validate_user_in_details():
 				new_employee.user_id = employee.user_id
@@ -42,8 +42,8 @@ class EmployeeTransfer(Document):
 			employee.db_set("status", "Left")
 		else:
 			employee = update_employee_work_history(employee, self.transfer_details, date=self.transfer_date)
-			if self.new_company and self.company != self.new_company:
-				employee.company = self.new_company
+			if self.new_company and self.hr_organization != self.new_company:
+				employee.hr_organization = self.new_company
 				employee.date_of_joining = self.transfer_date
 			employee.save()
 
@@ -63,8 +63,8 @@ class EmployeeTransfer(Document):
 			employee = update_employee_work_history(
 				employee, self.transfer_details, date=self.transfer_date, cancel=True
 			)
-		if self.new_company != self.company:
-			employee.company = self.company
+		if self.new_company != self.hr_organization:
+			employee.hr_organization = self.hr_organization
 		employee.save()
 
 	def validate_user_in_details(self):

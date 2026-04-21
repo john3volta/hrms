@@ -79,7 +79,7 @@ class EmployeeBenefitClaim(Document):
 		frappe.get_doc(
 			{
 				"doctype": "Additional Salary",
-				"company": self.company,
+				"hr_organization": self.hr_organization,
 				"employee": self.employee,
 				"currency": self.currency,
 				"salary_component": self.earning_component,
@@ -98,7 +98,7 @@ class EmployeeBenefitClaim(Document):
 			get_max_claim_eligible,
 		)
 
-		payroll_period = get_payroll_period(self.payroll_date, self.payroll_date, self.company).get("name")
+		payroll_period = get_payroll_period(self.payroll_date, self.payroll_date, self.hr_organization).get("name")
 		salary_structure_assignment = get_salary_structure_assignment(self.employee, self.payroll_date)
 		component_details = self.get_component_details(payroll_period, salary_structure_assignment)
 
@@ -170,7 +170,7 @@ def get_benefit_components(doctype, txt, searchfield, start, page_len, filters):
 	"""Fetch benefit components to choose from based on employee and date filters."""
 	employee = filters.get("employee")
 	date = filters.get("date")
-	company = filters.get("company")
+	company = filters.get("hr_organization")
 
 	if not employee or not date:
 		return []

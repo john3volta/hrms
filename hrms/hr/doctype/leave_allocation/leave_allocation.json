@@ -11,7 +11,7 @@
   "employee",
   "employee_name",
   "department",
-  "company",
+  "hr_organization",
   "column_break1",
   "leave_type",
   "from_date",
@@ -226,11 +226,11 @@
    "read_only": 1
   },
   {
-   "fetch_from": "employee.company",
-   "fieldname": "company",
+   "fetch_from": "employee.hr_organization",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
-   "label": "Company",
-   "options": "Company",
+   "label": "HR Organization",
+   "options": "HR Organization",
    "read_only": 1,
    "reqd": 1
   },

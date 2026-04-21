@@ -11,7 +11,7 @@
   "late_entry",
   "early_exit",
   "section_break_ackd",
-  "company",
+  "hr_organization",
   "branch",
   "department",
   "filter_by_shift",
@@ -51,10 +51,10 @@
    "options": "Branch"
   },
   {
-   "fieldname": "company",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
-   "label": "Company",
-   "options": "Company"
+   "label": "HR Organization",
+   "options": "HR Organization"
   },
   {
    "collapsible": 1,

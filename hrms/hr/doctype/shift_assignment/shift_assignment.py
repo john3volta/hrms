@@ -165,7 +165,7 @@ def has_overlapping_timings(shift_1: str, shift_2: str) -> bool:
 @frappe.whitelist()
 def get_events(start, end, filters=None):
 	employee = frappe.db.get_value(
-		"Employee", {"user_id": frappe.session.user}, ["name", "company"], as_dict=True
+		"Employee", {"user_id": frappe.session.user}, ["name", "hr_organization"], as_dict=True
 	)
 	if employee:
 		employee = employee.name

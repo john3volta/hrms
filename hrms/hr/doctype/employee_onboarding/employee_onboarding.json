@@ -10,7 +10,7 @@
   "job_offer",
   "employee_onboarding_template",
   "column_break_7",
-  "company",
+  "hr_organization",
   "boarding_status",
   "project",
   "details_section",
@@ -92,11 +92,11 @@
    "options": "Employee Onboarding Template"
   },
   {
-   "fetch_from": "employee_onboarding_template.company",
-   "fieldname": "company",
+   "fetch_from": "employee_onboarding_template.hr_organization",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
-   "label": "Company",
-   "options": "Company",
+   "label": "HR Organization",
+   "options": "HR Organization",
    "reqd": 1
   },
   {

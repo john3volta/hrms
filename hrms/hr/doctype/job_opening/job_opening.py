@@ -28,7 +28,7 @@ class JobOpening(WebsiteGenerator):
 
 	def validate(self):
 		if not self.route:
-			self.route = f"jobs/{frappe.scrub(self.company)}/{frappe.scrub(self.job_title).replace('_', '-')}"
+			self.route = f"jobs/{frappe.scrub(self.hr_organization)}/{frappe.scrub(self.job_title).replace('_', '-')}"
 		self.update_closing_date()
 		self.validate_dates()
 		self.validate_current_vacancies()
@@ -57,7 +57,7 @@ class JobOpening(WebsiteGenerator):
 
 	def validate_current_vacancies(self):
 		if not self.staffing_plan:
-			staffing_plan = get_active_staffing_plan_details(self.company, self.designation)
+			staffing_plan = get_active_staffing_plan_details(self.hr_organization, self.designation)
 			if staffing_plan:
 				self.staffing_plan = staffing_plan[0].name
 				self.planned_vacancies = staffing_plan[0].vacancies
@@ -69,7 +69,7 @@ class JobOpening(WebsiteGenerator):
 			)
 
 		if self.staffing_plan and self.planned_vacancies:
-			designation_counts = get_designation_counts(self.designation, self.company, self.name)
+			designation_counts = get_designation_counts(self.designation, self.hr_organization, self.name)
 			current_count = designation_counts["employee_count"] + designation_counts["job_openings"]
 
 			number_of_positions = frappe.db.get_value(

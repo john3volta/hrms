@@ -16,7 +16,7 @@
   "posting_date",
   "gratuity_rule",
   "status",
-  "company",
+  "hr_organization",
   "amended_from",
   "section_break_5",
   "pay_via_salary_slip",
@@ -42,11 +42,11 @@
    "search_index": 1
   },
   {
-   "fetch_from": "employee.company",
-   "fieldname": "company",
+   "fetch_from": "employee.hr_organization",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
-   "label": "Company",
-   "options": "Company",
+   "label": "HR Organization",
+   "options": "HR Organization",
    "read_only": 1,
    "reqd": 1
   },

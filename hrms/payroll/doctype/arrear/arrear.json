@@ -11,7 +11,7 @@
   "salary_structure",
   "arrear_start_date",
   "column_break_itzd",
-  "company",
+  "hr_organization",
   "currency",
   "payroll_period",
   "payroll_date",
@@ -59,12 +59,12 @@
    "fieldtype": "Column Break"
   },
   {
-   "fetch_from": "employee.company",
-   "fieldname": "company",
+   "fetch_from": "employee.hr_organization",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
    "in_standard_filter": 1,
-   "label": "Company",
-   "options": "Company",
+   "label": "HR Organization",
+   "options": "HR Organization",
    "reqd": 1
   },
   {

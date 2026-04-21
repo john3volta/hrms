@@ -17,7 +17,7 @@
   "leave_application",
   "column_break0",
   "attendance_date",
-  "company",
+  "hr_organization",
   "department",
   "attendance_request",
   "half_day_status",
@@ -133,13 +133,13 @@
    "search_index": 1
   },
   {
-   "fetch_from": "employee.company",
-   "fieldname": "company",
+   "fetch_from": "employee.hr_organization",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
-   "label": "Company",
+   "label": "HR Organization",
    "oldfieldname": "company",
    "oldfieldtype": "Link",
-   "options": "Company",
+   "options": "HR Organization",
    "read_only": 1,
    "remember_last_selected_value": 1,
    "reqd": 1

@@ -63,12 +63,12 @@ class SalaryStructureAssignment(Document):
 
 	def validate_company(self):
 		salary_structure_company = frappe.db.get_value(
-			"Salary Structure", self.salary_structure, "company", cache=True
+			"Salary Structure", self.salary_structure, "hr_organization", cache=True
 		)
-		if self.company != salary_structure_company:
+		if self.hr_organization != salary_structure_company:
 			frappe.throw(
-				_("Salary Structure {0} does not belong to company {1}").format(
-					frappe.bold(self.salary_structure), frappe.bold(self.company)
+				_("Salary Structure {0} does not belong to HR Organization {1}").format(
+					frappe.bold(self.salary_structure), frappe.bold(self.hr_organization)
 				)
 			)
 
@@ -99,15 +99,15 @@ class SalaryStructureAssignment(Document):
 	def set_payroll_payable_account(self):
 		if not self.payroll_payable_account:
 			payroll_payable_account = frappe.db.get_value(
-				"Company", self.company, "default_payroll_payable_account"
+				"Company", self.hr_organization, "default_payroll_payable_account"
 			)
 			if not payroll_payable_account:
 				payroll_payable_account = frappe.db.get_value(
 					"Account",
 					{
 						"account_name": _("Payroll Payable"),
-						"company": self.company,
-						"account_currency": frappe.db.get_value("Company", self.company, "default_currency"),
+						"company": self.hr_organization,
+						"account_currency": frappe.db.get_value("Company", self.hr_organization, "default_currency"),
 						"is_group": 0,
 					},
 				)
@@ -136,10 +136,10 @@ class SalaryStructureAssignment(Document):
 		total_percentage = 0
 		for entry in self.payroll_cost_centers:
 			company = frappe.db.get_value("Cost Center", entry.cost_center, "company")
-			if company != self.company:
+			if company != self.hr_organization:
 				frappe.throw(
 					_("Row {0}: Cost Center {1} does not belong to Company {2}").format(
-						entry.idx, frappe.bold(entry.cost_center), frappe.bold(self.company)
+						entry.idx, frappe.bold(entry.cost_center), frappe.bold(self.hr_organization)
 					),
 					title=_("Invalid Cost Center"),
 				)
@@ -172,7 +172,7 @@ class SalaryStructureAssignment(Document):
 		if not get_tax_component(self.salary_structure):
 			return False
 
-		payroll_period = get_payroll_period(self.from_date, self.from_date, self.company)
+		payroll_period = get_payroll_period(self.from_date, self.from_date, self.hr_organization)
 		if payroll_period and getdate(self.from_date) <= getdate(payroll_period.start_date):
 			return False
 

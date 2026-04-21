@@ -415,7 +415,7 @@ class Arrear(Document):
 				{
 					"doctype": "Additional Salary",
 					"employee": self.employee,
-					"company": self.company,
+					"hr_organization": self.hr_organization,
 					"payroll_date": self.payroll_date,
 					"salary_component": component.salary_component,
 					"currency": self.currency,
@@ -442,7 +442,7 @@ class Arrear(Document):
 					"doctype": "Employee Benefit Ledger",
 					"employee": self.employee,
 					"employee_name": self.employee_name,
-					"company": self.company,
+					"hr_organization": self.hr_organization,
 					"payroll_period": self.payroll_period,
 					"salary_component": component.salary_component,
 					"transaction_type": "Accrual",

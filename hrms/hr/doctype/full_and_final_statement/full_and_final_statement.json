@@ -10,7 +10,7 @@
   "employee_name",
   "transaction_date",
   "column_break_12",
-  "company",
+  "hr_organization",
   "status",
   "amended_from",
   "employee_details_section",
@@ -120,13 +120,13 @@
    "label": "Assets Allocated"
   },
   {
-   "fetch_from": "employee.company",
-   "fieldname": "company",
+   "fetch_from": "employee.hr_organization",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "Company",
-   "options": "Company",
+   "label": "HR Organization",
+   "options": "HR Organization",
    "read_only": 1
   },
   {

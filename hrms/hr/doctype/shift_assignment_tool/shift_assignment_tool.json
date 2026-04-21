@@ -8,7 +8,7 @@
  "field_order": [
   "action",
   "column_break_dnmy",
-  "company",
+  "hr_organization",
   "shift_assignment_details_section",
   "shift_type",
   "shift_schedule",
@@ -50,11 +50,11 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "company",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Company",
-   "options": "Company",
+   "label": "HR Organization",
+   "options": "HR Organization",
    "reqd": 1
   },
   {

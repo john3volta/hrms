@@ -154,7 +154,7 @@ class LeaveEncashment(AccountsController):
 
 	def create_additional_salary(self):
 		additional_salary = frappe.new_doc("Additional Salary")
-		additional_salary.company = frappe.get_value("Employee", self.employee, "company")
+		additional_salary.hr_organization = frappe.get_value("Employee", self.employee, "hr_organization")
 		additional_salary.employee = self.employee
 		additional_salary.currency = self.currency
 		earning_component = frappe.get_value("Leave Type", self.leave_type, "earning_component")
@@ -278,7 +278,7 @@ class LeaveEncashment(AccountsController):
 			frappe.qb.from_(aple)
 			.select(Abs(Sum(aple.amount)).as_("paid_amount"))
 			.where(
-				(aple.company == self.company)
+				(aple.company == self.hr_organization)
 				& (aple.against_voucher_type == self.doctype)
 				& (aple.against_voucher_no == self.name)
 				& (aple.delinked == 0)

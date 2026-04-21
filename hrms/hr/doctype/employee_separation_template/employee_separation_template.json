@@ -7,7 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "title",
-  "company",
+  "hr_organization",
   "department",
   "column_break_7",
   "designation",
@@ -25,10 +25,10 @@
    "translatable": 1
   },
   {
-   "fieldname": "company",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
-   "label": "Company",
-   "options": "Company"
+   "label": "HR Organization",
+   "options": "HR Organization"
   },
   {
    "fieldname": "department",

@@ -205,7 +205,7 @@ class FullandFinalStatement(Document):
 	def create_journal_entry(self):
 		precision = frappe.get_precision("Journal Entry Account", "debit_in_account_currency")
 		jv = frappe.new_doc("Journal Entry")
-		jv.company = self.company
+		jv.company = self.hr_organization
 		jv.voucher_type = "Bank Entry"
 		jv.posting_date = today()
 

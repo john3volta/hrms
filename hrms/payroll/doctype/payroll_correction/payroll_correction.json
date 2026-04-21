@@ -12,7 +12,7 @@
   "employee_name",
   "payroll_date",
   "column_break_uuzk",
-  "company",
+  "hr_organization",
   "payroll_period",
   "currency",
   "section_break_xdag",
@@ -66,16 +66,16 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "company",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Company",
-   "options": "Company",
+   "label": "HR Organization",
+   "options": "HR Organization",
    "reqd": 1
   },
   {
-   "depends_on": "eval: doc.company && doc.employee",
-   "fetch_from": "company.default_currency",
+   "depends_on": "eval: doc.hr_organization && doc.employee",
+   "fetch_from": "hr_organization.default_currency",
    "fieldname": "currency",
    "fieldtype": "Link",
    "label": "Currency",

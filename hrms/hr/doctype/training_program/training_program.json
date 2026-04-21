@@ -10,7 +10,7 @@
   "training_program",
   "status",
   "column_break_3",
-  "company",
+  "hr_organization",
   "section_break_5",
   "trainer_name",
   "trainer_email",
@@ -45,11 +45,11 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "company",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Company",
-   "options": "Company",
+   "label": "HR Organization",
+   "options": "HR Organization",
    "reqd": 1
   },
   {

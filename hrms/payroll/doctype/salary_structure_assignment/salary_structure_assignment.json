@@ -17,7 +17,7 @@
   "from_date",
   "income_tax_slab",
   "column_break_11",
-  "company",
+  "hr_organization",
   "payroll_payable_account",
   "currency",
   "section_break_7",
@@ -96,11 +96,11 @@
    "reqd": 1
   },
   {
-   "fetch_from": "employee.company",
-   "fieldname": "company",
+   "fetch_from": "employee.hr_organization",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
-   "label": "Company",
-   "options": "Company",
+   "label": "HR Organization",
+   "options": "HR Organization",
    "reqd": 1
   },
   {

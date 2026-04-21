@@ -107,7 +107,7 @@ class ShiftScheduleAssignment(Document):
 	def create_individual_assignment(self, shift_type, start_date, end_date):
 		create_shift_assignment(
 			self.employee,
-			self.company,
+			self.hr_organization,
 			shift_type,
 			start_date,
 			end_date,

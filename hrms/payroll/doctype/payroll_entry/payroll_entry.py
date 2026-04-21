@@ -198,7 +198,7 @@ class PayrollEntry(Document):
 
 	def make_filters(self):
 		filters = frappe._dict(
-			company=self.company,
+			hr_organization=self.hr_organization,
 			branch=self.branch,
 			department=self.department,
 			designation=self.designation,
@@ -225,7 +225,7 @@ class PayrollEntry(Document):
 			error_msg = _(
 				"No employees found for the mentioned criteria:<br>Company: {0}<br> Currency: {1}<br>Payroll Payable Account: {2}"
 			).format(
-				frappe.bold(self.company),
+				frappe.bold(self.hr_organization),
 				frappe.bold(self.currency),
 				frappe.bold(self.payroll_payable_account),
 			)
@@ -269,7 +269,7 @@ class PayrollEntry(Document):
 					"payroll_frequency": self.payroll_frequency,
 					"start_date": self.start_date,
 					"end_date": self.end_date,
-					"company": self.company,
+					"hr_organization": self.hr_organization,
 					"posting_date": self.posting_date,
 					"deduct_tax_for_unsubmitted_tax_exemption_proof": self.deduct_tax_for_unsubmitted_tax_exemption_proof,
 					"payroll_entry": self.name,
@@ -347,7 +347,7 @@ class PayrollEntry(Document):
 	def get_salary_component_account(self, salary_component):
 		account = frappe.db.get_value(
 			"Salary Component Account",
-			{"parent": salary_component, "company": self.company},
+			{"parent": salary_component, "company": self.hr_organization},
 			"account",
 			cache=True,
 		)
@@ -584,7 +584,7 @@ class PayrollEntry(Document):
 			currencies = []
 			payable_amount = 0
 			accounting_dimensions = get_accounting_dimensions() or []
-			company_currency = compat.get_company_currency(self.company)
+			company_currency = compat.get_company_currency(self.hr_organization)
 
 			payable_amount = self.get_payable_amount_for_earnings_and_deductions(
 				accounts,
@@ -650,7 +650,7 @@ class PayrollEntry(Document):
 		journal_entry = frappe.new_doc("Journal Entry")
 		journal_entry.voucher_type = voucher_type
 		journal_entry.user_remark = user_remark
-		journal_entry.company = self.company
+		journal_entry.company = self.hr_organization
 		journal_entry.posting_date = self.posting_date
 		journal_entry.party_not_required = True if not employee_wise_accounting_enabled else False
 
@@ -1018,7 +1018,7 @@ class PayrollEntry(Document):
 
 		accounts = []
 		currencies = []
-		company_currency = compat.get_company_currency(self.company)
+		company_currency = compat.get_company_currency(self.hr_organization)
 		accounting_dimensions = get_accounting_dimensions() or []
 
 		exchange_rate, amount = self.get_amount_and_exchange_rate_for_journal_entry(
@@ -1113,7 +1113,7 @@ class PayrollEntry(Document):
 
 	def set_start_end_dates(self):
 		self.update(
-			get_start_end_dates(self.payroll_frequency, self.start_date or self.posting_date, self.company)
+			get_start_end_dates(self.payroll_frequency, self.start_date or self.posting_date, self.hr_organization)
 		)
 
 	@frappe.whitelist()
@@ -1124,7 +1124,7 @@ class PayrollEntry(Document):
 		unmarked_attendance = []
 		employee_details = self.get_employee_and_attendance_details()
 		default_holiday_list = frappe.db.get_value(
-			"Company", self.company, "default_holiday_list", cache=True
+			"HR Organization", self.hr_organization, "default_holiday_list", cache=True
 		)
 
 		for emp in self.employees:
@@ -1233,7 +1233,7 @@ class PayrollEntry(Document):
 					"posting_date": self.posting_date,
 					"start_date": self.start_date,
 					"end_date": self.end_date,
-					"company": self.company,
+					"hr_organization": self.hr_organization,
 					"currency": self.currency,
 					"payroll_entry": self.name,
 				}
@@ -1315,11 +1315,11 @@ def get_salary_structure(
 	query = (
 		frappe.qb.from_(SalaryStructure)
 		.select(SalaryStructure.name)
-		.where(
-			(SalaryStructure.docstatus == 1)
-			& (SalaryStructure.is_active == "Yes")
-			& (SalaryStructure.company == company)
-			& (SalaryStructure.currency == currency)
+			.where(
+				(SalaryStructure.docstatus == 1)
+				& (SalaryStructure.is_active == "Yes")
+				& (SalaryStructure.hr_organization == company)
+				& (SalaryStructure.currency == currency)
 			& (SalaryStructure.salary_slip_based_on_timesheet == salary_slip_based_on_timesheet)
 		)
 	)
@@ -1348,11 +1348,11 @@ def get_filtered_employees(
 		frappe.qb.from_(Employee)
 		.join(SalaryStructureAssignment)
 		.on(Employee.name == SalaryStructureAssignment.employee)
-		.where(
-			(SalaryStructureAssignment.docstatus == 1)
-			& (Employee.status != "Inactive")
-			& (Employee.company == filters.company)
-			& ((Employee.date_of_joining <= filters.end_date) | (Employee.date_of_joining.isnull()))
+			.where(
+				(SalaryStructureAssignment.docstatus == 1)
+				& (Employee.status != "Inactive")
+				& (Employee.hr_organization == filters.hr_organization)
+				& ((Employee.date_of_joining <= filters.end_date) | (Employee.date_of_joining.isnull()))
 			& ((Employee.relieving_date >= filters.start_date) | (Employee.relieving_date.isnull()))
 			& (SalaryStructureAssignment.salary_structure.isin(sal_struct))
 			& (SalaryStructureAssignment.payroll_payable_account == filters.payroll_payable_account)
@@ -1619,7 +1619,7 @@ def get_existing_salary_slips(employees, args):
 		.distinct()
 		.where(
 			(SalarySlip.docstatus != 2)
-			& (SalarySlip.company == args.company)
+			& (SalarySlip.hr_organization == args.hr_organization)
 			& (SalarySlip.payroll_entry == args.payroll_entry)
 			& (SalarySlip.start_date >= args.start_date)
 			& (SalarySlip.end_date <= args.end_date)
@@ -1699,7 +1699,7 @@ def get_employee_list(
 	ignore_match_conditions=False,
 ) -> list:
 	sal_struct = get_salary_structure(
-		filters.company,
+		filters.hr_organization,
 		filters.currency,
 		filters.salary_slip_based_on_timesheet,
 		filters.payroll_frequency,

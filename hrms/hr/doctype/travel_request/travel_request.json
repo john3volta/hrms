@@ -17,7 +17,7 @@
   "employee_name",
   "cell_number",
   "prefered_email",
-  "company",
+  "hr_organization",
   "column_break_7",
   "date_of_birth",
   "personal_id_type",
@@ -215,11 +215,11 @@
    "fieldtype": "Column Break"
   },
   {
-   "fetch_from": "employee.company",
-   "fieldname": "company",
+   "fetch_from": "employee.hr_organization",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
-   "label": "Company",
-   "options": "Company",
+   "label": "HR Organization",
+   "options": "HR Organization",
    "read_only": 1
   }
  ],

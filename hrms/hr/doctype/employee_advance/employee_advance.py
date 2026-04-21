@@ -35,9 +35,9 @@ class EmployeeAdvance(Document):
 	def before_submit(self):
 		if not self.get("advance_account"):
 			default_advance_account = frappe.db.get_value(
-				"Company", self.company, "default_employee_advance_account"
+				"Company", self.hr_organization, "default_employee_advance_account"
 			)
-			same_currency = self.currency == compat.get_company_currency(self.company)
+			same_currency = self.currency == compat.get_company_currency(self.hr_organization)
 
 			if default_advance_account and same_currency:
 				self.advance_account = default_advance_account
@@ -57,9 +57,9 @@ class EmployeeAdvance(Document):
 					"Advance Account is mandatory. Please set the {0} in the Company {1} and submit this document."
 				).format(
 					get_link_to_form(
-						"Company", self.company + "#hr_and_payroll_tab", "Default Employee Advance Account"
+						"Company", self.hr_organization + "#hr_and_payroll_tab", "Default Employee Advance Account"
 					),
-					frappe.bold(self.company),
+					frappe.bold(self.hr_organization),
 				),
 				title=_("Missing Advance Account"),
 			)
@@ -167,7 +167,7 @@ class EmployeeAdvance(Document):
 			.select(Abs(Sum(aple.amount)).as_("paid_amount"))
 			.select(Abs(Sum(aple.base_amount)).as_("base_paid_amount"))
 			.where(
-				(aple.company == self.company)
+				(aple.company == self.hr_organization)
 				& (aple.delinked == 0)
 				& (aple.against_voucher_type == self.doctype)
 				& (aple.against_voucher_no == self.name)
@@ -181,7 +181,7 @@ class EmployeeAdvance(Document):
 			frappe.qb.from_(aple)
 			.select(Abs(Sum(aple.amount)).as_("return_amount"))
 			.where(
-				(aple.company == self.company)
+				(aple.company == self.hr_organization)
 				& (aple.delinked == 0)
 				& (aple.against_voucher_type == self.doctype)
 				& (aple.against_voucher_no == self.name)
@@ -258,14 +258,16 @@ class EmployeeAdvance(Document):
 @frappe.whitelist()
 def make_bank_entry(dt, dn):
 	doc = frappe.get_doc(dt, dn)
-	payment_account = get_same_currency_bank_cash_account(doc.company, doc.currency, doc.mode_of_payment)
+	payment_account = get_same_currency_bank_cash_account(
+		doc.hr_organization, doc.currency, doc.mode_of_payment
+	)
 
 	je = frappe.new_doc("Journal Entry")
 	je.posting_date = nowdate()
 	je.voucher_type = "Bank Entry"
-	je.company = doc.company
+	je.company = doc.hr_organization
 	je.remark = "Payment against Employee Advance: " + dn + "\n" + doc.purpose
-	je.multi_currency = 1 if doc.currency != compat.get_company_currency(doc.company) else 0
+	je.multi_currency = 1 if doc.currency != compat.get_company_currency(doc.hr_organization) else 0
 
 	je.append(
 		"accounts",
@@ -276,7 +278,7 @@ def make_bank_entry(dt, dn):
 			"reference_type": "Employee Advance",
 			"reference_name": doc.name,
 			"party_type": "Employee",
-			"cost_center": compat.get_default_cost_center(doc.company),
+			"cost_center": compat.get_default_cost_center(doc.hr_organization),
 			"party": doc.employee,
 			"is_advance": "Yes",
 		},
@@ -286,7 +288,7 @@ def make_bank_entry(dt, dn):
 		"accounts",
 		{
 			"account": payment_account.account or payment_account.name,
-			"cost_center": compat.get_default_cost_center(doc.company),
+			"cost_center": compat.get_default_cost_center(doc.hr_organization),
 			"credit_in_account_currency": flt(doc.advance_amount),
 			"account_currency": doc.currency,
 			"account_type": payment_account.account_type,
@@ -308,7 +310,7 @@ def create_return_through_additional_salary(doc):
 	additional_salary.currency = doc.currency
 	additional_salary.overwrite_salary_structure_amount = 0
 	additional_salary.amount = doc.paid_amount - doc.claimed_amount
-	additional_salary.company = doc.company
+	additional_salary.hr_organization = doc.hr_organization
 	additional_salary.ref_doctype = doc.doctype
 	additional_salary.ref_docname = doc.name
 

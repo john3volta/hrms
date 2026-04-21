@@ -99,7 +99,7 @@ def get_holiday_list_for_employee(
 	as_on = frappe.utils.getdate(as_on)
 	holiday_list = get_assigned_holiday_list(employee, as_on, as_dict)
 	if not holiday_list:
-		company = frappe.db.get_value("Employee", employee, "company")
+		company = frappe.db.get_value("Employee", employee, "hr_organization")
 		holiday_list = get_assigned_holiday_list(company, as_on, as_dict)
 
 	if not holiday_list and raise_exception:

@@ -10,7 +10,7 @@
   "job_applicant",
   "applicant_name",
   "column_break_3",
-  "company",
+  "hr_organization",
   "appointment_date",
   "appointment_letter_template",
   "body_section",
@@ -66,10 +66,10 @@
    "reqd": 1
   },
   {
-   "fieldname": "company",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
-   "label": "Company",
-   "options": "Company",
+   "label": "HR Organization",
+   "options": "HR Organization",
    "reqd": 1
   },
   {

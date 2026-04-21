@@ -71,7 +71,7 @@ class AppraisalCycle(Document):
 	def get_employees_for_appraisal(self):
 		filters = {
 			"status": "Active",
-			"company": self.company,
+			"hr_organization": self.hr_organization,
 		}
 		if self.department:
 			filters["department"] = self.department
@@ -173,7 +173,7 @@ def create_appraisals_for_cycle(appraisal_cycle: AppraisalCycle, publish_progres
 			appraisal = frappe.get_doc(
 				{
 					"doctype": "Appraisal",
-					"company": appraisal_cycle.company,
+					"hr_organization": appraisal_cycle.hr_organization,
 					"appraisal_template": employee.appraisal_template,
 					"employee": employee.employee,
 					"appraisal_cycle": appraisal_cycle.name,

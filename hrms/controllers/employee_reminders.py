@@ -165,7 +165,7 @@ def get_employees_having_an_event_today(event_type):
 	employees_born_today = frappe.db.multisql(
 		{
 			"mariadb": f"""
-			SELECT `personal_email`, `company`, `company_email`, `user_id`, `employee_name` AS 'name', `image`, `date_of_joining`
+			SELECT `personal_email`, `hr_organization`, `company_email`, `user_id`, `employee_name` AS 'name', `image`, `date_of_joining`
 			FROM `tabEmployee`
 			WHERE
 				DAY({condition_column}) = DAY(%(today)s)
@@ -177,7 +177,7 @@ def get_employees_having_an_event_today(event_type):
 				`status` = 'Active'
 		""",
 			"postgres": f"""
-			SELECT "personal_email", "company", "company_email", "user_id", "employee_name" AS 'name', "image"
+			SELECT "personal_email", "hr_organization", "company_email", "user_id", "employee_name" AS 'name', "image"
 			FROM "tabEmployee"
 			WHERE
 				DATE_PART('day', {condition_column}) = date_part('day', %(today)s)
@@ -196,7 +196,7 @@ def get_employees_having_an_event_today(event_type):
 	grouped_employees = defaultdict(lambda: [])
 
 	for employee_doc in employees_born_today:
-		grouped_employees[employee_doc.get("company")].append(employee_doc)
+		grouped_employees[employee_doc.get("hr_organization")].append(employee_doc)
 
 	return grouped_employees
 

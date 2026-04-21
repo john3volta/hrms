@@ -46,7 +46,7 @@ class ShiftRequest(Document, PWANotificationsMixin):
 			frappe.throw(_("Only Shift Request with status 'Approved' and 'Rejected' can be submitted"))
 		if self.status == "Approved":
 			assignment_doc = frappe.new_doc("Shift Assignment")
-			assignment_doc.company = self.company
+			assignment_doc.hr_organization = self.hr_organization
 			assignment_doc.shift_type = self.shift_type
 			assignment_doc.employee = self.employee
 			assignment_doc.start_date = self.from_date

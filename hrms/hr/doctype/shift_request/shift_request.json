@@ -13,7 +13,7 @@
   "department",
   "status",
   "column_break_4",
-  "company",
+  "hr_organization",
   "approver",
   "from_date",
   "to_date",
@@ -56,11 +56,11 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "company",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Company",
-   "options": "Company",
+   "label": "HR Organization",
+   "options": "HR Organization",
    "reqd": 1
   },
   {

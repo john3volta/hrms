@@ -39,7 +39,7 @@ class EmployeeBoardingController(Document):
 				if self.doctype == "Employee Onboarding"
 				else self.resignation_letter_date,
 				"department": self.department,
-				"company": self.company,
+				"company": self.hr_organization,
 			}
 		).insert(ignore_permissions=True, ignore_mandatory=True)
 
@@ -65,7 +65,7 @@ class EmployeeBoardingController(Document):
 					"subject": activity.activity_name + " : " + self.employee_name,
 					"description": activity.description,
 					"department": self.department,
-					"company": self.company,
+					"company": self.hr_organization,
 					"task_weight": activity.task_weight,
 					"exp_start_date": dates[0],
 					"exp_end_date": dates[1],

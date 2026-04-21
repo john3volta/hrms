@@ -8,7 +8,7 @@
  "field_order": [
   "employee",
   "employee_name",
-  "company",
+  "hr_organization",
   "leave_policy",
   "carry_forward",
   "column_break_5",
@@ -74,12 +74,12 @@
    "reqd": 1
   },
   {
-   "fetch_from": "employee.company",
-   "fieldname": "company",
+   "fetch_from": "employee.hr_organization",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
    "in_standard_filter": 1,
-   "label": "Company",
-   "options": "Company",
+   "label": "HR Organization",
+   "options": "HR Organization",
    "read_only": 1
   },
   {

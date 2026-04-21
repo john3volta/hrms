@@ -10,7 +10,7 @@
   "employee_name",
   "transfer_date",
   "column_break_3",
-  "company",
+  "hr_organization",
   "new_company",
   "department",
   "details_section",
@@ -47,11 +47,11 @@
    "fieldtype": "Column Break"
   },
   {
-   "fetch_from": "employee.company",
-   "fieldname": "company",
+   "fetch_from": "employee.hr_organization",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
-   "label": "Company",
-   "options": "Company"
+   "label": "HR Organization",
+   "options": "HR Organization"
   },
   {
    "fieldname": "new_company",

@@ -96,7 +96,7 @@ def get_data(args):
 				date,
 				existing_attendance and existing_attendance.status or "",
 				existing_attendance and existing_attendance.leave_type or "",
-				employee.company,
+				employee.hr_organization,
 				existing_attendance and existing_attendance.naming_series or get_naming_series(),
 			]
 			if date in holidays[employee_holiday_list]:
@@ -132,7 +132,7 @@ def get_dates(args):
 def get_active_employees():
 	employees = frappe.db.get_all(
 		"Employee",
-		fields=["name", "employee_name", "date_of_joining", "company", "relieving_date"],
+		fields=["name", "employee_name", "date_of_joining", "hr_organization", "relieving_date"],
 		filters={"docstatus": ["<", 2], "status": "Active"},
 	)
 	return employees

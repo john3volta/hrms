@@ -16,7 +16,7 @@ class ExpenseClaimType(Document):
 		"""Error when Same Company is entered multiple times in accounts"""
 		accounts_list = []
 		for entry in self.accounts:
-			accounts_list.append(entry.company)
+			accounts_list.append(entry.hr_organization)
 
 		if len(accounts_list) != len(set(accounts_list)):
 			frappe.throw(_("Same Company is entered more than once"))
@@ -24,9 +24,9 @@ class ExpenseClaimType(Document):
 	def validate_accounts(self):
 		for entry in self.accounts:
 			"""Error when Company of Ledger account doesn't match with Company Selected"""
-			if frappe.db.get_value("Account", entry.default_account, "company") != entry.company:
+			if frappe.db.get_value("Account", entry.default_account, "company") != entry.hr_organization:
 				frappe.throw(
 					_("Account {0} does not match with Company {1}").format(
-						entry.default_account, entry.company
+						entry.default_account, entry.hr_organization
 					)
 				)

@@ -50,7 +50,7 @@ def get_current_employee_info() -> dict:
 			"employee_name",
 			"designation",
 			"department",
-			"company",
+			"hr_organization",
 			"reports_to",
 			"user_id",
 		],
@@ -68,7 +68,7 @@ def get_all_employees() -> list[dict]:
 			"employee_name",
 			"designation",
 			"department",
-			"company",
+			"hr_organization",
 			"reports_to",
 			"user_id",
 			"image",
@@ -512,7 +512,7 @@ def get_expense_claims(
 		"`tabExpense Claim`.expense_approver",
 		"`tabExpense Claim`.total_claimed_amount",
 		"`tabExpense Claim`.posting_date",
-		"`tabExpense Claim`.company",
+		"`tabExpense Claim`.hr_organization",
 		"`tabExpense Claim`.creation",
 		"`tabExpense Claim Detail`.expense_type",
 		{"COUNT": "`tabExpense Claim Detail`.expense_type", "as": "total_expenses"},
@@ -574,12 +574,12 @@ def get_expense_claim_summary() -> dict:
 			sum_approved_claims,
 			sum_rejected_claims,
 			sum_approved_total_claimed,
-			Claim.company,
+			Claim.hr_organization,
 		)
 		.where((Claim.docstatus != 2) & (Claim.employee == employee))
 	).run(as_dict=True)[0]
 
-	currency = frappe.db.get_value("Company", summary.company, "default_currency")
+	currency = frappe.db.get_value("Company", summary.hr_organization, "default_currency")
 	summary["currency"] = currency
 
 	return summary

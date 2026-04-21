@@ -12,7 +12,7 @@
   "designation",
   "employee_grade",
   "column_break_7",
-  "company",
+  "hr_organization",
   "boarding_status",
   "resignation_letter_date",
   "boarding_begins_on",
@@ -76,11 +76,11 @@
    "options": "Employee Separation Template"
   },
   {
-   "fetch_from": "employee.company",
-   "fieldname": "company",
+   "fetch_from": "employee.hr_organization",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
-   "label": "Company",
-   "options": "Company",
+   "label": "HR Organization",
+   "options": "HR Organization",
    "reqd": 1
   },
   {

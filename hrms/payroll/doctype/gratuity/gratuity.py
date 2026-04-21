@@ -111,7 +111,7 @@ class Gratuity(AccountsController):
 			additional_salary.overwrite_salary_structure_amount = 0
 			additional_salary.amount = self.amount
 			additional_salary.payroll_date = self.payroll_date
-			additional_salary.company = self.company
+			additional_salary.hr_organization = self.hr_organization
 			additional_salary.ref_doctype = self.doctype
 			additional_salary.ref_docname = self.name
 			additional_salary.submit()
@@ -122,7 +122,7 @@ class Gratuity(AccountsController):
 			frappe.qb.from_(aple)
 			.select(Abs(Sum(aple.amount)).as_("paid_amount"))
 			.where(
-				(aple.company == self.company)
+				(aple.company == self.hr_organization)
 				& (aple.against_voucher_type == self.doctype)
 				& (aple.against_voucher_no == self.name)
 				& (aple.delinked == 0)

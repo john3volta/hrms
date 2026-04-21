@@ -14,7 +14,7 @@
   "status",
   "offer_date",
   "designation",
-  "company",
+  "hr_organization",
   "section_break_4",
   "job_offer_term_template",
   "offer_terms",
@@ -87,11 +87,11 @@
    "reqd": 1
   },
   {
-   "fieldname": "company",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Company",
-   "options": "Company",
+   "label": "HR Organization",
+   "options": "HR Organization",
    "print_hide": 1,
    "remember_last_selected_value": 1,
    "reqd": 1
@@ -130,7 +130,7 @@
   },
   {
    "allow_on_submit": 1,
-   "fetch_from": "company.default_letter_head",
+   "fetch_from": "hr_organization.default_letter_head",
    "fieldname": "letter_head",
    "fieldtype": "Link",
    "label": "Letter Head",

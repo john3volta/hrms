@@ -27,7 +27,7 @@ class JobOffer(Document):
 			)
 
 	def validate_vacancies(self):
-		staffing_plan = get_staffing_plan_detail(self.designation, self.company, self.offer_date)
+		staffing_plan = get_staffing_plan_detail(self.designation, self.hr_organization, self.offer_date)
 		check_vacancies = frappe.get_single("HR Settings").check_vacancies
 		if staffing_plan and check_vacancies:
 			job_offers = self.get_job_offer(staffing_plan.from_date, staffing_plan.to_date)
@@ -48,7 +48,7 @@ class JobOffer(Document):
 			filters={
 				"offer_date": ["between", (from_date, to_date)],
 				"designation": self.designation,
-				"company": self.company,
+				"hr_organization": self.hr_organization,
 				"docstatus": 1,
 			},
 			fields=["name"],
@@ -76,7 +76,7 @@ def get_staffing_plan_detail(designation, company, offer_date):
 		WHERE
 			sp.docstatus=1
 			AND spd.designation=%s
-			AND sp.company=%s
+			AND sp.hr_organization=%s
 			AND spd.parent = sp.name
 			AND %s between sp.from_date and sp.to_date
 	""",
@@ -115,7 +115,7 @@ def get_offer_acceptance_rate(company: str | None = None, department: str | None
 
 	filters = {"docstatus": 1}
 	if company:
-		filters["company"] = company
+		filters["hr_organization"] = company
 	if department:
 		filters["department"] = department
 

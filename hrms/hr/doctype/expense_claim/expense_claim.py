@@ -103,9 +103,9 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 	def validate_company_and_department(self):
 		if self.department:
 			company = frappe.db.get_value("Department", self.department, "company")
-			if company and self.company != company:
+			if company and self.hr_organization != company:
 				frappe.throw(
-					_("Department {0} does not belong to company: {1}").format(self.department, self.company),
+					_("Department {0} does not belong to company: {1}").format(self.department, self.hr_organization),
 					exc=MismatchError,
 				)
 
@@ -287,7 +287,7 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 
 		if self.is_paid and self.grand_total:
 			# payment entry
-			payment_account = get_bank_cash_account(self.mode_of_payment, self.company).get("account")
+			payment_account = get_bank_cash_account(self.mode_of_payment, self.hr_organization).get("account")
 			gl_entry.append(
 				self.get_gl_dict(
 					{
@@ -356,7 +356,7 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		)
 
 		for dim in get_checks_for_pl_and_bs_accounts():
-			if dim.company != self.company:
+			if dim.company != self.hr_organization:
 				continue
 
 			field = frappe.scrub(dim.fieldname)
@@ -390,7 +390,7 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 					advance.db_set("exchange_gain_loss", per_advance_gain_loss)
 					total_advance_exchange_gain_loss += per_advance_gain_loss
 		if total_advance_exchange_gain_loss:
-			gain_loss_account = frappe.get_cached_value("Company", self.company, "exchange_gain_loss_account")
+			gain_loss_account = frappe.get_cached_value("Company", self.hr_organization, "exchange_gain_loss_account")
 			self.db_set(
 				{
 					"total_exchange_gain_loss": total_advance_exchange_gain_loss,
@@ -401,7 +401,7 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 			reverse_dr_or_cr = "debit" if dr_or_cr == "credit" else "credit"
 
 			je = create_gain_loss_journal(
-				company=self.company,
+				company=self.hr_organization,
 				posting_date=today(),
 				party_type="Employee",
 				party=self.employee,
@@ -535,7 +535,7 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 	def set_expense_account(self, validate=False):
 		for expense in self.expenses:
 			if not expense.default_account or not validate:
-				expense.default_account = get_expense_claim_account(expense.expense_type, self.company)[
+				expense.default_account = get_expense_claim_account(expense.expense_type, self.hr_organization)[
 					"account"
 				]
 
@@ -636,15 +636,15 @@ def make_bank_entry(dt, dn):
 	from hrms.utils.compat import get_default_bank_cash_account
 
 	expense_claim = frappe.get_doc(dt, dn)
-	default_bank_cash_account = get_default_bank_cash_account(expense_claim.company, "Bank")
+	default_bank_cash_account = get_default_bank_cash_account(expense_claim.hr_organization, "Bank")
 	if not default_bank_cash_account:
-		default_bank_cash_account = get_default_bank_cash_account(expense_claim.company, "Cash")
+		default_bank_cash_account = get_default_bank_cash_account(expense_claim.hr_organization, "Cash")
 
 	payable_amount = get_outstanding_amount_for_claim(expense_claim)
 
 	je = frappe.new_doc("Journal Entry")
 	je.voucher_type = "Bank Entry"
-	je.company = expense_claim.company
+	je.company = expense_claim.hr_organization
 	je.remark = "Payment against Expense Claim: " + dn
 
 	je.append(
@@ -655,7 +655,7 @@ def make_bank_entry(dt, dn):
 			"reference_type": "Expense Claim",
 			"party_type": "Employee",
 			"party": expense_claim.employee,
-			"cost_center": compat.get_default_cost_center(expense_claim.company),
+			"cost_center": compat.get_default_cost_center(expense_claim.hr_organization),
 			"reference_name": expense_claim.name,
 		},
 	)
@@ -667,7 +667,7 @@ def make_bank_entry(dt, dn):
 			"credit_in_account_currency": payable_amount,
 			"balance": default_bank_cash_account.balance,
 			"account_currency": default_bank_cash_account.account_currency,
-			"cost_center": compat.get_default_cost_center(expense_claim.company),
+			"cost_center": compat.get_default_cost_center(expense_claim.hr_organization),
 			"account_type": default_bank_cash_account.account_type,
 		},
 	)
@@ -686,7 +686,7 @@ def get_expense_claim_account_and_cost_center(expense_claim_type, company):
 @frappe.whitelist()
 def get_expense_claim_account(expense_claim_type, company):
 	account = frappe.db.get_value(
-		"Expense Claim Account", {"parent": expense_claim_type, "company": company}, "default_account"
+		"Expense Claim Account", {"parent": expense_claim_type, "hr_organization": company}, "default_account"
 	)
 	if not account:
 		frappe.throw(
@@ -746,14 +746,14 @@ def get_expense_claim(employee_advance: str | dict, payment_via_journal_entry: s
 	if isinstance(employee_advance, str):
 		employee_advance = frappe.get_doc("Employee Advance", employee_advance)
 
-	company = employee_advance.company
+	company = employee_advance.hr_organization
 	default_payable_account = frappe.get_cached_value(
 		"Company", company, "default_expense_claim_payable_account"
 	)
 	default_cost_center = frappe.get_cached_value("Company", company, "cost_center")
 
 	expense_claim = frappe.new_doc("Expense Claim")
-	expense_claim.company = company
+	expense_claim.hr_organization = company
 	expense_claim.currency = employee_advance.currency
 	expense_claim.employee = employee_advance.employee
 	expense_claim.payable_account = (

@@ -79,7 +79,7 @@ def _get_loan_details(doc: "SalarySlip") -> dict[str, Any]:
 			"applicant": doc.employee,
 			"docstatus": 1,
 			"repay_from_salary": 1,
-			"company": doc.company,
+			"company": doc.hr_organization,
 			"status": ("!=", "Closed"),
 		},
 	)
@@ -120,7 +120,7 @@ def process_loan_interest_accrual_and_demand(doc: "SalarySlip"):
 def make_loan_repayment_entry(doc: "SalarySlip"):
 	from lending.loan_management.doctype.loan_repayment.loan_repayment import create_repayment_entry
 
-	payroll_payable_account = get_payroll_payable_account(doc.company, doc.payroll_entry)
+	payroll_payable_account = get_payroll_payable_account(doc.hr_organization, doc.payroll_entry)
 	process_payroll_accounting_entry_based_on_employee = frappe.db.get_single_value(
 		"Payroll Settings", "process_payroll_accounting_entry_based_on_employee"
 	)
@@ -135,7 +135,7 @@ def make_loan_repayment_entry(doc: "SalarySlip"):
 		repayment_entry = create_repayment_entry(
 			loan.loan,
 			doc.employee,
-			doc.company,
+			doc.hr_organization,
 			doc.posting_date,
 			loan.loan_product,
 			"Normal Repayment",

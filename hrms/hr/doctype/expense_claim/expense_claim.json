@@ -12,7 +12,7 @@
   "employee",
   "employee_name",
   "department",
-  "company",
+  "hr_organization",
   "column_break_5",
   "expense_approver",
   "approval_status",
@@ -227,15 +227,15 @@
    "label": "Accounting Details"
   },
   {
-   "fetch_from": "employee.company",
+   "fetch_from": "employee.hr_organization",
    "fetch_if_empty": 1,
-   "fieldname": "company",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
    "in_standard_filter": 1,
-   "label": "Company",
+   "label": "HR Organization",
    "oldfieldname": "company",
    "oldfieldtype": "Link",
-   "options": "Company",
+   "options": "HR Organization",
    "reqd": 1
   },
   {
@@ -255,7 +255,7 @@
    "fieldtype": "Column Break"
   },
   {
-   "fetch_from": "company.default_expense_claim_payable_account",
+   "fetch_from": "hr_organization.default_expense_claim_payable_account",
    "fetch_if_empty": 1,
    "fieldname": "payable_account",
    "fieldtype": "Link",
@@ -264,7 +264,7 @@
   },
   {
    "allow_on_submit": 1,
-   "fetch_from": "company.cost_center",
+   "fetch_from": "hr_organization.cost_center",
    "fetch_if_empty": 1,
    "fieldname": "cost_center",
    "fieldtype": "Link",

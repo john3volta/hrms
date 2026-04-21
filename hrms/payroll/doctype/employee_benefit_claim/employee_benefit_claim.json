@@ -13,7 +13,7 @@
   "column_break_3",
   "payroll_date",
   "currency",
-  "company",
+  "hr_organization",
   "amended_from",
   "benefit_type_and_amount",
   "earning_component",
@@ -110,11 +110,11 @@
    "reqd": 1
   },
   {
-   "fetch_from": "employee.company",
-   "fieldname": "company",
+   "fetch_from": "employee.hr_organization",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
-   "label": "Company",
-   "options": "Company",
+   "label": "HR Organization",
+   "options": "HR Organization",
    "reqd": 1
   },
   {

@@ -182,7 +182,7 @@ class SalaryStructure(Document):
 		income_tax_slab=None,
 	):
 		employees = self.get_employees(
-			company=self.company,
+			company=self.hr_organization,
 			grade=grade,
 			department=department,
 			designation=designation,
@@ -242,7 +242,7 @@ def assign_salary_structure_for_employees(
 			assignment = create_salary_structure_assignment(
 				employee,
 				salary_structure.name,
-				salary_structure.company,
+				salary_structure.hr_organization,
 				salary_structure.currency,
 				from_date,
 				payroll_payable_account,
@@ -297,7 +297,7 @@ def create_salary_structure_assignment(
 
 	assignment.employee = employee
 	assignment.salary_structure = salary_structure
-	assignment.company = company
+	assignment.hr_organization = company
 	assignment.currency = currency
 	assignment.payroll_payable_account = payroll_payable_account
 	assignment.from_date = from_date
@@ -316,9 +316,9 @@ def get_existing_assignments(employees, salary_structure, from_date):
 		f"""
 		SELECT DISTINCT employee FROM `tabSalary Structure Assignment`
 		WHERE salary_structure=%s AND employee IN ({", ".join(["%s"] * len(employees))})
-		AND from_date=%s AND company=%s AND docstatus=1
+		AND from_date=%s AND hr_organization=%s AND docstatus=1
 		""",
-		[salary_structure.name, *employees, from_date, salary_structure.company],
+		[salary_structure.name, *employees, from_date, salary_structure.hr_organization],
 	)
 	if salary_structures_assignments:
 		frappe.msgprint(
@@ -420,7 +420,7 @@ def get_salary_component(doctype, txt, searchfield, start, page_len, filters):
 		if not component.company:
 			accounts.append((component.name, component.account, component.company))
 		else:
-			if component.company == filters["company"]:
+			if component.company == filters["hr_organization"]:
 				accounts.append((component.name, component.account, component.company))
 
 	return accounts

@@ -63,7 +63,7 @@ def process_loan_accrual(doc: "FullandFinalStatement"):
 			repayment_entry = create_repayment_entry(
 				loan,
 				doc.employee,
-				doc.company,
+				doc.hr_organization,
 				doc.transaction_date,
 				loan_doc.loan_product,
 				"Normal Repayment",

@@ -9,7 +9,7 @@
  "field_order": [
   "select_payroll_period",
   "posting_date",
-  "company",
+  "hr_organization",
   "column_break_5",
   "currency",
   "exchange_rate",
@@ -69,11 +69,11 @@
    "options": "\nMonthly\nFortnightly\nBimonthly\nWeekly\nDaily"
   },
   {
-   "fieldname": "company",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Company",
-   "options": "Company",
+   "label": "HR Organization",
+   "options": "HR Organization",
    "remember_last_selected_value": 1,
    "reqd": 1
   },
@@ -217,7 +217,7 @@
    "options": "Bank Account"
   },
   {
-   "depends_on": "company",
+   "depends_on": "hr_organization",
    "fieldname": "currency",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -226,7 +226,7 @@
    "reqd": 1
   },
   {
-   "depends_on": "company",
+   "depends_on": "hr_organization",
    "fieldname": "exchange_rate",
    "fieldtype": "Float",
    "label": "Exchange Rate",
@@ -234,7 +234,7 @@
    "reqd": 1
   },
   {
-   "depends_on": "company",
+   "depends_on": "hr_organization",
    "fieldname": "payroll_payable_account",
    "fieldtype": "Link",
    "label": "Payroll Payable Account",

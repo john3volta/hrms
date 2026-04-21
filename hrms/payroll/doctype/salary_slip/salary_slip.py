@@ -120,7 +120,7 @@ class SalarySlip(TransactionBase):
 	@property
 	def payroll_period(self):
 		if not hasattr(self, "__payroll_period"):
-			self.__payroll_period = get_payroll_period(self.start_date, self.end_date, self.company)
+			self.__payroll_period = get_payroll_period(self.start_date, self.end_date, self.hr_organization)
 
 		return self.__payroll_period
 
@@ -195,7 +195,7 @@ class SalarySlip(TransactionBase):
 
 	def set_net_total_in_words(self):
 		doc_currency = self.currency
-		company_currency = compat.get_company_currency(self.company)
+		company_currency = compat.get_company_currency(self.hr_organization)
 		total = self.net_pay if self.is_rounding_total_disabled() else self.rounded_total
 		base_total = self.base_net_pay if self.is_rounding_total_disabled() else self.base_rounded_total
 		self.total_in_words = money_in_words(total, doc_currency)
@@ -1636,7 +1636,7 @@ class SalarySlip(TransactionBase):
 		)
 
 		default_tax_components = tax_components.get("default", [])
-		return tax_components.get(self.company, default_tax_components)
+		return tax_components.get(self.hr_organization, default_tax_components)
 
 	def _fetch_tax_components_by_company(self) -> dict:
 		"""
@@ -2135,7 +2135,7 @@ class SalarySlip(TransactionBase):
 				filters={
 					"employee": self.employee,
 					"payroll_period": self.payroll_period.name,
-					"company": self.company,
+					"hr_organization": self.hr_organization,
 					"docstatus": 1,
 				},
 				fields=[{"SUM": "amount", "as": "total_amount"}],
@@ -2360,7 +2360,7 @@ class SalarySlip(TransactionBase):
 			period_end_date = self.payroll_period.end_date
 		else:
 			# get dates based on fiscal year if no payroll period exists
-			fiscal_year = get_fiscal_year(date=self.start_date, company=self.company, as_dict=1)
+			fiscal_year = get_fiscal_year(date=self.start_date, company=self.hr_organization, as_dict=1)
 			period_start_date = fiscal_year.year_start_date
 			period_end_date = fiscal_year.year_end_date
 

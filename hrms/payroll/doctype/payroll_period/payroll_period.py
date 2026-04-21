@@ -25,7 +25,7 @@ class PayrollPeriod(Document):
 			select name
 			from `tab{0}`
 			where name != %(name)s
-			and company = %(company)s and (start_date between %(start_date)s and %(end_date)s \
+			and hr_organization = %(company)s and (start_date between %(start_date)s and %(end_date)s \
 				or end_date between %(start_date)s and %(end_date)s \
 				or (start_date < %(start_date)s and end_date > %(end_date)s))
 			"""
@@ -39,7 +39,7 @@ class PayrollPeriod(Document):
 				"start_date": self.start_date,
 				"end_date": self.end_date,
 				"name": self.name,
-				"company": self.company,
+				"company": self.hr_organization,
 			},
 			as_dict=1,
 		)
@@ -50,20 +50,20 @@ class PayrollPeriod(Document):
 					self.doctype, formatdate(self.start_date), formatdate(self.end_date)
 				)
 				+ f""" <b><a href="/app/Form/{self.doctype}/{overlap_doc[0].name}">{overlap_doc[0].name}</a></b>"""
-				+ _(") for {0}").format(self.company)
+				+ _(") for {0}").format(self.hr_organization)
 			)
 			frappe.throw(msg)
 
 
 def get_payroll_period_days(start_date, end_date, employee, company=None):
 	if not company:
-		company = frappe.db.get_value("Employee", employee, "company")
+		company = frappe.db.get_value("Employee", employee, "hr_organization")
 	payroll_period = frappe.db.sql(
 		"""
 		select name, start_date, end_date
 		from `tabPayroll Period`
 		where
-			company=%(company)s
+			hr_organization=%(company)s
 			and %(start_date)s between start_date and end_date
 			and %(end_date)s between start_date and end_date
 	""",
@@ -89,11 +89,11 @@ def get_payroll_period(from_date, to_date, company):
 	payroll_period = (
 		frappe.qb.from_(PayrollPeriod)
 		.select(PayrollPeriod.name, PayrollPeriod.start_date, PayrollPeriod.end_date)
-		.where(
-			(PayrollPeriod.start_date <= from_date)
-			& (PayrollPeriod.end_date >= to_date)
-			& (PayrollPeriod.company == company)
-		)
+			.where(
+				(PayrollPeriod.start_date <= from_date)
+				& (PayrollPeriod.end_date >= to_date)
+				& (PayrollPeriod.hr_organization == company)
+			)
 	).run(as_dict=1)
 
 	return payroll_period[0] if payroll_period else None

@@ -14,7 +14,7 @@
   "designation",
   "employee_image",
   "column_break0",
-  "company",
+  "hr_organization",
   "appraisal_cycle",
   "start_date",
   "end_date",
@@ -91,12 +91,12 @@
    "read_only": 1
   },
   {
-   "fieldname": "company",
+   "fieldname": "hr_organization",
    "fieldtype": "Link",
-   "label": "Company",
+   "label": "HR Organization",
    "oldfieldname": "company",
    "oldfieldtype": "Link",
-   "options": "Company",
+   "options": "HR Organization",
    "remember_last_selected_value": 1,
    "reqd": 1
   },

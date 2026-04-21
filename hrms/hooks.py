@@ -48,7 +48,6 @@ app_include_css = "hrms.bundle.css"
 # include js in doctype views
 doctype_js = {
 	"Employee": "public/js/erpnext/employee.js",
-	"Company": "public/js/erpnext/company.js",
 	"Department": "public/js/erpnext/department.js",
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
@@ -154,14 +153,6 @@ doc_events = {
 			"hrms.utils.compat.validate_employee_role",
 			"hrms.overrides.employee_master.update_approver_user_roles",
 		],
-	},
-	"Company": {
-		"validate": "hrms.overrides.company.validate_default_accounts",
-		"on_update": [
-			"hrms.overrides.company.make_company_fixtures",
-			"hrms.overrides.company.set_default_hr_accounts",
-		],
-		"on_trash": "hrms.overrides.company.handle_linked_docs",
 	},
 	"Holiday List": {
 		"on_update": "hrms.utils.holiday_list.invalidate_cache",

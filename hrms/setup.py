@@ -7,11 +7,12 @@ from frappe.desk.page.setup_wizard.install_fixtures import (
 )
 from frappe.desk.page.setup_wizard.setup_wizard import make_records
 
-from hrms.overrides.company import delete_company_fixtures
-
-
 def after_install():
-	create_custom_fields(get_custom_fields(), ignore_validate=True)
+	custom_fields = get_custom_fields()
+	existing_doctypes = frappe.get_list("DocType", pluck="name")
+	filtered = {dt: fields for dt, fields in custom_fields.items() if dt in existing_doctypes}
+	if filtered:
+		create_custom_fields(filtered, ignore_validate=True)
 	create_salary_slip_loan_fields()
 	make_fixtures()
 	setup_notifications()
@@ -25,7 +26,6 @@ def after_install():
 def before_uninstall():
 	delete_custom_fields(get_custom_fields())
 	delete_custom_fields(get_salary_slip_loan_fields())
-	delete_company_fixtures()
 
 
 def after_app_install(app_name):
@@ -34,7 +34,11 @@ def after_app_install(app_name):
 		return
 
 	print("Updating payroll setup for loans")
-	create_custom_fields(get_salary_slip_loan_fields(), ignore_validate=True)
+	custom_fields = get_salary_slip_loan_fields()
+	existing_doctypes = frappe.get_list("DocType", pluck="name")
+	filtered = {dt: fields for dt, fields in custom_fields.items() if dt in existing_doctypes}
+	if filtered:
+		create_custom_fields(filtered, ignore_validate=True)
 	add_lending_docperms_to_ess()
 
 
@@ -51,71 +55,7 @@ def before_app_uninstall(app_name):
 def get_custom_fields():
 	"""HR specific custom fields that need to be added to the masters in ERPNext"""
 	return {
-		"Company": [
-			{
-				"fieldname": "hr_and_payroll_tab",
-				"fieldtype": "Tab Break",
-				"label": _("HR & Payroll"),
-				"insert_after": "purchase_expense_contra_account",
-			},
-			{
-				"fieldname": "hr_settings_section",
-				"fieldtype": "Section Break",
-				"label": _("HR & Payroll Settings"),
-				"insert_after": "hr_and_payroll_tab",
-			},
-			{
-				"depends_on": "eval:!doc.__islocal",
-				"fieldname": "default_expense_claim_payable_account",
-				"fieldtype": "Link",
-				"ignore_user_permissions": 1,
-				"label": _("Default Expense Claim Payable Account"),
-				"no_copy": 1,
-				"options": "Account",
-				"insert_after": "hr_settings_section",
-			},
-			{
-				"fieldname": "default_employee_advance_account",
-				"fieldtype": "Link",
-				"label": _("Default Employee Advance Account"),
-				"no_copy": 1,
-				"options": "Account",
-				"insert_after": "default_expense_claim_payable_account",
-			},
-			{
-				"fieldname": "column_break_10",
-				"fieldtype": "Column Break",
-				"insert_after": "default_employee_advance_account",
-			},
-			{
-				"depends_on": "eval:!doc.__islocal",
-				"fieldname": "default_payroll_payable_account",
-				"fieldtype": "Link",
-				"ignore_user_permissions": 1,
-				"label": _("Default Payroll Payable Account"),
-				"no_copy": 1,
-				"options": "Account",
-				"insert_after": "column_break_10",
-			},
-		],
 		"Department": [
-			{
-				"fieldname": "section_break_4",
-				"fieldtype": "Section Break",
-				"insert_after": "disabled",
-			},
-			{
-				"fieldname": "payroll_cost_center",
-				"fieldtype": "Link",
-				"label": _("Payroll Cost Center"),
-				"options": "Cost Center",
-				"insert_after": "section_break_4",
-			},
-			{
-				"fieldname": "column_break_9",
-				"fieldtype": "Column Break",
-				"insert_after": "payroll_cost_center",
-			},
 			{
 				"description": _("Days for which Holidays are blocked for this department."),
 				"fieldname": "leave_block_list",
@@ -123,7 +63,7 @@ def get_custom_fields():
 				"in_list_view": 1,
 				"label": _("Leave Block List"),
 				"options": "Leave Block List",
-				"insert_after": "column_break_9",
+				"insert_after": "disabled",
 			},
 			{
 				"description": _("The first Approver in the list will be set as the default Approver."),
@@ -152,29 +92,6 @@ def get_custom_fields():
 				"label": _("Expense Approver"),
 				"options": "Department Approver",
 				"insert_after": "leave_approvers",
-			},
-		],
-		"Designation": [
-			{
-				"fieldname": "appraisal_template",
-				"fieldtype": "Link",
-				"label": _("Appraisal Template"),
-				"options": "Appraisal Template",
-				"insert_after": "description",
-				"allow_in_quick_entry": 1,
-			},
-			{
-				"fieldname": "required_skills_section",
-				"fieldtype": "Section Break",
-				"label": _("Required Skills"),
-				"insert_after": "appraisal_template",
-			},
-			{
-				"fieldname": "skills",
-				"fieldtype": "Table",
-				"label": _("Skills"),
-				"options": "Designation Skill",
-				"insert_after": "required_skills_section",
 			},
 		],
 		"Employee": [
@@ -263,27 +180,6 @@ def get_custom_fields():
 				"options": "User",
 				"insert_after": "column_break_45",
 				"ignore_user_permissions": 1,
-			},
-			{
-				"fieldname": "employee_advance_account",
-				"fieldtype": "Link",
-				"label": _("Employee Advance Account"),
-				"options": "Account",
-				"insert_after": "salary_mode",
-			},
-			{
-				"fieldname": "salary_cb",
-				"fieldtype": "Column Break",
-				"insert_after": "employee_advance_account",
-			},
-			{
-				"fetch_from": "department.payroll_cost_center",
-				"fetch_if_empty": 1,
-				"fieldname": "payroll_cost_center",
-				"fieldtype": "Link",
-				"label": _("Payroll Cost Center"),
-				"options": "Cost Center",
-				"insert_after": "salary_cb",
 			},
 		],
 	}
@@ -502,7 +398,6 @@ def create_default_role_profiles():
 
 def get_post_install_patches():
 	return (
-		"create_country_fixtures",
 		"update_allocate_on_in_leave_type",
 		"update_performance_module_changes",
 	)
@@ -528,7 +423,11 @@ def run_post_install_patches():
 # LENDING APP SETUP & CLEANUP
 def create_salary_slip_loan_fields():
 	if "lending" in frappe.get_installed_apps():
-		create_custom_fields(get_salary_slip_loan_fields(), ignore_validate=True)
+		custom_fields = get_salary_slip_loan_fields()
+		existing_doctypes = frappe.get_list("DocType", pluck="name")
+		filtered = {dt: fields for dt, fields in custom_fields.items() if dt in existing_doctypes}
+		if filtered:
+			create_custom_fields(filtered, ignore_validate=True)
 
 
 def add_lending_docperms_to_ess():
@@ -573,7 +472,6 @@ def get_user_types_data():
 				# masters
 				"Holiday List": ["read"],
 				"Employee": ["read", "write"],
-				"Company": ["read"],
 				# payroll
 				"Salary Slip": ["read"],
 				"Employee Benefit Application": ["read", "write", "create", "delete"],
@@ -648,9 +546,12 @@ def create_user_type(user_type, data):
 
 def append_docperms_to_user_type(docperms, doc):
 	existing_doctypes = [d.document_type for d in doc.user_doctypes]
+	installed_doctypes = frappe.get_list("DocType", pluck="name")
 
 	for doctype, perms in docperms.items():
 		if doctype in existing_doctypes:
+			continue
+		if doctype not in installed_doctypes:
 			continue
 
 		args = {"document_type": doctype}

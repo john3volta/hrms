@@ -16,13 +16,11 @@
   "employee",
   "employee_name",
   "cell_number",
-  "prefered_email",
   "hr_organization",
   "column_break_7",
   "date_of_birth",
   "personal_id_type",
   "personal_id_number",
-  "passport_number",
   "section_break_4",
   "description",
   "travel_itinerary",
@@ -114,12 +112,6 @@
    "label": "Contact Number"
   },
   {
-   "fetch_from": "employee.prefered_email",
-   "fieldname": "prefered_email",
-   "fieldtype": "Data",
-   "label": "Contact Email"
-  },
-  {
    "fieldname": "column_break_7",
    "fieldtype": "Column Break"
   },
@@ -140,12 +132,6 @@
    "fieldname": "personal_id_number",
    "fieldtype": "Data",
    "label": "Identification Document Number"
-  },
-  {
-   "fetch_from": "employee.passport_number",
-   "fieldname": "passport_number",
-   "fieldtype": "Data",
-   "label": "Passport Number"
   },
   {
    "fieldname": "travel_itinerary",

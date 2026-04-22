@@ -11,7 +11,6 @@
   "employee_name",
   "department",
   "designation",
-  "grade",
   "column_break_6",
   "salary_structure",
   "from_date",
@@ -75,8 +74,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "fetch_from": "grade.default_salary_structure",
-   "fetch_if_empty": 1,
    "fieldname": "salary_structure",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -106,8 +103,6 @@
    "label": "Base, Variable & Leave Encashment"
   },
   {
-   "fetch_from": "grade.default_base_pay",
-   "fetch_if_empty": 1,
    "fieldname": "base",
    "fieldtype": "Currency",
    "label": "Base",
@@ -149,14 +144,6 @@
    "print_hide": 1,
    "read_only": 1,
    "reqd": 1
-  },
-  {
-   "fetch_from": "employee.grade",
-   "fieldname": "grade",
-   "fieldtype": "Link",
-   "label": "Grade",
-   "options": "Employee Grade",
-   "read_only": 1
   },
   {
    "fieldname": "column_break_11",

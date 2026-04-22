@@ -15,7 +15,6 @@
   "hr_organization",
   "department",
   "currency_section",
-  "currency",
   "column_break_crso",
   "section_break_8",
   "purpose",
@@ -28,7 +27,6 @@
   "return_amount",
   "section_break_7",
   "column_break_18",
-  "advance_account",
   "column_break_nhlv",
   "repay_unclaimed_amount_from_salary",
   "more_info_section",
@@ -147,15 +145,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "fetch_from": "employee.employee_advance_account",
-   "fetch_if_empty": 1,
-   "fieldname": "advance_account",
-   "fieldtype": "Link",
-   "ignore_user_permissions": 1,
-   "label": "Advance Account",
-   "options": "Account"
-  },
-  {
    "allow_on_submit": 1,
    "description": "Amount scheduled for deduction via salary",
    "fieldname": "return_amount",
@@ -180,16 +169,6 @@
    "no_copy": 1,
    "options": "currency",
    "read_only": 1
-  },
-  {
-   "depends_on": "eval:(doc.docstatus==1 || doc.employee)",
-   "fetch_from": "employee.salary_currency",
-   "fetch_if_empty": 1,
-   "fieldname": "currency",
-   "fieldtype": "Link",
-   "label": "Currency",
-   "options": "Currency",
-   "reqd": 1
   },
   {
    "fieldname": "column_break_nhlv",

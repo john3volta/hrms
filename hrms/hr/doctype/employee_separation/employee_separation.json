@@ -10,11 +10,9 @@
   "employee_name",
   "department",
   "designation",
-  "employee_grade",
   "column_break_7",
   "hr_organization",
   "boarding_status",
-  "resignation_letter_date",
   "boarding_begins_on",
   "table_for_activity",
   "employee_separation_template",
@@ -38,14 +36,6 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Employee Name",
-   "read_only": 1
-  },
-  {
-   "fetch_from": "employee.resignation_letter_date",
-   "fieldname": "resignation_letter_date",
-   "fieldtype": "Date",
-   "in_list_view": 1,
-   "label": "Resignation Letter Date",
    "read_only": 1
   },
   {
@@ -98,14 +88,6 @@
    "in_list_view": 1,
    "label": "Designation",
    "options": "Designation",
-   "read_only": 1
-  },
-  {
-   "fetch_from": "employee.grade",
-   "fieldname": "employee_grade",
-   "fieldtype": "Link",
-   "label": "Employee Grade",
-   "options": "Employee Grade",
    "read_only": 1
   },
   {

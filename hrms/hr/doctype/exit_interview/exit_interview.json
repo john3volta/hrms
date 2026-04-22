@@ -19,7 +19,6 @@
   "employee_details_section",
   "department",
   "designation",
-  "reports_to",
   "column_break_9",
   "date_of_joining",
   "relieving_date",
@@ -128,15 +127,6 @@
    "fieldname": "date_of_joining",
    "fieldtype": "Date",
    "label": "Date of Joining",
-   "read_only": 1
-  },
-  {
-   "fetch_from": "employee.reports_to",
-   "fieldname": "reports_to",
-   "fieldtype": "Link",
-   "in_standard_filter": 1,
-   "label": "Reports To",
-   "options": "Employee",
    "read_only": 1
   },
   {

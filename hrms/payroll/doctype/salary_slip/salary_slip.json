@@ -13,7 +13,6 @@
   "hr_organization",
   "department",
   "designation",
-  "branch",
   "column_break_obdl",
   "posting_date",
   "letter_head",
@@ -154,17 +153,6 @@
    "oldfieldname": "designation",
    "oldfieldtype": "Link",
    "options": "Designation",
-   "read_only": 1
-  },
-  {
-   "fetch_from": "employee.branch",
-   "fieldname": "branch",
-   "fieldtype": "Link",
-   "in_standard_filter": 1,
-   "label": "Branch",
-   "oldfieldname": "branch",
-   "oldfieldtype": "Link",
-   "options": "Branch",
    "read_only": 1
   },
   {

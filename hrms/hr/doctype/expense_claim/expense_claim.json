@@ -17,7 +17,6 @@
   "expense_approver",
   "approval_status",
   "currency_section",
-  "currency",
   "column_break_imlz",
   "exchange_rate",
   "expense_details",
@@ -373,16 +372,6 @@
    "fieldname": "currency_section",
    "fieldtype": "Section Break",
    "label": "Currency"
-  },
-  {
-   "depends_on": "eval:(doc.docstatus==1 || doc.employee)",
-   "fetch_from": "employee.salary_currency",
-   "fetch_if_empty": 1,
-   "fieldname": "currency",
-   "fieldtype": "Link",
-   "label": "Currency",
-   "options": "Currency",
-   "reqd": 1
   },
   {
    "fieldname": "column_break_imlz",

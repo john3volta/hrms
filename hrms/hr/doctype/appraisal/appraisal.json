@@ -12,7 +12,6 @@
   "employee_name",
   "department",
   "designation",
-  "employee_image",
   "column_break0",
   "hr_organization",
   "appraisal_cycle",
@@ -171,14 +170,6 @@
   {
    "fieldname": "section_break_20",
    "fieldtype": "Section Break"
-  },
-  {
-   "allow_on_submit": 1,
-   "fetch_from": "employee.image",
-   "fieldname": "employee_image",
-   "fieldtype": "Attach Image",
-   "hidden": 1,
-   "label": "Employee Image"
   },
   {
    "fieldname": "feedback_tab",

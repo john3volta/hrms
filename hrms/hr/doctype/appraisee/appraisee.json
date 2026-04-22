@@ -10,8 +10,7 @@
   "column_break_3",
   "appraisal_template",
   "department",
-  "designation",
-  "branch"
+  "designation"
  ],
  "fields": [
   {
@@ -49,15 +48,6 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Designation",
-   "read_only": 1
-  },
-  {
-   "fetch_from": "employee.branch",
-   "fieldname": "branch",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Branch",
-   "options": "Branch",
    "read_only": 1
   },
   {

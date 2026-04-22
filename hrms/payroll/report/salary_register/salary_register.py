@@ -40,7 +40,6 @@ def execute(filters=None):
 			"employee": ss.employee,
 			"employee_name": ss.employee_name,
 			"data_of_joining": doj_map.get(ss.employee),
-			"branch": ss.branch,
 			"department": ss.department,
 			"designation": ss.designation,
 			"company": ss.company,
@@ -96,8 +95,6 @@ def get_earning_and_deduction_types(salary_slips):
 
 
 def update_column_width(ss, columns):
-	if ss.branch is not None:
-		columns[3].update({"width": 120})
 	if ss.department is not None:
 		columns[4].update({"width": 120})
 	if ss.designation is not None:
@@ -133,15 +130,7 @@ def get_columns(earning_types, ded_types):
 			"fieldname": "data_of_joining",
 			"fieldtype": "Date",
 			"width": 80,
-		},
-		{
-			"label": _("Branch"),
-			"fieldname": "branch",
-			"fieldtype": "Link",
-			"options": "Branch",
-			"width": -1,
-		},
-		{
+		},		{
 			"label": _("Department"),
 			"fieldname": "department",
 			"fieldtype": "Link",
@@ -306,10 +295,6 @@ def get_salary_slips(filters, company_currency):
 
 	if filters.get("designation"):
 		query = query.where(salary_slip.designation == filters["designation"])
-
-	if filters.get("branch"):
-		query = query.where(salary_slip.branch == filters["branch"])
-
 	salary_slips = query.run(as_dict=1)
 
 	return salary_slips or []

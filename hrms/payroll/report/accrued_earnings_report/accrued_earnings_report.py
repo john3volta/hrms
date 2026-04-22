@@ -107,10 +107,6 @@ def get_data(filters):
 
 	if filters.get("department"):
 		query = query.where(EMP.department == filters["department"])
-
-	if filters.get("branch"):
-		query = query.where(EMP.branch == filters["branch"])
-
 	if filters.get("payroll_period"):
 		query = query.where(EBL.payroll_period == filters["payroll_period"])
 

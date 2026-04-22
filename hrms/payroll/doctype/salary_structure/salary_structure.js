@@ -35,22 +35,22 @@ frappe.ui.form.on("Salary Structure", {
 	},
 
 	set_earning_deduction_component: function (frm) {
-		if (!frm.doc.company) return;
+		if (!frm.doc.hr_organization) return;
 		frm.set_query("salary_component", "earnings", function () {
 			return {
-				filters: { component_type: "earning", company: frm.doc.company },
+				filters: { component_type: "earning", hr_organization: frm.doc.hr_organization },
 				query: "hrms.payroll.doctype.salary_structure.salary_structure.get_salary_component",
 			};
 		});
 		frm.set_query("salary_component", "deductions", function () {
 			return {
-				filters: { component_type: "deduction", company: frm.doc.company },
+				filters: { component_type: "deduction", hr_organization: frm.doc.hr_organization },
 				query: "hrms.payroll.doctype.salary_structure.salary_structure.get_salary_component",
 			};
 		});
 	},
 
-	company: function (frm) {
+	hr_organization: function (frm) {
 		frm.trigger("set_earning_deduction_component");
 	},
 
@@ -100,7 +100,7 @@ frappe.ui.form.on("Salary Structure", {
 				function () {
 					const doc = frappe.model.get_new_doc("Salary Structure Assignment");
 					doc.salary_structure = frm.doc.name;
-					doc.company = frm.doc.company;
+					doc.company = frm.doc.hr_organization;
 					frappe.set_route("Form", "Salary Structure Assignment", doc.name);
 				},
 				__("Create"),
@@ -111,7 +111,7 @@ frappe.ui.form.on("Salary Structure", {
 				() => {
 					const doc = frappe.model.get_new_doc("Bulk Salary Structure Assignment");
 					doc.salary_structure = frm.doc.name;
-					doc.company = frm.doc.company;
+					doc.company = frm.doc.hr_organization;
 					frappe.set_route("Form", "Bulk Salary Structure Assignment", doc.name);
 				},
 				__("Create"),

@@ -180,7 +180,7 @@ class SalaryStructure(Document):
 		income_tax_slab=None,
 	):
 		employees = self.get_employees(
-			company=self.hr_organization,
+			hr_organization=self.hr_organization,
 			grade=grade,
 			department=department,
 			designation=designation,

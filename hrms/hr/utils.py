@@ -240,7 +240,7 @@ def get_doc_condition(doctype):
 		or work_end_date between %(from_date)s and %(to_date)s \
 		or (work_from_date < %(from_date)s and work_end_date > %(to_date)s))"
 	elif doctype == "Leave Period":
-		return "and company = %(company)s and (from_date between %(from_date)s and %(to_date)s \
+		return "and hr_organization = %(company)s and (from_date between %(from_date)s and %(to_date)s \
 			or to_date between %(from_date)s and %(to_date)s \
 			or (from_date < %(from_date)s and to_date > %(to_date)s))"
 
@@ -314,7 +314,7 @@ def get_leave_period(from_date, to_date, company):
 		"""
 		select name, from_date, to_date
 		from `tabLeave Period`
-		where company=%(company)s and is_active=1
+		where hr_organization=%(company)s and is_active=1
 			and (from_date between %(from_date)s and %(to_date)s
 				or to_date between %(from_date)s and %(to_date)s
 				or (from_date < %(from_date)s and to_date > %(to_date)s))

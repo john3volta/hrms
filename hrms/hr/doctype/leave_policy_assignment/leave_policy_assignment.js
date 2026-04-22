@@ -16,7 +16,7 @@ frappe.ui.form.on("Leave Policy Assignment", {
 			return {
 				filters: {
 					is_active: 1,
-					company: frm.doc.company,
+					hr_organization: frm.doc.hr_organization,
 				},
 			};
 		});

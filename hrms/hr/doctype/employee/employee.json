@@ -66,6 +66,7 @@
   "sb53",
   "bio",
   "personal_details",
+  "passport_number",
   "column_break6",
   "marital_status",
   "blood_group",
@@ -466,6 +467,11 @@
    "fieldtype": "Section Break",
    "label": "Personal Details",
    "collapsible": 1
+  },
+  {
+   "fieldname": "passport_number",
+   "fieldtype": "Data",
+   "label": "Passport Number"
   },
   {
    "fieldname": "column_break6",

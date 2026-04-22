@@ -16,6 +16,8 @@
   "employee",
   "employee_name",
   "cell_number",
+  "prefered_email",
+  "passport_number",
   "hr_organization",
   "column_break_7",
   "date_of_birth",
@@ -110,6 +112,18 @@
    "fieldname": "cell_number",
    "fieldtype": "Data",
    "label": "Contact Number"
+  },
+  {
+   "fetch_from": "employee.prefered_email",
+   "fieldname": "prefered_email",
+   "fieldtype": "Data",
+   "label": "Contact Email"
+  },
+  {
+   "fetch_from": "employee.passport_number",
+   "fieldname": "passport_number",
+   "fieldtype": "Data",
+   "label": "Passport Number"
   },
   {
    "fieldname": "column_break_7",

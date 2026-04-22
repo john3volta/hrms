@@ -23,9 +23,11 @@
   "hr_organization",
   "department",
   "designation",
+  "reports_to",
   "user_id",
   "contact_section",
   "personal_email",
+  "prefered_email",
   "cell_number"
  ],
  "fields": [
@@ -124,6 +126,13 @@
    "label": "Designation"
   },
   {
+   "fieldname": "reports_to",
+   "fieldtype": "Link",
+   "label": "Reports To",
+   "options": "Employee",
+   "ignore_user_permissions": 1
+  },
+  {
    "fieldname": "user_id",
    "fieldtype": "Link",
    "label": "User",
@@ -139,6 +148,12 @@
    "fieldname": "personal_email",
    "fieldtype": "Data",
    "label": "Personal Email",
+   "options": "Email"
+  },
+  {
+   "fieldname": "prefered_email",
+   "fieldtype": "Data",
+   "label": "Preferred Email",
    "options": "Email"
   },
   {

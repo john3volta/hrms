@@ -36,7 +36,8 @@ def allow_regional(fn):
 
 
 def get_holiday_list_for_employee(employee, raise_exception=True, **kwargs):
-	return frappe.db.get_value("Employee", employee, "holiday_list")
+	from hrms.utils.holiday_list import get_holiday_list_for_employee as _get
+	return _get(employee, raise_exception=raise_exception, **kwargs)
 
 
 def is_holiday(holiday_list, date=None, **kwargs):

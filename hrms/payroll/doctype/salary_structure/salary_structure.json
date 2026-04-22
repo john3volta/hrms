@@ -47,7 +47,6 @@
   },
   {
    "allow_on_submit": 1,
-   "fetch_from": "hr_organization.default_letter_head",
    "fetch_if_empty": 1,
    "fieldname": "letter_head",
    "fieldtype": "Link",

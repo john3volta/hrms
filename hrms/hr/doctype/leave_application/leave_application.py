@@ -1319,7 +1319,7 @@ def get_events(start, end, filters=None):
 		employee, company = employee.name, employee.hr_organization
 	else:
 		employee = ""
-		company = frappe.db.get_single_value("Global Defaults", "default_company")
+		company = None
 
 	# show department leaves for employee
 	if "Employee" in frappe.get_roles():
@@ -1399,7 +1399,7 @@ def add_block_dates(events, start, end, employee, company):
 
 
 def add_holidays(events, start, end, employee, company):
-	applicable_holiday_list = get_holiday_list_for_employee(employee, company)
+	applicable_holiday_list = get_holiday_list_for_employee(employee, raise_exception=False, as_on=start)
 	if not applicable_holiday_list:
 		return
 

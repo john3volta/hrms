@@ -61,10 +61,7 @@ def get_employees(filters):
 
 
 def get_parameters(filters):
-	if filters.get("parameter") == "Grade":
-		parameter = "Employee Grade"
-	else:
-		parameter = filters.get("parameter")
+	parameter = filters.get("parameter")
 	return frappe.get_all(parameter, pluck="name")
 
 

@@ -170,7 +170,6 @@ class SalaryStructure(Document):
 	def assign_salary_structure(
 		self,
 		branch=None,
-		grade=None,
 		department=None,
 		designation=None,
 		employee=None,
@@ -181,7 +180,6 @@ class SalaryStructure(Document):
 	):
 		employees = self.get_employees(
 			hr_organization=self.hr_organization,
-			grade=grade,
 			department=department,
 			designation=designation,
 			name=employee,

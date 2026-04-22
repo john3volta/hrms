@@ -107,8 +107,6 @@ def get_columns(filters: Filters) -> list[dict]:
 
 	if filters.group_by:
 		options_mapping = {
-			"Branch": "Branch",
-			"Grade": "Employee Grade",
 			"Department": "Department",
 			"Designation": "Designation",
 		}
@@ -355,9 +353,7 @@ def get_employee_related_details(filters: Filters) -> tuple[dict, list]:
 			Employee.name,
 			Employee.employee_name,
 			Employee.designation,
-			Employee.grade,
 			Employee.department,
-			Employee.branch,
 			Employee.company,
 			Employee.holiday_list,
 			(Employee.date_of_joining).as_("joined_date"),
@@ -376,9 +372,6 @@ def get_employee_related_details(filters: Filters) -> tuple[dict, list]:
 		query = query.where(Employee.name == filters.employee)
 	if filters.department and filters.department != "All Departments":
 		query = query.where(Employee.department == filters.department)
-	if filters.branch:
-		query = query.where(Employee.branch == filters.branch)
-
 	group_by = filters.group_by
 	if group_by:
 		group_by = group_by.lower()

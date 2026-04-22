@@ -189,7 +189,6 @@ class PayrollEntry(Document):
 			branch=self.branch,
 			department=self.department,
 			designation=self.designation,
-			grade=self.grade,
 			currency=self.currency,
 			start_date=self.start_date,
 			end_date=self.end_date,
@@ -654,7 +653,7 @@ def set_filter_conditions(query, filters, qb_object):
 	if filters.get("employees"):
 		query = query.where(qb_object.name.notin(filters.get("employees")))
 
-	for fltr_key in ["branch", "department", "designation", "grade"]:
+	for fltr_key in ["branch", "department", "designation"]:
 		if filters.get(fltr_key):
 			query = query.where(qb_object[fltr_key] == filters[fltr_key])
 

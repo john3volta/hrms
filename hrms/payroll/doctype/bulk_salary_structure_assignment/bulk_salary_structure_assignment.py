@@ -5,7 +5,6 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.query_builder.custom import ConstantColumn
-from frappe.query_builder.functions import Coalesce
 from frappe.query_builder.terms import SubQuery
 from frappe.utils import get_link_to_form
 
@@ -24,7 +23,6 @@ class BulkSalaryStructureAssignment(Document):
 			"branch",
 			"department",
 			"designation",
-			"grade",
 		]
 		filters = [[d, "=", self.get(d)] for d in quick_filter_fields if self.get(d)]
 		filters += advanced_filters
@@ -38,11 +36,10 @@ class BulkSalaryStructureAssignment(Document):
 		)
 
 		Employee = frappe.qb.DocType("Employee")
-		Grade = frappe.qb.DocType("Employee Grade")
 		query = (
 			frappe.qb.get_query(
 				Employee,
-				fields=[Employee.employee, Employee.employee_name, Employee.grade],
+				fields=[Employee.employee, Employee.employee_name],
 				filters=filters,
 			)
 			.where(
@@ -51,10 +48,8 @@ class BulkSalaryStructureAssignment(Document):
 				& ((Employee.relieving_date > self.from_date) | (Employee.relieving_date.isnull()))
 				& (Employee.employee.notin(employees_with_assignments))
 			)
-			.left_join(Grade)
-			.on(Employee.grade == Grade.name)
 			.select(
-				Coalesce(Grade.default_base_pay, 0).as_("base"),
+				ConstantColumn(0).as_("base"),
 				ConstantColumn(0).as_("variable"),
 			)
 		)

@@ -112,13 +112,6 @@ def get_custom_fields():
 				"insert_after": "employment_details",
 			},
 			{
-				"fieldname": "grade",
-				"fieldtype": "Link",
-				"label": _("Grade"),
-				"options": "Employee Grade",
-				"insert_after": "branch",
-			},
-			{
 				"fieldname": "default_shift",
 				"fieldtype": "Link",
 				"label": _("Default Shift"),

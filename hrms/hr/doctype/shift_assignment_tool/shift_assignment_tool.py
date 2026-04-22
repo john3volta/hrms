@@ -26,7 +26,6 @@ class ShiftAssignmentTool(Document):
 			"branch",
 			"department",
 			"designation",
-			"grade",
 			"employment_type",
 		]
 		filters = [[d, "=", self.get(d)] for d in quick_filter_fields if self.get(d)]

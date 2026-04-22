@@ -17,7 +17,6 @@ def get_dashboard_for_employee(data):
 				"items": [
 					"Employee Onboarding",
 					"Employee Transfer",
-					"Employee Promotion",
 					"Employee Grievance",
 				],
 			},

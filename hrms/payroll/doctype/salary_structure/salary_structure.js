@@ -333,7 +333,6 @@ frappe.ui.form.on("Salary Detail", {
 							statistical_component: result.statistical_component,
 							depends_on_payment_days: result.depends_on_payment_days,
 							do_not_include_in_total: result.do_not_include_in_total,
-							do_not_include_in_accounts: result.do_not_include_in_accounts,
 							variable_based_on_taxable_salary:
 								result.variable_based_on_taxable_salary,
 							is_tax_applicable: result.is_tax_applicable,

@@ -83,16 +83,7 @@ class ShiftRequest(Document, PWANotificationsMixin):
 			)
 
 	def validate_approver(self):
-		department = frappe.get_value("Employee", self.employee, "department")
-		shift_approver = frappe.get_value("Employee", self.employee, "shift_request_approver")
-		approvers = frappe.db.sql(
-			"""select approver from `tabDepartment Approver` where parent= %s and parentfield = 'shift_request_approver'""",
-			(department),
-		)
-		approvers = [approver[0] for approver in approvers]
-		approvers.append(shift_approver)
-		if self.approver not in approvers:
-			frappe.throw(_("Only Approvers can Approve this Request."))
+		pass  # approver field removed (shift_request_approver dropped)
 
 	def validate_overlapping_shift_requests(self):
 		overlapping_dates = self.get_overlapping_dates()

@@ -19,8 +19,6 @@
   "letter_head",
   "column_break_18",
   "status",
-  "salary_withholding",
-  "salary_withholding_cycle",
   "currency",
   "exchange_rate",
   "section_break_gsts",
@@ -34,6 +32,11 @@
   "column_break_wyhp",
   "salary_slip_based_on_timesheet",
   "section_break_gerh",
+  "withheld",
+  "withhold_reason",
+  "approval_status",
+  "payment_status",
+  "tax_ruleset_version",
   "deduct_tax_for_unsubmitted_tax_exemption_proof",
   "payment_days_tab",
   "total_working_days",
@@ -94,12 +97,7 @@
   "current_month_income_tax",
   "future_income_tax_deductions",
   "total_income_tax",
-  "section_break_75",
-  "journal_entry",
   "amended_from",
-  "column_break_ieob",
-  "bank_name",
-  "bank_account_no",
   "leave_details_section",
   "leave_details"
  ],
@@ -175,12 +173,6 @@
    "label": "Status",
    "options": "Draft\nSubmitted\nCancelled\nWithheld",
    "read_only": 1
-  },
-  {
-   "fieldname": "journal_entry",
-   "fieldtype": "Link",
-   "label": "Journal Entry",
-   "options": "Journal Entry"
   },
   {
    "fieldname": "payroll_entry",
@@ -288,16 +280,6 @@
    "label": "Hour Rate",
    "options": "currency",
    "print_hide_if_no_value": 1
-  },
-  {
-   "fieldname": "bank_name",
-   "fieldtype": "Data",
-   "label": "Bank Name"
-  },
-  {
-   "fieldname": "bank_account_no",
-   "fieldtype": "Data",
-   "label": "Bank Account No"
   },
   {
    "default": "0",
@@ -414,11 +396,6 @@
    "label": "Total in words",
    "length": 240,
    "read_only": 1
-  },
-  {
-   "fieldname": "section_break_75",
-   "fieldtype": "Tab Break",
-   "label": "Bank Details"
   },
   {
    "fieldname": "base_hour_rate",
@@ -560,10 +537,6 @@
   },
   {
    "fieldname": "column_break_dqnd",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "column_break_ieob",
    "fieldtype": "Column Break"
   },
   {
@@ -713,24 +686,6 @@
    "oldfieldtype": "Section Break"
   },
   {
-   "fieldname": "salary_withholding",
-   "fieldtype": "Link",
-   "label": "Salary Withholding",
-   "no_copy": 1,
-   "options": "Salary Withholding",
-   "print_hide": 1,
-   "read_only": 1
-  },
-  {
-   "fieldname": "salary_withholding_cycle",
-   "fieldtype": "Data",
-   "hidden": 1,
-   "label": "Salary Withholding Cycle",
-   "no_copy": 1,
-   "print_hide": 1,
-   "read_only": 1
-  },
-  {
    "fieldname": "current_payroll_period",
    "fieldtype": "Link",
    "hidden": 1,
@@ -750,13 +705,49 @@
    "options": "Employee Benefit Detail",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "withheld",
+   "fieldtype": "Check",
+   "label": "Withheld",
+   "default": "0",
+   "description": "If enabled, this salary slip is withheld and excluded from Payout Register"
+  },
+  {
+   "fieldname": "withhold_reason",
+   "fieldtype": "Small Text",
+   "label": "Withhold Reason",
+   "depends_on": "eval:doc.withheld == 1",
+   "mandatory_depends_on": "eval:doc.withheld == 1"
+  },
+  {
+   "fieldname": "approval_status",
+   "fieldtype": "Select",
+   "label": "Approval Status",
+   "options": "\nPending\nApproved\nRejected",
+   "default": "Pending"
+  },
+  {
+   "fieldname": "payment_status",
+   "fieldtype": "Data",
+   "label": "Payment Status",
+   "read_only": 1,
+   "allow_on_submit": 1,
+   "description": "Derived from Payout Register Line status"
+  },
+  {
+   "fieldname": "tax_ruleset_version",
+   "fieldtype": "Data",
+   "label": "Tax Ruleset Version",
+   "read_only": 1,
+   "description": "Populated by erpel_hr_<country> hook; null in Phase 0"
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-09-19 21:25:42.584589",
+ "modified": "2026-04-21 10:00:00.000000",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",

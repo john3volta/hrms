@@ -39,7 +39,7 @@ from hrms.payroll.doctype.employee_benefit_ledger.employee_benefit_ledger import
 	create_employee_benefit_ledger_entry,
 	delete_employee_benefit_ledger_entry,
 )
-from hrms.payroll.doctype.payroll_entry.payroll_entry import get_salary_withholdings, get_start_end_dates
+from hrms.payroll.doctype.payroll_entry.payroll_entry import get_start_end_dates
 from hrms.payroll.doctype.payroll_period.payroll_period import (
 	get_payroll_period,
 	get_period_factor,
@@ -57,7 +57,6 @@ from hrms.utils.holiday_list import get_holiday_dates_between
 HOLIDAYS_BETWEEN_DATES = "holidays_between_dates"
 LEAVE_TYPE_MAP = "leave_type_map"
 SALARY_COMPONENT_VALUES = "salary_component_values"
-TAX_COMPONENTS_BY_COMPANY = "tax_components_by_company"
 
 
 class SalarySlip(TransactionBase):
@@ -147,7 +146,6 @@ class SalarySlip(TransactionBase):
 		return self.__actual_end_date
 
 	def validate(self):
-		self.check_salary_withholding()
 		self.status = self.get_status()
 		validate_active_employee(self.employee)
 		self.validate_dates()
@@ -185,14 +183,6 @@ class SalarySlip(TransactionBase):
 		if self.payroll_period and not self.current_payroll_period:
 			self.current_payroll_period = self.payroll_period.name
 
-	def check_salary_withholding(self):
-		withholding = get_salary_withholdings(self.start_date, self.end_date, self.employee)
-		if withholding:
-			self.salary_withholding = withholding[0].salary_withholding
-			self.salary_withholding_cycle = withholding[0].salary_withholding_cycle
-		else:
-			self.salary_withholding = None
-
 	def set_net_total_in_words(self):
 		doc_currency = self.currency
 		company_currency = compat.get_company_currency(self.hr_organization)
@@ -200,6 +190,22 @@ class SalarySlip(TransactionBase):
 		base_total = self.base_net_pay if self.is_rounding_total_disabled() else self.base_rounded_total
 		self.total_in_words = money_in_words(total, doc_currency)
 		self.base_total_in_words = money_in_words(base_total, company_currency)
+
+	@property
+	def payment_status(self):
+		"""Derived from Payout Register Line.status — not stored in DB."""
+		lines = frappe.get_all(
+			"Payout Register Line",
+			filters={"salary_slip": self.name},
+			pluck="status",
+		)
+		if not lines:
+			return "Unpaid"
+		if all(s == "Paid" for s in lines):
+			return "Paid"
+		if any(s == "Paid" for s in lines):
+			return "Partially Paid"
+		return "Unpaid"
 
 	def on_update(self):
 		self.publish_update()
@@ -286,13 +292,10 @@ class SalarySlip(TransactionBase):
 	def get_status(self):
 		if self.docstatus == 2:
 			return "Cancelled"
-		else:
-			if self.salary_withholding:
-				return "Withheld"
-			elif self.docstatus == 0:
-				return "Draft"
-			elif self.docstatus == 1:
-				return "Submitted"
+		elif self.docstatus == 0:
+			return "Draft"
+		elif self.docstatus == 1:
+			return "Submitted"
 
 	def validate_dates(self):
 		self.validate_from_to_dates("start_date", "end_date")
@@ -1623,50 +1626,13 @@ class SalarySlip(TransactionBase):
 				self.update_component_row(tax_row, tax_amount, "deductions")
 
 	def get_tax_components(self) -> list:
-		"""
-		Returns:
-		        list: A list of tax components specific to the company.
-		        If no tax components are defined for the company,
-		        it returns the default tax components.
-		"""
-		tax_components = frappe.cache().get_value(
-			TAX_COMPONENTS_BY_COMPANY, self._fetch_tax_components_by_company
-		)
-
-		default_tax_components = tax_components.get("default", [])
-		return tax_components.get(self.hr_organization, default_tax_components)
-
-	def _fetch_tax_components_by_company(self) -> dict:
-		"""
-		Returns:
-		    dict: A dictionary containing tax components grouped by company.
-
-		Raises:
-		    None
-		"""
-
-		tax_components = {}
 		sc = frappe.qb.DocType("Salary Component")
-		sca = frappe.qb.DocType("Salary Component Account")
-
-		components = (
+		return (
 			frappe.qb.from_(sc)
-			.left_join(sca)
-			.on(sca.parent == sc.name)
-			.select(
-				sc.name,
-				sca.company,
-			)
+			.select(sc.name)
 			.where(sc.variable_based_on_taxable_salary == 1)
 			.where(sc.disabled == 0)
-		).run(as_dict=True)
-
-		for component in components:
-			key = component.company or "default"
-			tax_components.setdefault(key, [])
-			tax_components[key].append(component.name)
-
-		return tax_components
+		).run(pluck="name")
 
 	def handle_additional_salary_tax_component(self) -> bool:
 		component = next(
@@ -2417,18 +2383,6 @@ def get_benefits_details_parent(employee, payroll_period, salary_structure_assig
 	return benefit_details_parent, benefit_details_doctype
 
 
-def unlink_ref_doc_from_salary_slip(doc, method=None):
-	"""Unlinks accrual Journal Entry from Salary Slips on cancellation"""
-	linked_ss = frappe.get_all(
-		"Salary Slip", filters={"journal_entry": doc.name, "docstatus": ["<", 2]}, pluck="name"
-	)
-
-	if linked_ss:
-		for ss in linked_ss:
-			ss_doc = frappe.get_doc("Salary Slip", ss)
-			frappe.db.set_value("Salary Slip", ss_doc.name, "journal_entry", "")
-
-
 def generate_password_for_pdf(policy_template, employee):
 	employee = frappe.get_cached_doc("Employee", employee)
 	return policy_template.format(**employee.as_dict())
@@ -2453,18 +2407,6 @@ def get_salary_component_data(component):
 		cache=True,
 	)
 
-
-def get_payroll_payable_account(company, payroll_entry):
-	if payroll_entry:
-		payroll_payable_account = frappe.db.get_value(
-			"Payroll Entry", payroll_entry, "payroll_payable_account", cache=True
-		)
-	else:
-		payroll_payable_account = frappe.db.get_value(
-			"Company", company, "default_payroll_payable_account", cache=True
-		)
-
-	return payroll_payable_account
 
 
 def calculate_tax_by_tax_slab(annual_taxable_earning, tax_slab, eval_globals=None, eval_locals=None):

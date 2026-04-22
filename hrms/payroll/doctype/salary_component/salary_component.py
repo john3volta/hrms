@@ -29,13 +29,9 @@ class SalaryComponent(Document):
 			self.db_set("formula", self._formula)
 
 	def clear_cache(self):
-		from hrms.payroll.doctype.salary_slip.salary_slip import (
-			SALARY_COMPONENT_VALUES,
-			TAX_COMPONENTS_BY_COMPANY,
-		)
+		from hrms.payroll.doctype.salary_slip.salary_slip import SALARY_COMPONENT_VALUES
 
 		frappe.cache().delete_value(SALARY_COMPONENT_VALUES)
-		frappe.cache().delete_value(TAX_COMPONENTS_BY_COMPANY)
 		return super().clear_cache()
 
 	def validate_abbr(self):

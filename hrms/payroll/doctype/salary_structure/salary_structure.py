@@ -374,13 +374,10 @@ def get_employees(salary_structure):
 @frappe.whitelist()
 def get_salary_component(doctype, txt, searchfield, start, page_len, filters):
 	sc = frappe.qb.DocType("Salary Component")
-	sca = frappe.qb.DocType("Salary Component Account")
 
-	salary_components = (
+	return (
 		frappe.qb.from_(sc)
-		.left_join(sca)
-		.on(sca.parent == sc.name)
-		.select(sc.name, sca.account, sca.company)
+		.select(sc.name)
 		.where(
 			(sc.type == filters.get("component_type"))
 			& (sc.disabled == 0)
@@ -388,17 +385,7 @@ def get_salary_component(doctype, txt, searchfield, start, page_len, filters):
 		)
 		.limit(page_len)
 		.offset(start)
-	).run(as_dict=True)
-
-	accounts = []
-	for component in salary_components:
-		if not component.company:
-			accounts.append((component.name, component.account, component.company))
-		else:
-			if component.company == filters["hr_organization"]:
-				accounts.append((component.name, component.account, component.company))
-
-	return accounts
+	).run()
 
 
 def validate_max_benefit_for_flexible_benefit(employee_benefits, max_benefits=None):

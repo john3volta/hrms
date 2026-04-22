@@ -100,7 +100,7 @@ frappe.ui.form.on("Salary Structure", {
 				function () {
 					const doc = frappe.model.get_new_doc("Salary Structure Assignment");
 					doc.salary_structure = frm.doc.name;
-					doc.company = frm.doc.hr_organization;
+					doc.hr_organization = frm.doc.hr_organization;
 					frappe.set_route("Form", "Salary Structure Assignment", doc.name);
 				},
 				__("Create"),
@@ -111,7 +111,7 @@ frappe.ui.form.on("Salary Structure", {
 				() => {
 					const doc = frappe.model.get_new_doc("Bulk Salary Structure Assignment");
 					doc.salary_structure = frm.doc.name;
-					doc.company = frm.doc.hr_organization;
+					doc.hr_organization = frm.doc.hr_organization;
 					frappe.set_route("Form", "Bulk Salary Structure Assignment", doc.name);
 				},
 				__("Create"),

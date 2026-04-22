@@ -9,7 +9,6 @@ from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
 from frappe.utils import cint, cstr, flt, get_link_to_form
 
-from hrms.utils import compat
 from hrms.payroll.utils import sanitize_expression
 
 
@@ -175,7 +174,6 @@ class SalaryStructure(Document):
 		department=None,
 		designation=None,
 		employee=None,
-		payroll_payable_account=None,
 		from_date=None,
 		base=None,
 		variable=None,
@@ -197,7 +195,6 @@ class SalaryStructure(Document):
 					timeout=3000,
 					employees=employees,
 					salary_structure=self,
-					payroll_payable_account=payroll_payable_account,
 					from_date=from_date,
 					base=base,
 					variable=variable,
@@ -207,7 +204,6 @@ class SalaryStructure(Document):
 				assign_salary_structure_for_employees(
 					employees,
 					self,
-					payroll_payable_account=payroll_payable_account,
 					from_date=from_date,
 					base=base,
 					variable=variable,
@@ -220,7 +216,6 @@ class SalaryStructure(Document):
 def assign_salary_structure_for_employees(
 	employees,
 	salary_structure,
-	payroll_payable_account=None,
 	from_date=None,
 	base=None,
 	variable=None,
@@ -245,7 +240,6 @@ def assign_salary_structure_for_employees(
 				salary_structure.hr_organization,
 				salary_structure.currency,
 				from_date,
-				payroll_payable_account,
 				base,
 				variable,
 				income_tax_slab,
@@ -272,34 +266,15 @@ def create_salary_structure_assignment(
 	company,
 	currency,
 	from_date,
-	payroll_payable_account=None,
 	base=None,
 	variable=None,
 	income_tax_slab=None,
 ):
 	assignment = frappe.new_doc("Salary Structure Assignment")
-
-	if not payroll_payable_account:
-		payroll_payable_account = frappe.db.get_value("Company", company, "default_payroll_payable_account")
-		if not payroll_payable_account:
-			frappe.throw(_('Please set "Default Payroll Payable Account" in Company Defaults'))
-
-	payroll_payable_account_currency = frappe.db.get_value(
-		"Account", payroll_payable_account, "account_currency"
-	)
-	company_curency = compat.get_company_currency(company)
-	if payroll_payable_account_currency != currency and payroll_payable_account_currency != company_curency:
-		frappe.throw(
-			_("Invalid Payroll Payable Account. The account currency must be {0} or {1}").format(
-				currency, company_curency
-			)
-		)
-
 	assignment.employee = employee
 	assignment.salary_structure = salary_structure
 	assignment.hr_organization = company
 	assignment.currency = currency
-	assignment.payroll_payable_account = payroll_payable_account
 	assignment.from_date = from_date
 	assignment.base = base
 	assignment.variable = variable

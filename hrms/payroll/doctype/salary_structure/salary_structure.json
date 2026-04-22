@@ -33,10 +33,7 @@
   "total_earning",
   "total_deduction",
   "column_break2",
-  "net_pay",
-  "account",
-  "column_break_28",
-  "payment_account"
+  "net_pay"
  ],
  "fields": [
   {
@@ -196,21 +193,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "account",
-   "fieldtype": "Tab Break",
-   "label": "Account"
-  },
-  {
-   "fieldname": "column_break_28",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "payment_account",
-   "fieldtype": "Link",
-   "label": "Payment Account",
-   "options": "Account"
-  },
-  {
    "fieldname": "amended_from",
    "fieldtype": "Link",
    "label": "Amended From",
@@ -248,7 +230,7 @@
  "idx": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-09-15 15:56:52.814944",
+ "modified": "2026-04-21 10:00:00.000000",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Structure",

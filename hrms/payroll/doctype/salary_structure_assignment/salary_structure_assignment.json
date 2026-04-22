@@ -18,7 +18,6 @@
   "income_tax_slab",
   "column_break_11",
   "hr_organization",
-  "payroll_payable_account",
   "currency",
   "section_break_7",
   "base",
@@ -33,9 +32,7 @@
   "tax_deducted_till_date",
   "employee_benefits_section",
   "max_benefits",
-  "employee_benefits",
-  "section_break_17",
-  "payroll_cost_centers"
+  "employee_benefits"
  ],
  "fields": [
   {
@@ -154,27 +151,6 @@
    "reqd": 1
   },
   {
-   "depends_on": "employee",
-   "fieldname": "payroll_payable_account",
-   "fieldtype": "Link",
-   "label": "Payroll Payable Account",
-   "options": "Account"
-  },
-  {
-   "collapsible": 1,
-   "depends_on": "employee",
-   "fieldname": "section_break_17",
-   "fieldtype": "Section Break",
-   "label": "Payroll Cost Centers"
-  },
-  {
-   "allow_on_submit": 1,
-   "fieldname": "payroll_cost_centers",
-   "fieldtype": "Table",
-   "label": "Cost Centers",
-   "options": "Employee Cost Center"
-  },
-  {
    "fetch_from": "employee.grade",
    "fieldname": "grade",
    "fieldtype": "Link",
@@ -246,7 +222,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-26 14:37:43.779340",
+ "modified": "2026-04-21 10:00:00.000000",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Structure Assignment",

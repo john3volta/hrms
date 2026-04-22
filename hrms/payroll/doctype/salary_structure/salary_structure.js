@@ -31,17 +31,6 @@ frappe.ui.form.on("Salary Structure", {
 		help_button_wrapper.append(frm.doc.filters_html).append(help_button);
 
 		frm.toggle_reqd(["payroll_frequency"], !frm.doc.salary_slip_based_on_timesheet);
-
-		frm.set_query("payment_account", function () {
-			var account_types = ["Bank", "Cash"];
-			return {
-				filters: {
-					account_type: ["in", account_types],
-					is_group: 0,
-					company: frm.doc.company,
-				},
-			};
-		});
 		frm.trigger("set_earning_deduction_component");
 	},
 

@@ -29,9 +29,7 @@ frappe.listview_settings["Attendance"] = {
 							fieldtype: "Link",
 							options: "Employee",
 							get_query: () => {
-								return {
-									query: "erpnext.controllers.queries.employee_query",
-								};
+								return { filters: { status: "Active" } };
 							},
 							reqd: 1,
 							onchange: () => me.reset_dialog(dialog),

@@ -8,9 +8,7 @@ frappe.ui.form.on("Attendance", {
 		}
 
 		frm.set_query("employee", () => {
-			return {
-				query: "erpnext.controllers.queries.employee_query",
-			};
+			return { filters: { status: "Active" } };
 		});
 
 		if (frm.doc.docstatus === 1 && frm.doc.status === "Absent") {

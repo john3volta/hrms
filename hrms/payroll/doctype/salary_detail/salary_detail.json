@@ -21,7 +21,6 @@
   "is_flexible_benefit",
   "variable_based_on_taxable_salary",
   "do_not_include_in_total",
-  "do_not_include_in_accounts",
   "accrual_component",
   "deduct_full_tax_on_selected_payroll_date",
   "section_break_2",
@@ -254,15 +253,6 @@
    "fieldtype": "Check",
    "label": "Is Recurring Additional Salary",
    "read_only": 1
-  },
-  {
-   "default": "0",
-   "depends_on": "eval:doc.do_not_include_in_total",
-   "description": "If enabled, the amount will be excluded from accounting entries during Journal Entry creation.",
-   "fetch_from": "salary_component.do_not_include_in_accounts",
-   "fieldname": "do_not_include_in_accounts",
-   "fieldtype": "Check",
-   "label": "Do Not Include in Accounting Entries"
   },
   {
    "default": "0",

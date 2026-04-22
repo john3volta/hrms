@@ -147,6 +147,7 @@ class SalarySlip(TransactionBase):
 
 	def validate(self):
 		self.status = self.get_status()
+		self._validate_withheld()
 		validate_active_employee(self.employee)
 		self.validate_dates()
 		self.check_existing()
@@ -182,6 +183,14 @@ class SalarySlip(TransactionBase):
 
 		if self.payroll_period and not self.current_payroll_period:
 			self.current_payroll_period = self.payroll_period.name
+
+	def _validate_withheld(self):
+		if self.withheld and not self.withhold_reason:
+			frappe.throw(
+				_("Withhold Reason is required when Salary Slip is withheld"),
+				frappe.MandatoryError,
+				title=_("Missing Mandatory Field"),
+			)
 
 	def set_net_total_in_words(self):
 		doc_currency = self.currency
@@ -2181,13 +2190,7 @@ class SalarySlip(TransactionBase):
 		self.calculate_net_pay()
 
 	def pull_emp_details(self):
-		account_details = frappe.get_cached_value(
-			"Employee", self.employee, ["bank_name", "bank_ac_no", "salary_mode"], as_dict=1
-		)
-		if account_details:
-			# MODE_OF_PAYMENT_REMOVED
-			self.bank_name = account_details.bank_name
-			self.bank_account_no = account_details.bank_ac_no
+		pass
 
 	@frappe.whitelist()
 	def process_salary_based_on_working_days(self):

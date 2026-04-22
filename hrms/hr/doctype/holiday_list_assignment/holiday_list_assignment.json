@@ -73,15 +73,15 @@
    "fieldname": "employee_company",
    "fieldtype": "Link",
    "hidden": 1,
-   "label": "Employee Company",
-   "options": "Company",
+   "label": "Employee HR Organization",
+   "options": "HR Organization",
    "read_only": 1
   },
   {
    "fieldname": "applicable_for",
    "fieldtype": "Select",
    "label": "Applicable For",
-   "options": "Employee\nCompany",
+   "options": "Employee\nHR Organization",
    "reqd": 1
   },
   {

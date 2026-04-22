@@ -13,13 +13,13 @@ frappe.ui.form.on("Holiday List Assignment", {
 	toggle_fields: function (frm) {
 		frm.toggle_display(
 			["employee_name", "employee_company"],
-			frm.doc.applicable_for == "Employee",
+			frm.doc.applicable_for === "Employee",
 		);
 	},
 	clear_fields: function (frm) {
 		frm.set_value("assigned_to", "");
 		frm.set_value("employee_name", "");
-		frm.set_value("employee_company", "");
+		frm.set_value("employee_company", null);
 	},
 	assigned_to: function (frm) {
 		if (frm.doc.applicable_for == "Employee" && frm.doc.assigned_to) {
@@ -27,10 +27,10 @@ frappe.ui.form.on("Holiday List Assignment", {
 			frappe.db.get_value(
 				"Employee",
 				frm.doc.assigned_to,
-				["employee_name", "company"],
+				["employee_name", "hr_organization"],
 				(r) => {
 					frm.set_value("employee_name", r.employee_name);
-					frm.set_value("employee_company", r.company);
+					frm.set_value("employee_company", r.hr_organization);
 				},
 			);
 		}

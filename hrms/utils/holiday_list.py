@@ -105,7 +105,7 @@ def get_holiday_list_for_employee(
 	if not holiday_list and raise_exception:
 		frappe.throw(
 			_(
-				"No Holiday List was found for Employee {0} or their company {1} for date {2}. Please assign through {3}"
+				"No Holiday List was found for Employee {0} or their HR Organization {1} for date {2}. Please assign through {3}"
 			).format(
 				frappe.bold(employee),
 				frappe.bold(company),

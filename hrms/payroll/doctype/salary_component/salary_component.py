@@ -18,7 +18,6 @@ class SalaryComponent(Document):
 
 	def validate(self):
 		self.validate_abbr()
-		self.validate_accounts()
 		self.validate_accrual_component()
 		self.valide_arrear_component()
 
@@ -51,14 +50,6 @@ class SalaryComponent(Document):
 			separator="_",
 			filters={"name": ["!=", self.name]},
 		)
-
-	def validate_accounts(self):
-		if not (self.statistical_component or (self.accounts and all(d.account for d in self.accounts))):
-			frappe.msgprint(
-				title=_("Warning"),
-				msg=_("Accounts not set for Salary Component {0}").format(self.name),
-				indicator="orange",
-			)
 
 	def validate_accrual_component(self):
 		if self.type != "Earning" and self.accrual_component:

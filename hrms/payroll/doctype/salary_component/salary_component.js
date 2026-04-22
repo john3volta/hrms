@@ -3,15 +3,6 @@
 
 frappe.ui.form.on("Salary Component", {
 	setup: function (frm) {
-		frm.set_query("account", "accounts", function (doc, cdt, cdn) {
-			var d = locals[cdt][cdn];
-			return {
-				filters: {
-					is_group: 0,
-					company: d.company,
-				},
-			};
-		});
 		frm.set_query("earning_component_group", function () {
 			return {
 				filters: {
@@ -34,12 +25,6 @@ frappe.ui.form.on("Salary Component", {
 				},
 				__("Create"),
 			);
-		}
-	},
-
-	do_not_include_in_total: function (frm) {
-		if (!frm.doc.do_not_include_in_total) {
-			frm.set_value("do_not_include_in_accounts", 0);
 		}
 	},
 
@@ -175,7 +160,6 @@ var set_value_for_condition_and_formula = function (frm) {
 		amount_based_on_formula: 0,
 		statistical_component: 0,
 		do_not_include_in_total: 0,
-		do_not_include_in_accounts: 0,
 		depends_on_payment_days: 0,
 	});
 };

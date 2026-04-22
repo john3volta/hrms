@@ -190,10 +190,14 @@ class LeaveControlPanel(Document):
 			"branch",
 			"department",
 			"designation",
+			"employee_grade",
 		]
 		filters = [["status", "=", "Active"]]
 
 		for d in filter_fields:
 			if self.get(d):
+				if d == "employee_grade":
+					filters.append(["grade", "=", self.get(d)])
+				else:
 					filters.append([d, "=", self.get(d)])
 		return filters

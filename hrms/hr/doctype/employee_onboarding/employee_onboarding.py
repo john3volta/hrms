@@ -74,6 +74,7 @@ def make_employee(source_name, target_doc=None):
 				"doctype": "Employee",
 				"field_map": {
 					"first_name": "employee_name",
+					"employee_grade": "grade",
 				},
 			}
 		},

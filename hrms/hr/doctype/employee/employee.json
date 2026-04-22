@@ -41,6 +41,7 @@
   "date_of_retirement",
   "job_profile",
   "column_break_31",
+  "grade",
   "holiday_list",
   "salary_information",
   "health_insurance_section",
@@ -315,6 +316,12 @@
   {
    "fieldname": "column_break_31",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "grade",
+   "fieldtype": "Link",
+   "label": "Grade",
+   "options": "Employee Grade"
   },
   {
    "description": "Applicable Holiday List",

@@ -224,6 +224,7 @@ global_search_doctypes = {
 		{"doctype": "Salary Slip", "index": 19},
 		{"doctype": "Leave Application", "index": 20},
 		{"doctype": "Expense Claim", "index": 21},
+		{"doctype": "Employee Grade", "index": 37},
 		{"doctype": "Job Opening", "index": 39},
 		{"doctype": "Job Applicant", "index": 40},
 		{"doctype": "Job Offer", "index": 41},

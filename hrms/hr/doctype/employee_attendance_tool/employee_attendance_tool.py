@@ -22,6 +22,7 @@ def get_employees(
 	company: str | None = None,
 	employment_type: str | None = None,
 	designation: str | None = None,
+	employee_grade: str | None = None,
 	shift: str | None = None,
 	filter_by_shift: bool | None = None,
 ) -> dict[str, list]:
@@ -33,6 +34,7 @@ def get_employees(
 		"hr_organization": company,
 		"employment_type": employment_type,
 		"designation": designation,
+		"grade": employee_grade,
 	}.items():
 		if value:
 			filters[field] = value

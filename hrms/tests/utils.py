@@ -130,7 +130,7 @@ class BootStrapTestData:
 		records = [
 			{
 				"doctype": "Holiday List Assignment",
-				"applicable_for": "Company",
+				"applicable_for": "HR Organization",
 				"assigned_to": "_Test Company",
 				"holiday_list": "Salary Slip Test Holiday List",
 				"from_date": fiscal_year[1],
@@ -184,12 +184,12 @@ class BootStrapTestData:
 		records = [
 			{
 				"doctype": "Leave Period",
-				"company": "_Test Company",
+				"hr_organization": "_Test Company",
 				"from_date": "2013-01-01",
 				"to_date": "2019-12-31",
 			}
 		]
-		self.make_records(["from_date", "to_date", "company"], records)
+		self.make_records(["from_date", "to_date", "hr_organization"], records)
 
 	def make_leave_allocations(self):
 		"""Create test leave applications"""

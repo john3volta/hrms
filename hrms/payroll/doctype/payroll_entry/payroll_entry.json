@@ -10,10 +10,9 @@
   "select_payroll_period",
   "posting_date",
   "hr_organization",
+  "payroll_period",
   "column_break_5",
   "currency",
-  "exchange_rate",
-  "payroll_payable_account",
   "status",
   "section_break_cypo",
   "salary_slip_based_on_timesheet",
@@ -35,13 +34,7 @@
   "section_break_26",
   "validate_attendance",
   "attendance_detail_html",
-  "accounting_dimensions_tab",
-  "accounting_dimensions_section",
-  "cost_center",
-  "dimension_col_break",
-  "account",
   "payment_method",
-  "payment_account",
   "column_break_35",
   "salary_slips_created",
   "salary_slips_submitted",
@@ -49,6 +42,8 @@
   "failure_details_section",
   "error_message",
   "section_break_41",
+  "payout_register",
+  "tax_ruleset_version",
   "amended_from",
   "connections_tab"
  ],
@@ -146,32 +141,11 @@
    "label": "Deduct Tax For Unsubmitted Tax Exemption Proof"
   },
   {
-   "default": ":Company",
-   "fieldname": "cost_center",
-   "fieldtype": "Link",
-   "label": "Cost Center",
-   "options": "Cost Center",
-   "reqd": 1
-  },
-  {
-   "fieldname": "account",
-   "fieldtype": "Section Break",
-   "label": "Payment Entry"
-  },
-  {
    "fieldname": "payment_method",
    "fieldtype": "Select",
    "label": "Payment Method",
    "options": "Manual\nCrypto\nBank Transfer",
    "default": "Manual"
-  },
-  {
-   "allow_on_submit": 1,
-   "description": "Select Payment Account to make Bank Entry",
-   "fieldname": "payment_account",
-   "fieldtype": "Link",
-   "label": "Payment Account",
-   "options": "Account"
   },
   {
    "fieldname": "amended_from",
@@ -201,37 +175,12 @@
    "read_only": 1
   },
   {
-   "fieldname": "accounting_dimensions_section",
-   "fieldtype": "Section Break",
-   "label": "Accounting Dimensions"
-  },
-  {
-   "fieldname": "dimension_col_break",
-   "fieldtype": "Column Break"
-  },
-  {
    "depends_on": "hr_organization",
    "fieldname": "currency",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Currency",
    "options": "Currency",
-   "reqd": 1
-  },
-  {
-   "depends_on": "hr_organization",
-   "fieldname": "exchange_rate",
-   "fieldtype": "Float",
-   "label": "Exchange Rate",
-   "precision": "9",
-   "reqd": 1
-  },
-  {
-   "depends_on": "hr_organization",
-   "fieldname": "payroll_payable_account",
-   "fieldtype": "Link",
-   "label": "Payroll Payable Account",
-   "options": "Account",
    "reqd": 1
   },
   {
@@ -258,7 +207,7 @@
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "Draft\nSubmitted\nCancelled\nQueued\nFailed",
+   "options": "Draft\nSubmitting\nSubmitted\nCancelled\nQueued\nFailed",
    "print_hide": 1,
    "read_only": 1
   },
@@ -286,11 +235,6 @@
   {
    "fieldname": "column_break_13",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "accounting_dimensions_tab",
-   "fieldtype": "Tab Break",
-   "label": "Accounting & Payment"
   },
   {
    "fieldname": "section_break_17",
@@ -323,6 +267,29 @@
    "fieldtype": "Select",
    "label": "Overtime Slip Step",
    "options": "\nCreate\nSubmit"
+  },
+  {
+   "fieldname": "payroll_period",
+   "fieldtype": "Link",
+   "label": "Payroll Period",
+   "options": "Payroll Period",
+   "reqd": 1,
+   "in_list_view": 0
+  },
+  {
+   "fieldname": "payout_register",
+   "fieldtype": "Link",
+   "label": "Payout Register",
+   "options": "Payout Register",
+   "read_only": 1,
+   "no_copy": 1
+  },
+  {
+   "fieldname": "tax_ruleset_version",
+   "fieldtype": "Data",
+   "label": "Tax Ruleset Version",
+   "read_only": 1,
+   "no_copy": 1
   }
  ],
  "icon": "fa fa-cog",
@@ -333,7 +300,7 @@
    "link_fieldname": "payroll_entry"
   }
  ],
- "modified": "2025-08-25 20:05:37.733324",
+ "modified": "2026-04-21 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Entry",

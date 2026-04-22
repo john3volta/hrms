@@ -98,11 +98,14 @@ def get_income_tax_deductions(filters: Filters) -> list[dict]:
 
 	SalarySlip = frappe.qb.DocType("Salary Slip")
 	SalaryDetail = frappe.qb.DocType("Salary Detail")
+	Employee = frappe.qb.DocType("Employee")
 
 	query = (
 		frappe.qb.from_(SalarySlip)
 		.inner_join(SalaryDetail)
 		.on(SalarySlip.name == SalaryDetail.parent)
+		.left_join(Employee)
+		.on(SalarySlip.employee == Employee.name)
 		.select(
 			SalarySlip.employee,
 			SalarySlip.employee_name,
@@ -119,9 +122,10 @@ def get_income_tax_deductions(filters: Filters) -> list[dict]:
 		)
 	)
 
-	for field in ["department", "branch"]:
-		if filters.get(field):
-			query = query.where(getattr(SalarySlip, field) == filters.get(field))
+	if filters.get("department"):
+		query = query.where(SalarySlip.department == filters.get("department"))
+	if filters.get("branch"):
+		query = query.where(Employee.branch == filters.get("branch"))
 
 	if filters.get("month"):
 		query = query.where(Extract("month", SalarySlip.start_date) == filters.month)

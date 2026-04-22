@@ -103,7 +103,7 @@ def update_column_width(ss, columns):
 	if ss.designation is not None:
 		columns[6].update({"width": 120})
 	if ss.leave_without_pay is not None:
-		columns[9].update({"width": 120})
+		columns[10].update({"width": 120})
 
 
 def get_columns(earning_types, ded_types):
@@ -279,8 +279,14 @@ def get_salary_component_type(salary_component):
 
 def get_salary_slips(filters, company_currency):
 	doc_status = {"Draft": 0, "Submitted": 1, "Cancelled": 2}
+	employee = frappe.qb.DocType("Employee")
 
-	query = frappe.qb.from_(salary_slip).select(salary_slip.star)
+	query = (
+		frappe.qb.from_(salary_slip)
+		.left_join(employee)
+		.on(salary_slip.employee == employee.name)
+		.select(salary_slip.star, employee.branch)
+	)
 
 	if filters.get("docstatus"):
 		query = query.where(salary_slip.docstatus == doc_status[filters.get("docstatus")])
@@ -304,7 +310,7 @@ def get_salary_slips(filters, company_currency):
 		query = query.where(salary_slip.department == filters["department"])
 
 	if filters.get("branch"):
-		query = query.where(salary_slip.branch == filters["branch"])
+		query = query.where(employee.branch == filters["branch"])
 
 	if filters.get("designation"):
 		query = query.where(salary_slip.designation == filters["designation"])

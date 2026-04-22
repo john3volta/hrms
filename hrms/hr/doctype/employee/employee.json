@@ -95,7 +95,8 @@
   "attendance_and_leave_details",
   "column_break_44",
   "default_shift",
-  "leave_approver"
+  "leave_approver",
+  "shift_request_approver"
  ],
  "fields": [
   {
@@ -641,6 +642,12 @@
    "fieldname": "leave_approver",
    "fieldtype": "Link",
    "label": "Leave Approver",
+   "options": "User"
+  },
+  {
+   "fieldname": "shift_request_approver",
+   "fieldtype": "Link",
+   "label": "Shift Request Approver",
    "options": "User"
   }
  ],

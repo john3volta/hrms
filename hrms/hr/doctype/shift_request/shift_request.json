@@ -11,6 +11,7 @@
   "employee",
   "employee_name",
   "department",
+  "approver",
   "status",
   "column_break_4",
   "hr_organization",
@@ -49,6 +50,15 @@
    "label": "Department",
    "options": "Department",
    "read_only": 1
+  },
+  {
+   "fetch_from": "employee.shift_request_approver",
+   "fetch_if_empty": 1,
+   "fieldname": "approver",
+   "fieldtype": "Link",
+   "label": "Approver",
+   "options": "User",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_4",

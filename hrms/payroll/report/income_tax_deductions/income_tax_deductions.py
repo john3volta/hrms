@@ -119,7 +119,7 @@ def get_income_tax_deductions(filters: Filters) -> list[dict]:
 		)
 	)
 
-	for field in ["department"]:
+	for field in ["department", "branch"]:
 		if filters.get(field):
 			query = query.where(getattr(SalarySlip, field) == filters.get(field))
 

@@ -42,6 +42,7 @@
   "job_profile",
   "column_break_31",
   "grade",
+  "branch",
   "holiday_list",
   "salary_information",
   "health_insurance_section",
@@ -322,6 +323,12 @@
    "fieldtype": "Link",
    "label": "Grade",
    "options": "Employee Grade"
+  },
+  {
+   "fieldname": "branch",
+   "fieldtype": "Link",
+   "label": "Branch",
+   "options": "Branch"
   },
   {
    "description": "Applicable Holiday List",

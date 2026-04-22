@@ -41,6 +41,7 @@ def execute(filters=None):
 			"employee_name": ss.employee_name,
 			"data_of_joining": doj_map.get(ss.employee),
 			"department": ss.department,
+			"branch": ss.branch,
 			"designation": ss.designation,
 			"company": ss.company,
 			"start_date": ss.start_date,
@@ -97,8 +98,10 @@ def get_earning_and_deduction_types(salary_slips):
 def update_column_width(ss, columns):
 	if ss.department is not None:
 		columns[4].update({"width": 120})
-	if ss.designation is not None:
+	if ss.branch is not None:
 		columns[5].update({"width": 120})
+	if ss.designation is not None:
+		columns[6].update({"width": 120})
 	if ss.leave_without_pay is not None:
 		columns[9].update({"width": 120})
 
@@ -135,6 +138,13 @@ def get_columns(earning_types, ded_types):
 			"fieldname": "department",
 			"fieldtype": "Link",
 			"options": "Department",
+			"width": -1,
+		},
+		{
+			"label": _("Branch"),
+			"fieldname": "branch",
+			"fieldtype": "Link",
+			"options": "Branch",
 			"width": -1,
 		},
 		{
@@ -292,6 +302,9 @@ def get_salary_slips(filters, company_currency):
 
 	if filters.get("department"):
 		query = query.where(salary_slip.department == filters["department"])
+
+	if filters.get("branch"):
+		query = query.where(salary_slip.branch == filters["branch"])
 
 	if filters.get("designation"):
 		query = query.where(salary_slip.designation == filters["designation"])

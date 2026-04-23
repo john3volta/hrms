@@ -37,6 +37,7 @@ def allow_regional(fn):
 
 def get_holiday_list_for_employee(employee, raise_exception=True, **kwargs):
 	from hrms.utils.holiday_list import get_holiday_list_for_employee as _get
+
 	return _get(employee, raise_exception=raise_exception, **kwargs)
 
 
@@ -67,18 +68,19 @@ def get_default_company():
 
 
 def get_company_currency(company=None):
+	# Hard-fork Q2: Company replaced by HR Organization (single-currency per org)
 	company = company or get_default_company()
-	return frappe.db.get_value("Company", company, "default_currency")
+	return frappe.db.get_value("HR Organization", company, "default_currency")
 
 
 def get_default_cost_center(company=None):
-	company = company or get_default_company()
-	return frappe.db.get_value("Company", company, "cost_center")
+	# Hard-fork: Cost Center dropped (no GL in payroll, Q5 decision)
+	return None
 
 
 def get_region(company=None):
-	company = company or get_default_company()
-	return frappe.db.get_value("Company", company, "country") or ""
+	# Hard-fork: regional/tax logic deferred (Phase 5 localization)
+	return None
 
 
 def make_gl_entries(*args, **kwargs):
@@ -90,9 +92,7 @@ def get_fiscal_year(date=None, company=None, as_dict=False, **kwargs):
 	year_start = datetime.date(current_date.year, 1, 1)
 	year_end = datetime.date(current_date.year, 12, 31)
 	if as_dict:
-		return frappe._dict(
-			name=str(current_date.year), year_start_date=year_start, year_end_date=year_end
-		)
+		return frappe._dict(name=str(current_date.year), year_start_date=year_start, year_end_date=year_end)
 	return str(current_date.year), year_start, year_end
 
 

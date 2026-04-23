@@ -169,6 +169,6 @@ def get_payroll_payable_account(company, payroll_entry):
 			"Payroll Entry", payroll_entry, "payroll_payable_account"
 		)
 	else:
-		payroll_payable_account = frappe.db.get_value("Company", company, "default_payroll_payable_account")
+		payroll_payable_account = None  # Hard-fork Q5: GL export dropped, no payable account
 
 	return payroll_payable_account

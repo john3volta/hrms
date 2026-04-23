@@ -32,9 +32,12 @@ class PayoutRegister(Document):
 	def _populate_lines_if_empty(self):
 		if self.lines:
 			return
+		filters = {"docstatus": 1, "withheld": 0}
+		if self.payroll_entry:
+			filters["payroll_entry"] = self.payroll_entry
 		salary_slips = frappe.get_all(
 			"Salary Slip",
-			filters={"payroll_entry": self.payroll_entry, "docstatus": 1},
+			filters=filters,
 			fields=["name", "employee", "net_pay"],
 		)
 		for ss in salary_slips:
@@ -43,7 +46,7 @@ class PayoutRegister(Document):
 				{
 					"salary_slip": ss.name,
 					"employee": ss.employee,
-					"net_pay": ss.net_pay,
+					"net_pay": ss.net_pay or 0,
 					"status": "Unpaid",
 				},
 			)
@@ -59,22 +62,16 @@ class PayoutRegister(Document):
 		"""Mark specific (or all Unpaid) lines as Paid."""
 		self.check_permission("write")
 		paid_date = today()
-		all_paid = True
 
 		for line in self.lines:
 			if salary_slips and line.salary_slip not in salary_slips:
 				continue
 			if line.status == "Unpaid":
-				line.status = "Paid"
-				line.paid_date = paid_date
+				line_doc = frappe.get_doc("Payout Register Line", line.name)
+				line_doc.db_set("status", "Paid")
+				line_doc.db_set("paid_date", paid_date)
 
-		for line in self.lines:
-			if line.status == "Unpaid":
-				all_paid = False
-				break
-
-		if all_paid:
+		self.reload()
+		if all(l.status == "Paid" for l in self.lines):
 			self.db_set("status", "Paid")
 			self.db_set("paid_date", paid_date)
-
-		self.save(ignore_permissions=True)

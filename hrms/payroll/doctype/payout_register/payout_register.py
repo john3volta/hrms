@@ -11,8 +11,10 @@ class PayoutRegister(Document):
 	def validate(self):
 		self._validate_state_transition()
 
-	def on_submit(self):
+	def before_submit(self):
 		self._populate_lines_if_empty()
+
+	def on_submit(self):
 		self.db_set("status", "Confirmed")
 		self.db_set("confirmed_date", today())
 
@@ -45,7 +47,6 @@ class PayoutRegister(Document):
 					"status": "Unpaid",
 				},
 			)
-		self.save(ignore_permissions=True)
 
 	def _cancel_lines(self):
 		for line in self.lines:

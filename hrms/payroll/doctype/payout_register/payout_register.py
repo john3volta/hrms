@@ -54,8 +54,8 @@ class PayoutRegister(Document):
 	def _cancel_lines(self):
 		for line in self.lines:
 			if line.status != "Paid":
-				line.status = "Cancelled"
-		self.save(ignore_permissions=True)
+				line_doc = frappe.get_doc("Payout Register Line", line.name)
+				line_doc.db_set("status", "Cancelled")
 
 	@frappe.whitelist()
 	def mark_paid(self, salary_slips=None):

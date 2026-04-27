@@ -41,8 +41,11 @@ def _ensure_leave_policy_assignment(doc):
 		)
 		lpa.insert(ignore_permissions=True)
 		lpa.submit()
-	except Exception as e:
-		frappe.log_error(f"LPA creation failed for {doc.name}: {e}", "Employee Bootstrap")
+	except frappe.ValidationError:
+		frappe.log_error(frappe.get_traceback(), f"Employee Bootstrap: LPA employee={doc.name}")
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), f"Employee Bootstrap: LPA employee={doc.name}")
+		raise
 
 
 def _ensure_salary_structure_assignment(doc):
@@ -72,5 +75,8 @@ def _ensure_salary_structure_assignment(doc):
 		)
 		ssa.insert(ignore_permissions=True)
 		ssa.submit()
-	except Exception as e:
-		frappe.log_error(f"SSA creation failed for {doc.name}: {e}", "Employee Bootstrap")
+	except frappe.ValidationError:
+		frappe.log_error(frappe.get_traceback(), f"Employee Bootstrap: SSA employee={doc.name}")
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), f"Employee Bootstrap: SSA employee={doc.name}")
+		raise

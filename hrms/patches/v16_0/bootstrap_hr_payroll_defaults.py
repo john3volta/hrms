@@ -33,12 +33,19 @@ def _assign_lpa_ssa_for_active_employees():
 
 def _ensure_lpa(employee):
 	try:
+		from frappe.utils import now_datetime
+
 		from hrms.setup import _get_or_create_default_leave_policy
 
 		date_of_joining = frappe.db.get_value("Employee", employee, "date_of_joining")
 		if not date_of_joining:
 			return
 		joining_date = getdate(date_of_joining)
+
+		year = now_datetime().year
+		year_start = getdate(f"{year}-01-01")
+		year_end = getdate(f"{year}-12-31")
+
 		existing = frappe.db.sql(
 			"""
             SELECT name FROM `tabLeave Policy Assignment`
@@ -52,20 +59,45 @@ def _ensure_lpa(employee):
 		)
 		if existing:
 			return
+
 		policy_name = _get_or_create_default_leave_policy()
-		lpa = frappe.get_doc(
-			{
-				"doctype": "Leave Policy Assignment",
-				"employee": employee,
-				"leave_policy": policy_name,
-				"assignment_based_on": "Joining Date",
-				"effective_from": joining_date,
-			}
-		)
+
+		if joining_date >= year_start:
+			# New employee this year — assign from joining date
+			lpa = frappe.get_doc(
+				{
+					"doctype": "Leave Policy Assignment",
+					"employee": employee,
+					"leave_policy": policy_name,
+					"assignment_based_on": "Joining Date",
+					"effective_from": joining_date,
+				}
+			)
+		else:
+			# Long-tenured employee — assign current calendar year leave period
+			leave_period = frappe.db.get_value(
+				"Leave Period",
+				{"hr_organization": "HO", "from_date": str(year_start), "to_date": str(year_end)},
+				"name",
+			)
+			lpa = frappe.get_doc(
+				{
+					"doctype": "Leave Policy Assignment",
+					"employee": employee,
+					"leave_policy": policy_name,
+					"assignment_based_on": "Leave Period",
+					"leave_period": leave_period,
+					"effective_from": year_start,
+				}
+			)
+
 		lpa.insert(ignore_permissions=True)
 		lpa.submit()
-	except Exception as e:
-		frappe.log_error(f"Bootstrap LPA failed for {employee}: {e}", "HR Bootstrap")
+	except frappe.ValidationError:
+		frappe.log_error(frappe.get_traceback(), f"HR Bootstrap: employee={employee}")
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), f"HR Bootstrap: employee={employee}")
+		raise
 
 
 def _ensure_ssa(employee):
@@ -97,5 +129,8 @@ def _ensure_ssa(employee):
 		)
 		ssa.insert(ignore_permissions=True)
 		ssa.submit()
-	except Exception as e:
-		frappe.log_error(f"Bootstrap SSA failed for {employee}: {e}", "HR Bootstrap")
+	except frappe.ValidationError:
+		frappe.log_error(frappe.get_traceback(), f"HR Bootstrap SSA: employee={employee}")
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), f"HR Bootstrap SSA: employee={employee}")
+		raise

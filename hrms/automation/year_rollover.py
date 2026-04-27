@@ -74,32 +74,57 @@ def _create_lpa_for_active_employees(year):
 	from hrms.setup import _get_or_create_default_leave_policy
 
 	policy_name = _get_or_create_default_leave_policy()
+	target_from = getdate(from_date)
+	target_to = getdate(to_date)
 	employees = frappe.get_all("Employee", filters={"status": "Active"}, pluck="name")
 	for employee in employees:
 		try:
+			# Fetch any submitted LPA that overlaps the target range
 			overlapping = frappe.db.sql(
 				"""
-                SELECT name FROM `tabLeave Policy Assignment`
+                SELECT name, effective_from, effective_to
+                FROM `tabLeave Policy Assignment`
                 WHERE employee = %s AND docstatus = 1
                   AND effective_from <= %s AND effective_to >= %s
                 LIMIT 1
                 """,
 				(employee, to_date, from_date),
+				as_dict=True,
 			)
 			if overlapping:
-				continue
-
-			lpa = frappe.get_doc(
-				{
-					"doctype": "Leave Policy Assignment",
-					"employee": employee,
-					"leave_policy": policy_name,
-					"assignment_based_on": "Leave Period",
-					"leave_period": leave_period,
-					"effective_from": from_date,
-				}
-			)
+				existing_to = getdate(overlapping[0]["effective_to"])
+				# Full coverage — skip entirely
+				if getdate(overlapping[0]["effective_from"]) <= target_from and existing_to >= target_to:
+					continue
+				# Partial coverage — create follow-on LPA for uncovered remainder
+				remainder_from = existing_to + frappe.utils.datetime.timedelta(days=1)
+				if remainder_from > target_to:
+					continue
+				lpa = frappe.get_doc(
+					{
+						"doctype": "Leave Policy Assignment",
+						"employee": employee,
+						"leave_policy": policy_name,
+						"assignment_based_on": "Leave Period",
+						"leave_period": leave_period,
+						"effective_from": remainder_from,
+					}
+				)
+			else:
+				lpa = frappe.get_doc(
+					{
+						"doctype": "Leave Policy Assignment",
+						"employee": employee,
+						"leave_policy": policy_name,
+						"assignment_based_on": "Leave Period",
+						"leave_period": leave_period,
+						"effective_from": from_date,
+					}
+				)
 			lpa.insert(ignore_permissions=True)
 			lpa.submit()
-		except Exception as e:
-			frappe.log_error(f"Year rollover LPA failed for {employee}: {e}", "Year Rollover")
+		except frappe.ValidationError:
+			frappe.log_error(frappe.get_traceback(), f"Year Rollover: employee={employee}, year={year}")
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), f"Year Rollover: employee={employee}, year={year}")
+			raise

@@ -723,18 +723,18 @@ def get_salary_slip_loan_fields():
 
 
 def create_default_hr_organization():
-	if frappe.db.exists("HR Organization", "HO"):
-		return
-	org = frappe.get_doc(
-		{
-			"doctype": "HR Organization",
-			"organization_code": "HO",
-			"organization_name": "Head Office",
-			"country": "United States",
-			"default_currency": "USD",
-		}
-	)
-	org.insert(ignore_permissions=True)
+	if not frappe.db.exists("HR Organization", "HO"):
+		org = frappe.get_doc(
+			{
+				"doctype": "HR Organization",
+				"organization_code": "HO",
+				"organization_name": "Head Office",
+				"country": "United States",
+				"default_currency": "USD",
+			}
+		)
+		org.insert(ignore_permissions=True)
+	# Always restore default regardless of existence guard
 	frappe.db.set_default("hr_organization", "HO")
 
 
@@ -743,18 +743,38 @@ def create_default_holiday_list():
 
 	year = getdate().year
 	name = f"Default Holidays {year}"
-	if frappe.db.exists("Holiday List", name):
-		return
-	hl = frappe.get_doc(
-		{
-			"doctype": "Holiday List",
-			"holiday_list_name": name,
-			"from_date": f"{year}-01-01",
-			"to_date": f"{year}-12-31",
-			"holidays": [],
-		}
-	)
-	hl.insert(ignore_permissions=True)
+	from_date = f"{year}-01-01"
+	if not frappe.db.exists("Holiday List", name):
+		hl = frappe.get_doc(
+			{
+				"doctype": "Holiday List",
+				"holiday_list_name": name,
+				"from_date": from_date,
+				"to_date": f"{year}-12-31",
+				"holidays": [],
+			}
+		)
+		hl.insert(ignore_permissions=True)
+		if not frappe.db.exists(
+			"Holiday List Assignment",
+			{"applicable_for": "HR Organization", "assigned_to": "HO", "holiday_list": name},
+		):
+			hla = frappe.get_doc(
+				{
+					"doctype": "Holiday List Assignment",
+					"applicable_for": "HR Organization",
+					"assigned_to": "HO",
+					"holiday_list": name,
+					"from_date": from_date,
+				}
+			)
+			hla.insert(ignore_permissions=True)
+			frappe.flags.ignore_permissions = True
+			try:
+				hla.submit()
+			finally:
+				frappe.flags.ignore_permissions = False
+	# Always upsert default_holiday_list regardless of existence guard
 	if frappe.db.exists("HR Organization", "HO"):
 		frappe.db.set_value("HR Organization", "HO", "default_holiday_list", name)
 

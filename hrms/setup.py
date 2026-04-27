@@ -7,6 +7,7 @@ from frappe.desk.page.setup_wizard.install_fixtures import (
 )
 from frappe.desk.page.setup_wizard.setup_wizard import make_records
 
+
 def after_install():
 	custom_fields = get_custom_fields()
 	existing_doctypes = frappe.get_list("DocType", pluck="name")
@@ -17,7 +18,6 @@ def after_install():
 	make_fixtures()
 	setup_notifications()
 	update_hr_defaults()
-	add_non_standard_user_types()
 	set_single_defaults()
 	create_default_role_profiles()
 	run_post_install_patches()
@@ -237,6 +237,17 @@ def make_fixtures():
 		},
 		{
 			"doctype": "Leave Type",
+			"leave_type_name": _("Earned Leave"),
+			"name": _("Earned Leave"),
+			"allow_encashment": 1,
+			"is_carry_forward": 1,
+			"include_holiday": 1,
+			"is_earned_leave": 1,
+			"earned_leave_frequency": "Monthly",
+			"rounding": 0.5,
+		},
+		{
+			"doctype": "Leave Type",
 			"leave_type_name": _("Leave Without Pay"),
 			"name": _("Leave Without Pay"),
 			"allow_encashment": 0,
@@ -431,6 +442,9 @@ def create_salary_slip_loan_fields():
 
 
 def add_lending_docperms_to_ess():
+	if not frappe.db.exists("User Type", "Employee Self Service"):
+		return
+
 	doc = frappe.get_doc("User Type", "Employee Self Service")
 
 	loan_docperms = get_lending_docperms_for_ess()
@@ -441,6 +455,9 @@ def add_lending_docperms_to_ess():
 
 
 def remove_lending_docperms_from_ess():
+	if not frappe.db.exists("User Type", "Employee Self Service"):
+		return
+
 	doc = frappe.get_doc("User Type", "Employee Self Service")
 
 	loan_docperms = get_lending_docperms_for_ess()

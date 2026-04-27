@@ -1,5 +1,4 @@
-from hrms.setup import add_non_standard_user_types
-
-
 def execute():
-	add_non_standard_user_types()
+	# Skipped: Employee Self Service User Type is not used in this fork.
+	# All users are Website User; access is managed via EL User Profile + EL Role.
+	pass

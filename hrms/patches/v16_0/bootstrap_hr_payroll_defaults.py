@@ -60,9 +60,10 @@ def _ensure_lpa(employee):
 			)
 			if covers_full_year:
 				return
+			hr_org = frappe.db.get_default("hr_organization") or "HO"
 			leave_period = frappe.db.get_value(
 				"Leave Period",
-				{"hr_organization": "HO", "from_date": str(year_start), "to_date": str(year_end)},
+				{"hr_organization": hr_org, "from_date": str(year_start), "to_date": str(year_end)},
 				"name",
 			)
 			lpa = frappe.get_doc(
@@ -73,6 +74,7 @@ def _ensure_lpa(employee):
 					"assignment_based_on": "Leave Period",
 					"leave_period": leave_period,
 					"effective_from": year_start,
+					"effective_to": year_end,
 				}
 			)
 		else:

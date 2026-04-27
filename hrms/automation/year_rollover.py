@@ -74,11 +74,16 @@ def _create_lpa_for_active_employees(year):
 	employees = frappe.get_all("Employee", filters={"status": "Active"}, pluck="name")
 	for employee in employees:
 		try:
-			existing = frappe.db.exists(
-				"Leave Policy Assignment",
-				{"employee": employee, "leave_period": leave_period, "docstatus": 1},
+			overlapping = frappe.db.sql(
+				"""
+                SELECT name FROM `tabLeave Policy Assignment`
+                WHERE employee = %s AND docstatus = 1
+                  AND effective_from <= %s AND effective_to >= %s
+                LIMIT 1
+                """,
+				(employee, to_date, from_date),
 			)
-			if existing:
+			if overlapping:
 				continue
 
 			lpa = frappe.get_doc(
@@ -93,8 +98,5 @@ def _create_lpa_for_active_employees(year):
 			)
 			lpa.insert(ignore_permissions=True)
 			lpa.submit()
-		except frappe.ValidationError:
-			frappe.log_error(
-				title="Year rollover LPA failed",
-				message=f"Employee: {employee}, Year: {year}\n{frappe.get_traceback()}",
-			)
+		except Exception as e:
+			frappe.log_error(f"Year rollover LPA failed for {employee}: {e}", "Year Rollover")

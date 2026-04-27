@@ -38,11 +38,8 @@ def _ensure_leave_policy_assignment(doc):
 		)
 		lpa.insert(ignore_permissions=True)
 		lpa.submit()
-	except frappe.ValidationError:
-		frappe.log_error(
-			title="Leave Policy Assignment failed for Employee",
-			message=f"Employee: {doc.name}\n{frappe.get_traceback()}",
-		)
+	except Exception as e:
+		frappe.log_error(f"LPA creation failed for {doc.name}: {e}", "Employee Bootstrap")
 
 
 def _ensure_salary_structure_assignment(doc):
@@ -72,8 +69,5 @@ def _ensure_salary_structure_assignment(doc):
 		)
 		ssa.insert(ignore_permissions=True)
 		ssa.submit()
-	except frappe.ValidationError:
-		frappe.log_error(
-			title="Salary Structure Assignment failed for Employee",
-			message=f"Employee: {doc.name}\n{frappe.get_traceback()}",
-		)
+	except Exception as e:
+		frappe.log_error(f"SSA creation failed for {doc.name}: {e}", "Employee Bootstrap")

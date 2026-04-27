@@ -810,7 +810,7 @@ def create_default_salary_structure():
 		{
 			"doctype": "Salary Structure",
 			"name": "Default Structure",
-			"is_active": 1,
+			"is_active": "Yes",
 			"payroll_frequency": "Monthly",
 			"currency": "USD",
 			"hr_organization": "HO",
@@ -833,7 +833,8 @@ def create_default_leave_policy():
 	frappe.get_doc(
 		{
 			"doctype": "Leave Policy",
-			"leave_policy_name": "Standard Policy",
+			"name": "Standard Policy",
+			"title": "Standard Policy",
 			"leave_policy_details": [
 				{"leave_type": "Casual Leave", "annual_allocation": 14},
 				{"leave_type": "Sick Leave", "annual_allocation": 7},

@@ -48,17 +48,41 @@ def _create_payroll_period(year):
 
 def _create_holiday_list(year):
 	name = f"Default Holidays {year}"
-	if frappe.db.exists("Holiday List", name):
-		return
-	frappe.get_doc(
-		{
-			"doctype": "Holiday List",
-			"holiday_list_name": name,
-			"from_date": f"{year}-01-01",
-			"to_date": f"{year}-12-31",
-			"holidays": [],
-		}
-	).insert(ignore_permissions=True)
+	from_date = f"{year}-01-01"
+	if not frappe.db.exists("Holiday List", name):
+		frappe.get_doc(
+			{
+				"doctype": "Holiday List",
+				"holiday_list_name": name,
+				"from_date": from_date,
+				"to_date": f"{year}-12-31",
+				"holidays": [],
+			}
+		).insert(ignore_permissions=True)
+
+	# Always ensure HLA and default_holiday_list are up-to-date
+	if not frappe.db.exists(
+		"Holiday List Assignment",
+		{"applicable_for": "HR Organization", "assigned_to": "HO", "holiday_list": name},
+	):
+		hla = frappe.get_doc(
+			{
+				"doctype": "Holiday List Assignment",
+				"applicable_for": "HR Organization",
+				"assigned_to": "HO",
+				"holiday_list": name,
+				"from_date": from_date,
+			}
+		)
+		hla.insert(ignore_permissions=True)
+		frappe.flags.ignore_permissions = True
+		try:
+			hla.submit()
+		finally:
+			frappe.flags.ignore_permissions = False
+
+	if frappe.db.exists("HR Organization", "HO"):
+		frappe.db.set_value("HR Organization", "HO", "default_holiday_list", name)
 
 
 def _create_lpa_for_active_employees(year):
@@ -79,48 +103,32 @@ def _create_lpa_for_active_employees(year):
 	employees = frappe.get_all("Employee", filters={"status": "Active"}, pluck="name")
 	for employee in employees:
 		try:
-			# Fetch any submitted LPA that overlaps the target range
-			overlapping = frappe.db.sql(
-				"""
-                SELECT name, effective_from, effective_to
-                FROM `tabLeave Policy Assignment`
-                WHERE employee = %s AND docstatus = 1
-                  AND effective_from <= %s AND effective_to >= %s
-                LIMIT 1
-                """,
-				(employee, to_date, from_date),
-				as_dict=True,
+			# Skip only when existing LPA covers the FULL target range.
+			# TODO Phase 8: partial LPA coverage for mid-year hires — set_dates() on
+			# LeavePolicyAssignment.validate() overwrites effective_from/effective_to with
+			# Leave Period dates, making follow-on LPAs impossible without cancel/recreate.
+			covers_full_year = frappe.db.exists(
+				"Leave Policy Assignment",
+				{
+					"employee": employee,
+					"docstatus": 1,
+					"effective_from": ["<=", target_from],
+					"effective_to": [">=", target_to],
+				},
 			)
-			if overlapping:
-				existing_to = getdate(overlapping[0]["effective_to"])
-				# Full coverage — skip entirely
-				if getdate(overlapping[0]["effective_from"]) <= target_from and existing_to >= target_to:
-					continue
-				# Partial coverage — create follow-on LPA for uncovered remainder
-				remainder_from = existing_to + frappe.utils.datetime.timedelta(days=1)
-				if remainder_from > target_to:
-					continue
-				lpa = frappe.get_doc(
-					{
-						"doctype": "Leave Policy Assignment",
-						"employee": employee,
-						"leave_policy": policy_name,
-						"assignment_based_on": "Leave Period",
-						"leave_period": leave_period,
-						"effective_from": remainder_from,
-					}
-				)
-			else:
-				lpa = frappe.get_doc(
-					{
-						"doctype": "Leave Policy Assignment",
-						"employee": employee,
-						"leave_policy": policy_name,
-						"assignment_based_on": "Leave Period",
-						"leave_period": leave_period,
-						"effective_from": from_date,
-					}
-				)
+			if covers_full_year:
+				continue
+
+			lpa = frappe.get_doc(
+				{
+					"doctype": "Leave Policy Assignment",
+					"employee": employee,
+					"leave_policy": policy_name,
+					"assignment_based_on": "Leave Period",
+					"leave_period": leave_period,
+					"effective_from": from_date,
+				}
+			)
 			lpa.insert(ignore_permissions=True)
 			lpa.submit()
 		except frappe.ValidationError:

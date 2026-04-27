@@ -45,36 +45,21 @@ def _ensure_lpa(employee):
 		year = now_datetime().year
 		year_start = getdate(f"{year}-01-01")
 		year_end = getdate(f"{year}-12-31")
-
-		existing = frappe.db.sql(
-			"""
-            SELECT name FROM `tabLeave Policy Assignment`
-            WHERE employee = %s
-              AND docstatus = 1
-              AND effective_from <= %s
-              AND (effective_to IS NULL OR effective_to >= %s)
-            LIMIT 1
-            """,
-			(employee, joining_date, joining_date),
-		)
-		if existing:
-			return
-
 		policy_name = _get_or_create_default_leave_policy()
 
-		if joining_date >= year_start:
-			# New employee this year — assign from joining date
-			lpa = frappe.get_doc(
+		if joining_date < year_start:
+			# Pre-existing employee: check full-year coverage for current year
+			covers_full_year = frappe.db.exists(
+				"Leave Policy Assignment",
 				{
-					"doctype": "Leave Policy Assignment",
 					"employee": employee,
-					"leave_policy": policy_name,
-					"assignment_based_on": "Joining Date",
-					"effective_from": joining_date,
-				}
+					"docstatus": 1,
+					"effective_from": ["<=", year_start],
+					"effective_to": [">=", year_end],
+				},
 			)
-		else:
-			# Long-tenured employee — assign current calendar year leave period
+			if covers_full_year:
+				return
 			leave_period = frappe.db.get_value(
 				"Leave Period",
 				{"hr_organization": "HO", "from_date": str(year_start), "to_date": str(year_end)},
@@ -88,6 +73,28 @@ def _ensure_lpa(employee):
 					"assignment_based_on": "Leave Period",
 					"leave_period": leave_period,
 					"effective_from": year_start,
+				}
+			)
+		else:
+			# Current-year hire: check coverage from joining date
+			existing = frappe.db.exists(
+				"Leave Policy Assignment",
+				{
+					"employee": employee,
+					"docstatus": 1,
+					"effective_from": ["<=", joining_date],
+					"effective_to": [">=", joining_date],
+				},
+			)
+			if existing:
+				return
+			lpa = frappe.get_doc(
+				{
+					"doctype": "Leave Policy Assignment",
+					"employee": employee,
+					"leave_policy": policy_name,
+					"assignment_based_on": "Joining Date",
+					"effective_from": joining_date,
 				}
 			)
 

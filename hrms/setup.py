@@ -755,25 +755,28 @@ def create_default_holiday_list():
 			}
 		)
 		hl.insert(ignore_permissions=True)
-		if not frappe.db.exists(
-			"Holiday List Assignment",
-			{"applicable_for": "HR Organization", "assigned_to": "HO", "holiday_list": name},
-		):
-			hla = frappe.get_doc(
-				{
-					"doctype": "Holiday List Assignment",
-					"applicable_for": "HR Organization",
-					"assigned_to": "HO",
-					"holiday_list": name,
-					"from_date": from_date,
-				}
-			)
-			hla.insert(ignore_permissions=True)
-			frappe.flags.ignore_permissions = True
-			try:
-				hla.submit()
-			finally:
-				frappe.flags.ignore_permissions = False
+
+	# Always ensure HLA exists regardless of Holiday List existence guard
+	if not frappe.db.exists(
+		"Holiday List Assignment",
+		{"applicable_for": "HR Organization", "assigned_to": "HO", "holiday_list": name},
+	):
+		hla = frappe.get_doc(
+			{
+				"doctype": "Holiday List Assignment",
+				"applicable_for": "HR Organization",
+				"assigned_to": "HO",
+				"holiday_list": name,
+				"from_date": from_date,
+			}
+		)
+		hla.insert(ignore_permissions=True)
+		frappe.flags.ignore_permissions = True
+		try:
+			hla.submit()
+		finally:
+			frappe.flags.ignore_permissions = False
+
 	# Always upsert default_holiday_list regardless of existence guard
 	if frappe.db.exists("HR Organization", "HO"):
 		frappe.db.set_value("HR Organization", "HO", "default_holiday_list", name)

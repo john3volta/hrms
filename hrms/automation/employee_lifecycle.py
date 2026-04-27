@@ -12,6 +12,8 @@ def on_employee_after_insert(doc, method):
 
 def _ensure_leave_policy_assignment(doc):
 	try:
+		from hrms.setup import _get_or_create_default_leave_policy
+
 		joining_date = getdate(doc.date_of_joining)
 		existing = frappe.db.sql(
 			"""
@@ -27,11 +29,12 @@ def _ensure_leave_policy_assignment(doc):
 		if existing:
 			return
 
+		policy_name = _get_or_create_default_leave_policy()
 		lpa = frappe.get_doc(
 			{
 				"doctype": "Leave Policy Assignment",
 				"employee": doc.name,
-				"leave_policy": "Standard Policy",
+				"leave_policy": policy_name,
 				"assignment_based_on": "Joining Date",
 				"effective_from": joining_date,
 			}

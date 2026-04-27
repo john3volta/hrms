@@ -71,6 +71,9 @@ def _create_lpa_for_active_employees(year):
 	if not leave_period:
 		return
 
+	from hrms.setup import _get_or_create_default_leave_policy
+
+	policy_name = _get_or_create_default_leave_policy()
 	employees = frappe.get_all("Employee", filters={"status": "Active"}, pluck="name")
 	for employee in employees:
 		try:
@@ -90,7 +93,7 @@ def _create_lpa_for_active_employees(year):
 				{
 					"doctype": "Leave Policy Assignment",
 					"employee": employee,
-					"leave_policy": "Standard Policy",
+					"leave_policy": policy_name,
 					"assignment_based_on": "Leave Period",
 					"leave_period": leave_period,
 					"effective_from": from_date,

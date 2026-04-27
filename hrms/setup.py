@@ -827,21 +827,31 @@ def create_default_salary_structure():
 	ss.submit()
 
 
-def create_default_leave_policy():
-	if frappe.db.exists("Leave Policy", "Standard Policy"):
-		return
-	frappe.get_doc(
+STANDARD_POLICY_TITLE = "Standard Policy"
+
+
+def _get_or_create_default_leave_policy() -> str:
+	"""Returns the doc.name of the default Leave Policy, creating it if absent."""
+	existing_name = frappe.db.get_value("Leave Policy", {"title": STANDARD_POLICY_TITLE}, "name")
+	if existing_name:
+		return existing_name
+	doc = frappe.get_doc(
 		{
 			"doctype": "Leave Policy",
-			"name": "Standard Policy",
-			"title": "Standard Policy",
+			"title": STANDARD_POLICY_TITLE,
 			"leave_policy_details": [
 				{"leave_type": "Casual Leave", "annual_allocation": 14},
 				{"leave_type": "Sick Leave", "annual_allocation": 7},
 				{"leave_type": "Earned Leave", "annual_allocation": 21},
 			],
 		}
-	).insert(ignore_permissions=True)
+	)
+	doc.insert(ignore_permissions=True)
+	return doc.name
+
+
+def create_default_leave_policy():
+	_get_or_create_default_leave_policy()
 
 
 def create_default_payroll_period():

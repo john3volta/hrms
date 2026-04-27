@@ -33,6 +33,8 @@ def _assign_lpa_ssa_for_active_employees():
 
 def _ensure_lpa(employee):
 	try:
+		from hrms.setup import _get_or_create_default_leave_policy
+
 		date_of_joining = frappe.db.get_value("Employee", employee, "date_of_joining")
 		if not date_of_joining:
 			return
@@ -50,22 +52,20 @@ def _ensure_lpa(employee):
 		)
 		if existing:
 			return
+		policy_name = _get_or_create_default_leave_policy()
 		lpa = frappe.get_doc(
 			{
 				"doctype": "Leave Policy Assignment",
 				"employee": employee,
-				"leave_policy": "Standard Policy",
+				"leave_policy": policy_name,
 				"assignment_based_on": "Joining Date",
 				"effective_from": joining_date,
 			}
 		)
 		lpa.insert(ignore_permissions=True)
 		lpa.submit()
-	except frappe.ValidationError:
-		frappe.log_error(
-			title="Bootstrap LPA failed",
-			message=f"Employee: {employee}\n{frappe.get_traceback()}",
-		)
+	except Exception as e:
+		frappe.log_error(f"Bootstrap LPA failed for {employee}: {e}", "HR Bootstrap")
 
 
 def _ensure_ssa(employee):
@@ -97,8 +97,5 @@ def _ensure_ssa(employee):
 		)
 		ssa.insert(ignore_permissions=True)
 		ssa.submit()
-	except frappe.ValidationError:
-		frappe.log_error(
-			title="Bootstrap SSA failed",
-			message=f"Employee: {employee}\n{frappe.get_traceback()}",
-		)
+	except Exception as e:
+		frappe.log_error(f"Bootstrap SSA failed for {employee}: {e}", "HR Bootstrap")

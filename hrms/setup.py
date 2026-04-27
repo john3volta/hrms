@@ -21,6 +21,13 @@ def after_install():
 	set_single_defaults()
 	create_default_role_profiles()
 	run_post_install_patches()
+	create_default_hr_organization()
+	create_default_holiday_list()
+	create_default_leave_period()
+	create_default_leave_policy()
+	create_default_salary_components()
+	create_default_salary_structure()
+	create_default_payroll_period()
 
 
 def before_uninstall():
@@ -713,6 +720,146 @@ def get_salary_slip_loan_fields():
 			},
 		],
 	}
+
+
+def create_default_hr_organization():
+	if frappe.db.exists("HR Organization", "HO"):
+		return
+	org = frappe.get_doc(
+		{
+			"doctype": "HR Organization",
+			"organization_code": "HO",
+			"organization_name": "Head Office",
+			"country": "United States",
+			"default_currency": "USD",
+		}
+	)
+	org.insert(ignore_permissions=True)
+	frappe.db.set_default("hr_organization", "HO")
+
+
+def create_default_holiday_list():
+	from frappe.utils import getdate
+
+	year = getdate().year
+	name = f"Default Holidays {year}"
+	if frappe.db.exists("Holiday List", name):
+		return
+	hl = frappe.get_doc(
+		{
+			"doctype": "Holiday List",
+			"holiday_list_name": name,
+			"from_date": f"{year}-01-01",
+			"to_date": f"{year}-12-31",
+			"holidays": [],
+		}
+	)
+	hl.insert(ignore_permissions=True)
+	if frappe.db.exists("HR Organization", "HO"):
+		frappe.db.set_value("HR Organization", "HO", "default_holiday_list", name)
+
+
+def create_default_leave_period():
+	from frappe.utils import getdate
+
+	year = getdate().year
+	from_date, to_date = f"{year}-01-01", f"{year}-12-31"
+	if frappe.db.exists(
+		"Leave Period", {"hr_organization": "HO", "from_date": from_date, "to_date": to_date}
+	):
+		return
+	frappe.get_doc(
+		{
+			"doctype": "Leave Period",
+			"hr_organization": "HO",
+			"from_date": from_date,
+			"to_date": to_date,
+			"is_active": 1,
+		}
+	).insert(ignore_permissions=True)
+
+
+def create_default_salary_components():
+	components = [
+		{"component_name": "Basic", "salary_component_abbr": "B", "type": "Earning", "is_tax_applicable": 0},
+		{
+			"component_name": "HRA",
+			"salary_component_abbr": "HRA",
+			"type": "Earning",
+			"formula": "0.2 * base",
+			"amount_based_on_formula": 1,
+		},
+		{
+			"component_name": "PF",
+			"salary_component_abbr": "PF",
+			"type": "Deduction",
+			"formula": "0.1 * base",
+			"amount_based_on_formula": 1,
+		},
+	]
+	for comp in components:
+		if frappe.db.exists("Salary Component", comp["component_name"]):
+			continue
+		frappe.get_doc({"doctype": "Salary Component", **comp}).insert(ignore_permissions=True)
+
+
+def create_default_salary_structure():
+	if frappe.db.exists("Salary Structure", "Default Structure"):
+		return
+	ss = frappe.get_doc(
+		{
+			"doctype": "Salary Structure",
+			"name": "Default Structure",
+			"is_active": 1,
+			"payroll_frequency": "Monthly",
+			"currency": "USD",
+			"hr_organization": "HO",
+			"earnings": [
+				{"salary_component": "Basic", "amount_based_on_formula": 0, "amount": 0},
+				{"salary_component": "HRA", "amount_based_on_formula": 1, "formula": "0.2 * base"},
+			],
+			"deductions": [
+				{"salary_component": "PF", "amount_based_on_formula": 1, "formula": "0.1 * base"},
+			],
+		}
+	)
+	ss.insert(ignore_permissions=True)
+	ss.submit()
+
+
+def create_default_leave_policy():
+	if frappe.db.exists("Leave Policy", "Standard Policy"):
+		return
+	frappe.get_doc(
+		{
+			"doctype": "Leave Policy",
+			"leave_policy_name": "Standard Policy",
+			"leave_policy_details": [
+				{"leave_type": "Casual Leave", "annual_allocation": 14},
+				{"leave_type": "Sick Leave", "annual_allocation": 7},
+				{"leave_type": "Earned Leave", "annual_allocation": 21},
+			],
+		}
+	).insert(ignore_permissions=True)
+
+
+def create_default_payroll_period():
+	from frappe.utils import getdate
+
+	year = getdate().year
+	start_date, end_date = f"{year}-01-01", f"{year}-12-31"
+	if frappe.db.exists(
+		"Payroll Period", {"hr_organization": "HO", "start_date": start_date, "end_date": end_date}
+	):
+		return
+	frappe.get_doc(
+		{
+			"doctype": "Payroll Period",
+			"hr_organization": "HO",
+			"start_date": start_date,
+			"end_date": end_date,
+		}
+	).insert(ignore_permissions=True)
 
 
 def make_people_workspace_standard():

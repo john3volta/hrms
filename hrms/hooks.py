@@ -164,7 +164,10 @@ doc_events = {
 			"hrms.overrides.employee_master.update_approver_role",
 			"hrms.overrides.employee_master.publish_update",
 		],
-		"after_insert": "hrms.overrides.employee_master.update_job_applicant_and_offer",
+		"after_insert": [
+			"hrms.overrides.employee_master.update_job_applicant_and_offer",
+			"hrms.automation.employee_lifecycle.on_employee_after_insert",
+		],
 		"on_trash": "hrms.overrides.employee_master.update_employee_transfer",
 		"after_delete": "hrms.overrides.employee_master.publish_update",
 	},
@@ -200,6 +203,9 @@ scheduler_events = {
 	],
 	"weekly": ["hrms.controllers.employee_reminders.send_reminders_in_advance_weekly"],
 	"monthly": ["hrms.controllers.employee_reminders.send_reminders_in_advance_monthly"],
+	"cron": {
+		"0 0 1 1 *": ["hrms.automation.year_rollover.run_year_rollover"],
+	},
 }
 
 # Testing

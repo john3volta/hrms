@@ -8,18 +8,20 @@ def execute():
 		create_default_hr_organization,
 		create_default_leave_period,
 		create_default_leave_policy,
+		create_default_lpa_for_all_employees,
 		create_default_payroll_period,
 		create_default_salary_components,
 		create_default_salary_structure,
 	)
 
 	create_default_hr_organization()
-	create_default_holiday_list()
 	create_default_leave_period()
+	create_default_holiday_list()
 	create_default_leave_policy()
 	create_default_salary_components()
 	create_default_salary_structure()
 	create_default_payroll_period()
+	create_default_lpa_for_all_employees()
 
 	_assign_lpa_ssa_for_active_employees()
 

@@ -738,54 +738,71 @@ def create_default_hr_organization():
 	frappe.db.set_default("hr_organization", "HO")
 
 
-def create_default_holiday_list():
+def create_default_holiday_list(year=None):
+	"""Create or extend the persistent 'Holidays' list with the given year's base holidays.
+
+	Idempotent at two levels:
+	  - If the 'Holidays' list doesn't exist → create it.
+	  - If it already exists → extend child-table with any missing dates for *year*.
+	  - Update from_date / to_date to cover the widest date range present.
+	"""
 	from frappe.utils import getdate
 
-	year = getdate().year
-	name = f"Default Holidays {year}"
-	from_date = f"{year}-01-01"
-	if not frappe.db.exists("Holiday List", name):
+	if year is None:
+		year = getdate().year
+
+	_ensure_holiday_list_for_year(year)
+
+	# Always upsert default_holiday_list on HO regardless of prior state
+	if frappe.db.exists("HR Organization", "HO"):
+		frappe.db.set_value("HR Organization", "HO", "default_holiday_list", "Holidays")
+
+
+def _ensure_holiday_list_for_year(year: int) -> None:
+	"""Insert missing base-holidays for *year* into the persistent 'Holidays' list."""
+	base_holidays = [
+		(f"{year}-01-01", "New Year"),
+		(f"{year}-05-01", "Labour Day"),
+		(f"{year}-12-25", "Christmas"),
+	]
+
+	if not frappe.db.exists("Holiday List", "Holidays"):
 		hl = frappe.get_doc(
 			{
 				"doctype": "Holiday List",
-				"holiday_list_name": name,
-				"from_date": from_date,
+				"holiday_list_name": "Holidays",
+				"from_date": f"{year}-01-01",
 				"to_date": f"{year}-12-31",
-				"holidays": [],
+				"holidays": [
+					{"holiday_date": date, "description": desc} for date, desc in base_holidays
+				],
 			}
 		)
 		hl.insert(ignore_permissions=True)
+		return
 
-	# Always ensure HLA exists regardless of Holiday List existence guard
-	if not frappe.db.exists(
-		"Holiday List Assignment",
-		{"applicable_for": "HR Organization", "assigned_to": "HO", "holiday_list": name},
-	):
-		hla = frappe.get_doc(
-			{
-				"doctype": "Holiday List Assignment",
-				"applicable_for": "HR Organization",
-				"assigned_to": "HO",
-				"holiday_list": name,
-				"from_date": from_date,
-			}
-		)
-		hla.insert(ignore_permissions=True)
-		frappe.flags.ignore_permissions = True
-		try:
-			hla.submit()
-		finally:
-			frappe.flags.ignore_permissions = False
+	hl = frappe.get_doc("Holiday List", "Holidays")
+	existing_dates = {str(row.holiday_date) for row in hl.holidays}
 
-	# Always upsert default_holiday_list regardless of existence guard
-	if frappe.db.exists("HR Organization", "HO"):
-		frappe.db.set_value("HR Organization", "HO", "default_holiday_list", name)
+	added = False
+	for date, desc in base_holidays:
+		if date not in existing_dates:
+			hl.append("holidays", {"holiday_date": date, "description": desc})
+			added = True
+
+	if added:
+		# Expand from_date / to_date to cover all years present
+		all_dates = sorted(existing_dates | {d for d, _ in base_holidays})
+		hl.from_date = min(all_dates[0], str(hl.from_date))
+		hl.to_date = max(all_dates[-1], str(hl.to_date))
+		hl.save(ignore_permissions=True)
 
 
-def create_default_leave_period():
+def create_default_leave_period(year=None):
 	from frappe.utils import getdate
 
-	year = getdate().year
+	if year is None:
+		year = getdate().year
 	from_date, to_date = f"{year}-01-01", f"{year}-12-31"
 	if frappe.db.exists(
 		"Leave Period", {"hr_organization": "HO", "from_date": from_date, "to_date": to_date}
@@ -850,22 +867,45 @@ def create_default_salary_structure():
 	ss.submit()
 
 
-STANDARD_POLICY_TITLE = "Standard Policy"
+STANDARD_POLICY_TITLE = "Standard"
+
+_STANDARD_LEAVE_TYPES = [
+	{"leave_type_name": "Annual Leave", "annual_allocation": 28, "max_leaves_allowed": 28},
+	{"leave_type_name": "Sick Leave", "annual_allocation": 14, "max_leaves_allowed": 14},
+]
+
+
+def _ensure_leave_type(leave_type_name: str, max_leaves_allowed: int) -> None:
+	"""Create Leave Type if absent (idempotent)."""
+	if frappe.db.exists("Leave Type", leave_type_name):
+		return
+	frappe.get_doc(
+		{
+			"doctype": "Leave Type",
+			"leave_type_name": leave_type_name,
+			"name": leave_type_name,
+			"max_leaves_allowed": max_leaves_allowed,
+			"is_lwp": 0,
+		}
+	).insert(ignore_permissions=True)
 
 
 def _get_or_create_default_leave_policy() -> str:
-	"""Returns the doc.name of the default Leave Policy, creating it if absent."""
+	"""Return doc.name of the Standard leave policy, creating it (and required Leave Types) if absent."""
 	existing_name = frappe.db.get_value("Leave Policy", {"title": STANDARD_POLICY_TITLE}, "name")
 	if existing_name:
 		return existing_name
+
+	for lt in _STANDARD_LEAVE_TYPES:
+		_ensure_leave_type(lt["leave_type_name"], lt["max_leaves_allowed"])
+
 	doc = frappe.get_doc(
 		{
 			"doctype": "Leave Policy",
 			"title": STANDARD_POLICY_TITLE,
 			"leave_policy_details": [
-				{"leave_type": "Casual Leave", "annual_allocation": 14},
-				{"leave_type": "Sick Leave", "annual_allocation": 7},
-				{"leave_type": "Earned Leave", "annual_allocation": 21},
+				{"leave_type": lt["leave_type_name"], "annual_allocation": lt["annual_allocation"]}
+				for lt in _STANDARD_LEAVE_TYPES
 			],
 		}
 	)
@@ -895,6 +935,90 @@ def create_default_payroll_period():
 			"end_date": end_date,
 		}
 	).insert(ignore_permissions=True)
+
+
+def create_default_lpa_for_all_employees(year=None):
+	"""Assign Leave Policy 'Standard' to all active Employees for the given year's Leave Period.
+
+	Idempotent: employees that already have a submitted LPA covering the year are skipped.
+	After LPA submit, Frappe HRMS triggers Leave Allocation creation automatically.
+	"""
+	from frappe.utils import getdate
+
+	if year is None:
+		year = getdate().year
+
+	year_start = getdate(f"{year}-01-01")
+	year_end = getdate(f"{year}-12-31")
+
+	leave_period = frappe.db.get_value(
+		"Leave Period",
+		{"hr_organization": "HO", "from_date": str(year_start), "to_date": str(year_end)},
+		"name",
+	)
+	if not leave_period:
+		frappe.log_error(
+			f"Leave Period for HO/{year} not found — run create_default_leave_period({year}) first",
+			"HR Bootstrap LPA",
+		)
+		return
+
+	policy_name = _get_or_create_default_leave_policy()
+
+	employees = frappe.get_all(
+		"Employee",
+		filters={"status": "Active", "relieving_date": ["is", "not set"]},
+		pluck="name",
+	)
+
+	for employee in employees:
+		_ensure_lpa_for_year(employee, policy_name, leave_period, year_start, year_end)
+
+
+def _ensure_lpa_for_year(employee, policy_name, leave_period, year_start, year_end):
+	"""Create and submit LPA for employee+year if one doesn't already exist (idempotent)."""
+	already_assigned = frappe.db.exists(
+		"Leave Policy Assignment",
+		{
+			"employee": employee,
+			"leave_policy": policy_name,
+			"docstatus": 1,
+			"effective_from": ["<=", year_start],
+			"effective_to": [">=", year_end],
+		},
+	)
+	if already_assigned:
+		return
+
+	try:
+		lpa = frappe.get_doc(
+			{
+				"doctype": "Leave Policy Assignment",
+				"employee": employee,
+				"leave_policy": policy_name,
+				"assignment_based_on": "Leave Period",
+				"leave_period": leave_period,
+				"effective_from": year_start,
+				"effective_to": year_end,
+			}
+		)
+		lpa.insert(ignore_permissions=True)
+		lpa.submit()
+	except frappe.ValidationError:
+		frappe.log_error(frappe.get_traceback(), f"HR Bootstrap LPA: employee={employee}")
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), f"HR Bootstrap LPA: employee={employee}")
+		raise
+
+
+def bootstrap_next_year_defaults():
+	"""Scheduled entry point: called on 1 Dec to prepare next year's HR defaults."""
+	from frappe.utils import getdate
+
+	next_year = getdate().year + 1
+	create_default_leave_period(next_year)
+	create_default_holiday_list(next_year)
+	# Leave Policy and LPA for next year are done separately once employees are confirmed
 
 
 def make_people_workspace_standard():

@@ -205,6 +205,7 @@ scheduler_events = {
 	"monthly": ["hrms.controllers.employee_reminders.send_reminders_in_advance_monthly"],
 	"cron": {
 		"0 0 1 1 *": ["hrms.automation.year_rollover.run_year_rollover"],
+		"0 2 1 12 *": ["hrms.setup.bootstrap_next_year_defaults"],
 	},
 }
 

@@ -139,6 +139,29 @@
    "share": 1,
    "submit": 1,
    "write": 1
+  },
+  {
+   "role": "TRAINEE"
+  },
+  {
+   "role": "SPECIALIST"
+  },
+  {
+   "role": "TEAM LEAD",
+   "read": 1
+  },
+  {
+   "role": "DEPARTMENT HEAD",
+   "read": 1
+  },
+  {
+   "role": "EXECUTIVE",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1,
+   "submit": 1,
+   "cancel": 1
   }
  ],
  "row_format": "Dynamic",

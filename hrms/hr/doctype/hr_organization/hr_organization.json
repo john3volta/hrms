@@ -89,6 +89,31 @@
    "role": "HR Manager",
    "share": 1,
    "write": 1
+  },
+  {
+   "role": "TRAINEE",
+   "read": 1
+  },
+  {
+   "role": "SPECIALIST",
+   "read": 1
+  },
+  {
+   "role": "TEAM LEAD",
+   "read": 1
+  },
+  {
+   "role": "DEPARTMENT HEAD",
+   "read": 1,
+   "write": 1,
+   "create": 1
+  },
+  {
+   "role": "EXECUTIVE",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1
   }
  ],
  "sort_field": "modified",

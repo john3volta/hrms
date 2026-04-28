@@ -804,16 +804,16 @@ def create_default_leave_period():
 
 def create_default_salary_components():
 	components = [
-		{"component_name": "Basic", "salary_component_abbr": "B", "type": "Earning", "is_tax_applicable": 0},
+		{"salary_component": "Basic", "salary_component_abbr": "B", "type": "Earning", "is_tax_applicable": 0},
 		{
-			"component_name": "HRA",
+			"salary_component": "HRA",
 			"salary_component_abbr": "HRA",
 			"type": "Earning",
 			"formula": "0.2 * base",
 			"amount_based_on_formula": 1,
 		},
 		{
-			"component_name": "PF",
+			"salary_component": "PF",
 			"salary_component_abbr": "PF",
 			"type": "Deduction",
 			"formula": "0.1 * base",
@@ -821,7 +821,7 @@ def create_default_salary_components():
 		},
 	]
 	for comp in components:
-		if frappe.db.exists("Salary Component", comp["component_name"]):
+		if frappe.db.exists("Salary Component", comp["salary_component"]):
 			continue
 		frappe.get_doc({"doctype": "Salary Component", **comp}).insert(ignore_permissions=True)
 
@@ -889,6 +889,7 @@ def create_default_payroll_period():
 	frappe.get_doc(
 		{
 			"doctype": "Payroll Period",
+			"name": f"HO-{year}",
 			"hr_organization": "HO",
 			"start_date": start_date,
 			"end_date": end_date,

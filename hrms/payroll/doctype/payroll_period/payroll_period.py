@@ -20,6 +20,12 @@ class PayrollPeriod(Document):
 		get_payroll_period.clear_cache()
 		return super().clear_cache()
 
+	def on_submit(self):
+		self.db_set("status", "Submitted")
+
+	def on_cancel(self):
+		self.db_set("status", "Cancelled")
+
 	def validate_overlap(self):
 		query = """
 			select name
@@ -89,11 +95,11 @@ def get_payroll_period(from_date, to_date, company):
 	payroll_period = (
 		frappe.qb.from_(PayrollPeriod)
 		.select(PayrollPeriod.name, PayrollPeriod.start_date, PayrollPeriod.end_date)
-			.where(
-				(PayrollPeriod.start_date <= from_date)
-				& (PayrollPeriod.end_date >= to_date)
-				& (PayrollPeriod.hr_organization == company)
-			)
+		.where(
+			(PayrollPeriod.start_date <= from_date)
+			& (PayrollPeriod.end_date >= to_date)
+			& (PayrollPeriod.hr_organization == company)
+		)
 	).run(as_dict=1)
 
 	return payroll_period[0] if payroll_period else None

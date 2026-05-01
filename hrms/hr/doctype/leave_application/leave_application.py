@@ -20,9 +20,6 @@ from frappe.utils import (
 	nowdate,
 )
 
-from hrms.utils.compat import daterange
-from hrms.utils.compat import get_holiday_list_for_employee
-
 import hrms
 from hrms.api import get_current_employee_info
 from hrms.hr.doctype.leave_block_list.leave_block_list import get_applicable_block_dates
@@ -36,6 +33,7 @@ from hrms.hr.utils import (
 )
 from hrms.mixins.pwa_notifications import PWANotificationsMixin
 from hrms.utils import get_employee_email
+from hrms.utils.compat import daterange, get_holiday_list_for_employee
 from hrms.utils.holiday_list import get_holiday_dates_between_range
 
 
@@ -72,6 +70,13 @@ class LeaveApplication(Document, PWANotificationsMixin):
 
 	def after_insert(self):
 		self.notify_approver()
+		self.publish_update()
+		frappe.publish_realtime(
+			"list_update",
+			{"doctype": self.doctype, "name": self.name},
+			doctype=self.doctype,
+			after_commit=True,
+		)
 
 	def validate(self):
 		validate_active_employee(self.employee)
@@ -1312,7 +1317,10 @@ def get_events(start, end, filters=None):
 	events = []
 
 	employee = frappe.db.get_value(
-		"Employee", filters={"user_id": frappe.session.user}, fieldname=["name", "hr_organization"], as_dict=True
+		"Employee",
+		filters={"user_id": frappe.session.user},
+		fieldname=["name", "hr_organization"],
+		as_dict=True,
 	)
 
 	if employee:

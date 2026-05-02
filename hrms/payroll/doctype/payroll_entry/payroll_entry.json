@@ -45,7 +45,8 @@
   "payout_register",
   "tax_ruleset_version",
   "amended_from",
-  "connections_tab"
+  "connections_tab",
+  "custom_requires_finance_approval"
  ],
  "fields": [
   {
@@ -290,6 +291,13 @@
    "label": "Tax Ruleset Version",
    "read_only": 1,
    "no_copy": 1
+  },
+  {
+   "fieldname": "custom_requires_finance_approval",
+   "fieldtype": "Check",
+   "label": "Requires Finance Approval",
+   "default": "0",
+   "no_copy": 1
   }
  ],
  "icon": "fa fa-cog",
@@ -300,7 +308,7 @@
    "link_fieldname": "payroll_entry"
   }
  ],
- "modified": "2026-04-21 12:00:00.000000",
+ "modified": "2026-04-30 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Entry",

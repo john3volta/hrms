@@ -20,7 +20,7 @@ def execute():
 	create_default_leave_policy()
 	create_default_salary_components()
 	create_default_salary_structure()
-	create_default_payroll_period()
+	# Payroll Period managed manually via ERPel admin (12 monthly cycles, not annual).
 	create_default_lpa_for_all_employees()
 
 	_assign_lpa_ssa_for_active_employees()

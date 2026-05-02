@@ -27,7 +27,7 @@ def after_install():
 	create_default_leave_policy()
 	create_default_salary_components()
 	create_default_salary_structure()
-	create_default_payroll_period()
+	# Payroll Period managed manually via ERPel admin (12 monthly cycles, not annual).
 
 
 def before_uninstall():
